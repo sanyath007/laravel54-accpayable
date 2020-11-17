@@ -31,7 +31,7 @@ Route::group(['middleware' => 'web'], function() {
 });
 
 Route::group(['middleware' => ['web','auth']], function () {
-    Route::get('approve/list', 'ApprovementController@list');
+    Route::get('approve/list', 'ApprovementController@index');
     Route::get('approve/search/{searchKey}', 'ApprovementController@search');
     Route::get('approve/get-approve/{appId}', 'ApprovementController@getById');
     Route::get('approve/add', 'ApprovementController@add');
@@ -41,7 +41,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::put('approve/update', 'ApprovementController@update');
     Route::delete('approve/delete/{appId}', 'ApprovementController@delete');
 
-    Route::get('payment/list', 'PaymentController@list');
+    Route::get('payment/list', 'PaymentController@index');
     Route::get('payment/search/{searchKey}', 'PaymentController@search');
     Route::get('payment/get-payment/{appId}', 'PaymentController@getById');
     Route::get('payment/add', 'PaymentController@add');
@@ -62,7 +62,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('account/ledger-debttype/{sdate}/{edate}/{showall}', 'AccountController@ledgerDebttype');     
     Route::get('account/ledger-debttype-excel/{sdate}/{edate}/{showall}', 'AccountController@ledgerDebttypeExcel'); 
 
-    Route::get('creditor/list', 'CreditorController@list');
+    Route::get('creditor/list', 'CreditorController@index');
     Route::get('creditor/search/{searchKey}', 'CreditorController@search');
     Route::get('creditor/get-creditor/{creditorId}', 'CreditorController@getById');
     Route::get('creditor/add', 'CreditorController@add');
@@ -71,7 +71,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::put('creditor/update', 'CreditorController@update');
     Route::delete('creditor/delete/{creditorId}', 'CreditorController@delete');
 
-    Route::get('debttype/list', 'DebtTypeController@list');
+    Route::get('debttype/list', 'DebtTypeController@index');
 	Route::get('debttype/search/{searchKey}', 'DebttypeController@search');
     Route::get('debttype/get-debttype/{debttypeId}', 'DebttypeController@getById');
     Route::get('debttype/add', 'DebtTypeController@add');
@@ -80,7 +80,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::put('debttype/update', 'DebttypeController@update');
     Route::delete('debttype/delete/{debttypeId}', 'DebttypeController@delete');
 
-    Route::get('debt/list', 'DebtController@list');
+    Route::get('debt/list', 'DebtController@index');
     Route::get('debt/rpt/{creditor}/{sdate}/{edate}/{showall}', 'DebtController@debtRpt');
     Route::get('debt/get-debt/{debtId}', 'DebtController@getById');
     Route::get('debt/add/{creditor}', 'DebtController@add');

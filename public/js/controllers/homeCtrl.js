@@ -1,8 +1,5 @@
 app.controller('homeCtrl', function(CONFIG, $scope, limitToFilter, ReportService) {
-/** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
-    
+/** ################################################################################## */    
     $scope.pieOptions = {};
     $scope.barOptions = {};
 

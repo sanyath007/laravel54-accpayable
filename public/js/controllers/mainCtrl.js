@@ -1,8 +1,6 @@
 app.controller('mainCtrl', function($scope, $http, toaster, ModalService, CONFIG) {
 /** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
-/** ################################################################################## */
+    console.log(CONFIG);
     // $scope.selectText = function(form) {
     //     var input = form.$editables[0].inputEl;
     //     input.select();
@@ -143,8 +141,8 @@ app.controller('mainCtrl', function($scope, $http, toaster, ModalService, CONFIG
         //Clear events
         $('#calendar').fullCalendar( 'removeEventSource', this.events );
         //Load new events
-        console.log(baseUrl + '/reserve/ajaxcalendar/' + this.fdMonth + '/' + this.ldMonth);
-        $http.get(baseUrl + '/reserve/ajaxcalendar/' + this.fdMonth + '/' + this.ldMonth)
+        console.log(CONFIG.baseUrl + '/reserve/ajaxcalendar/' + this.fdMonth + '/' + this.ldMonth);
+        $http.get(CONFIG.baseUrl + '/reserve/ajaxcalendar/' + this.fdMonth + '/' + this.ldMonth)
         .then((data) => {
             this.events = data.data;
             $('#calendar').fullCalendar('addEventSource', this.events);
@@ -197,7 +195,7 @@ app.controller('mainCtrl', function($scope, $http, toaster, ModalService, CONFIG
 /** ################################################################################## */
     $scope.passengers = [];
     $scope.showPassengers = function (event, reserveid) {
-        $http.get(baseUrl + '/ajaxpassenger/' + reserveid + '/0')
+        $http.get(CONFIG.baseUrl + '/ajaxpassenger/' + reserveid + '/0')
         .then(function (data) {
             $scope.passengers = data.data[1];
             console.log($scope.passengers);

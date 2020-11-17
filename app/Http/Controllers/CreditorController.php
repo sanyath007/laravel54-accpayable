@@ -11,7 +11,7 @@ use App\Models\SupplierPrefix;
 
 class CreditorController extends Controller
 {
-    public function list()
+    public function index()
     {
     	return view('creditors.list');
     }

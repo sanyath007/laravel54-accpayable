@@ -8,7 +8,7 @@
   window.__env.apiUrl = 'http://dev.your-api.com';
 
   // Base url
-  window.__env.baseUrl = window.location.protocol+ '//' +window.location.host+ '/public';
+  window.__env.baseUrl = window.location.protocol+ '//' +window.location.host+ '/public_html/laravel54-accpayable/public';
 
   // App Name
   window.__env.appName = 'Accounts Payable System';

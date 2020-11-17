@@ -111,6 +111,6 @@ app.service('ReportService', function(CONFIG, $http) {
     };
 
 	this.getSeriesData = function (url, data) {
-		return $http.get(CONFIG.BASE_URL + url + data);
+		return $http.get(CONFIG.baseUrl + url + data);
 	}
 });

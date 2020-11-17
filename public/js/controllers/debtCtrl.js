@@ -1,8 +1,5 @@
 app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService, StringFormatService, ReportService, PaginateService) {
 /** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
-
     $scope.loading = false;
     $scope.cboDebtType = "";
     $scope.searchKeyword = "";
@@ -139,7 +136,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         var debtType = ($("#debtType").val() != '') ? $("#debtType").val() : 0;
         var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
-        $http.get(CONFIG.BASE_URL +URL+ '/' +debtType+ '/' +sDate+ '/' +eDate+ '/' +showAll)
+        $http.get(CONFIG.baseUrl +URL+ '/' +debtType+ '/' +sDate+ '/' +eDate+ '/' +showAll)
         .then(function(res) {
             console.log(res);
             $scope.debts = res.data.debts.data;
@@ -271,7 +268,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
             console.log("You doesn't select creditor !!!");
             toaster.pop('warning', "", "คุณยังไม่ได้เลือกเจ้าหนี้ !!!");
         } else {
-            window.location.href = CONFIG.BASE_URL + '/debt/add/' + creditor;
+            window.location.href = CONFIG.baseUrl + '/debt/add/' + creditor;
         }
     }
 
@@ -298,7 +295,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
             $scope.debt.debt_userid = $("#user").val();
             console.log($scope.debt);
 
-            $http.post(CONFIG.BASE_URL + '/debt/store', $scope.debt)
+            $http.post(CONFIG.baseUrl + '/debt/store', $scope.debt)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
@@ -314,7 +311,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
     }
 
     $scope.getDebt = function(debtId) {
-        $http.get(CONFIG.BASE_URL + '/debt/get-debt/' +debtId)
+        $http.get(CONFIG.baseUrl + '/debt/get-debt/' +debtId)
         .then(function(res) {
             console.log(res);
             $scope.debt = res.data.debt;
@@ -342,7 +339,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
             console.log("You doesn't select creditor !!!");
             toaster.pop('warning', "", "คุณยังไม่ได้เลือกเจ้าหนี้ !!!");
         } else {
-            window.location.href = CONFIG.BASE_URL + '/debt/edit/' + creditor + '/' + debtId;
+            window.location.href = CONFIG.baseUrl + '/debt/edit/' + creditor + '/' + debtId;
         }
     };
 
@@ -369,7 +366,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
             console.log($scope.debt);
 
             if(confirm("คุณต้องแก้ไขรายการหนี้เลขที่ " + debtId + " ใช่หรือไม่?")) {
-                $http.put(CONFIG.BASE_URL + '/debt/update/', $scope.debt)
+                $http.put(CONFIG.baseUrl + '/debt/update/', $scope.debt)
                 .then(function(res) {
                     console.log(res);
                 }, function(err) {
@@ -378,7 +375,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
             }
 
             /** Redirect to debt list */
-            window.location.href = CONFIG.BASE_URL + '/debt/list';
+            window.location.href = CONFIG.baseUrl + '/debt/list';
         }
     };
 
@@ -386,7 +383,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         console.log(debtId);
 
         if(confirm("คุณต้องลบรายการหนี้เลขที่ " + debtId + " ใช่หรือไม่?")) {
-            $http.delete(CONFIG.BASE_URL + '/debt/delete/' +debtId)
+            $http.delete(CONFIG.baseUrl + '/debt/delete/' +debtId)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');
@@ -405,7 +402,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         console.log(debtId);
 
         if(confirm("คุณต้องลดหนี้เป็นศูนย์รายการหนี้เลขที่ " + debtId + " ใช่หรือไม่?")) {
-            $http.post(CONFIG.BASE_URL + '/debt/setzero', { debt_id: debtId })
+            $http.post(CONFIG.baseUrl + '/debt/setzero', { debt_id: debtId })
             .then(function(res) {
                 console.log(res);
                 if(res.data.status == 'success') {

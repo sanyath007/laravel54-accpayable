@@ -15,7 +15,7 @@ use App\Models\DebtType;
 
 class PaymentController extends Controller
 {
-    public function list()
+    public function index()
     {
     	return view('payments.list');
     }

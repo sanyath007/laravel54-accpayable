@@ -4,7 +4,6 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
 	<!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -29,7 +28,6 @@
        	folder instead of downloading all of them to reduce the load. -->
   	<link rel="stylesheet" href="{{ asset('/css/skins/_all-skins.min.css') }}">
   	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.5.0/balloon.min.css">
-
 	<!-- Fonts -->
 	<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Roboto:400,300' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -55,26 +53,22 @@
 	<script src="{{ asset('/node_modules/angular-xeditable/dist/js/xeditable.js') }}"></script>
 	<script src="{{ asset('/node_modules/angular-modal-service/dst/angular-modal-service.min.js') }}"></script>
 	<script src="{{ asset('/node_modules/underscore/underscore-min.js') }}"></script>
-
 	<script src="{{ asset('/node_modules/jquery-ui-dist/jquery-ui.min.js') }}"></script>
-
 	<script src="{{ asset('/node_modules/bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.min.js') }}"></script>
 	<script src="{{ asset('/node_modules/select2/dist/js/select2.full.min.js') }}"></script>
 	<script src="{{ asset('/node_modules/daterangepicker/daterangepicker.js') }}"></script>
 	<script src="{{ asset('/node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
-	
 	<script src="{{ asset('/js/bootstrap-datepicker-custom.js') }}"></script>
 	<script src="{{ asset('/node_modules/bootstrap-datepicker/dist/locales/bootstrap-datepicker.th.min.js') }}"></script>
 	<script src="{{ asset('/js/jquery.knob.min.js') }}"></script>
 	<script src="{{ asset('/js/fastclick.js') }}"></script>
 	<script src="{{ asset('/js/thaibath.js') }}"></script>
-
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="http://code.highcharts.com/highcharts-more.js"></script>
-	
 	<!-- AdminLTE App -->
 	<script src="{{ asset('/js/adminlte.min.js') }}"></script>
-
+	<!-- Environment Variable -->
+	<script src="{{ asset('/js/env.js') }}"></script>
 	<!-- AngularJS Components -->
 	<script src="{{ asset('/js/main.js') }}"></script>
 	<script src="{{ asset('/js/controllers/mainCtrl.js') }}"></script>
@@ -90,11 +84,6 @@
 	<script src="{{ asset('/js/services/report.js') }}"></script>
 	<script src="{{ asset('/js/services/stringFormat.js') }}"></script>
 	<script src="{{ asset('/js/services/pagination.js') }}"></script>
-
-	<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-	<!--<script src="{{ asset('/js/services/dashboard.js') }}"></script>-->
-	<!-- AdminLTE for demo purposes -->
-	<!--<script src="{{ asset('/js/services/demo.js') }}"></script>-->
 
 </head>
 <body class="hold-transition skin-blue  sidebar-collapse sidebar-mini" ng-app="app" ng-controller="mainCtrl">

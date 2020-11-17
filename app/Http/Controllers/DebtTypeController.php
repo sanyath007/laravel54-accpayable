@@ -8,7 +8,7 @@ use App\Models\DebtType;
 
 class DebtTypeController extends Controller
 {
-    public function list()
+    public function index()
     {
     	return view('debttypes.list');
     }

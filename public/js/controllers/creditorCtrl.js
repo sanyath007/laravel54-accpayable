@@ -1,8 +1,5 @@
 app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalService) {
 /** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
-
     $scope.loading = false;
     $scope.pager = [];
     $scope.creditors = [];
@@ -32,9 +29,9 @@ app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalSer
         $scope.loading = true;
         
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
-        console.log(CONFIG.BASE_URL+ '/creditor/search/' +searchKey);
+        console.log(CONFIG.baseUrl+ '/creditor/search/' +searchKey);
 
-        $http.get(CONFIG.BASE_URL+ '/creditor/search/' +searchKey)
+        $http.get(CONFIG.baseUrl+ '/creditor/search/' +searchKey)
         .then(function(res) {
             console.log(res);
             $scope.creditors = res.data.creditors.data;
@@ -73,7 +70,7 @@ app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalSer
             toaster.pop('warning', "", 'กรุณาข้อมูลให้ครบก่อน !!!');
             return;
         } else {
-            $http.post(CONFIG.BASE_URL + '/creditor/store', $scope.creditor)
+            $http.post(CONFIG.baseUrl + '/creditor/store', $scope.creditor)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
@@ -87,7 +84,7 @@ app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalSer
     }
 
     $scope.getCreditor = function(creditorId) {
-        $http.get(CONFIG.BASE_URL + '/creditor/get-creditor/' +creditorId)
+        $http.get(CONFIG.baseUrl + '/creditor/get-creditor/' +creditorId)
         .then(function(res) {
             console.log(res);
             $scope.creditor = res.data.creditor;
@@ -99,7 +96,7 @@ app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalSer
     $scope.edit = function(creditorId) {
         console.log(creditorId);
 
-        window.location.href = CONFIG.BASE_URL + '/creditor/edit/' + creditorId;
+        window.location.href = CONFIG.baseUrl + '/creditor/edit/' + creditorId;
     };
 
     $scope.update = function(event, form, creditorId) {
@@ -107,7 +104,7 @@ app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalSer
         event.preventDefault();
 
         if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.put(CONFIG.BASE_URL + '/creditor/update/', $scope.creditor)
+            $http.put(CONFIG.baseUrl + '/creditor/update/', $scope.creditor)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
@@ -122,7 +119,7 @@ app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalSer
         console.log(creditorId);
 
         if(confirm("คุณต้องลบเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.delete(CONFIG.BASE_URL + '/creditor/delete/' +creditorId)
+            $http.delete(CONFIG.baseUrl + '/creditor/delete/' +creditorId)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');

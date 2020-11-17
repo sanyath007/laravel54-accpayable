@@ -10,7 +10,7 @@ use App\Models\Creditor;
 
 class DebtController extends Controller
 {
-    public function list()
+    public function index()
     {
     	return view('debts.list', [
             "creditors" => Creditor::all(),
