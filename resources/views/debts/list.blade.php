@@ -29,15 +29,25 @@
                     <form id="frmSearch" name="frmSearch" role="form">
                         <div class="box-body">
                             <div class="col-md-6">
-                                <!-- Date and time range -->
                                 <div class="form-group">
-                                    <label>ระหว่างวันที่-วันที่:</label>
+                                    <label>ระหว่างวันที่:</label>
 
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="debtDate">
+                                        <input type="text" class="form-control pull-right" id="debtFromDate">
+                                    </div><!-- /.input group -->
+                                </div><!-- /.form group -->
+
+                                <div class="form-group">
+                                    <label>ถึงวันที่:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control pull-right" id="debtToDate">
                                     </div><!-- /.input group -->
                                 </div><!-- /.form group -->
 
@@ -581,13 +591,20 @@
             //Initialize Select2 Elements
             $('.select2').select2()
 
-            //Date range picker with time picker
-            $('#debtDate').daterangepicker({
-                timePickerIncrement: 30,
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: " , ",
-                }
+            $('#debtFromDate').datepicker({
+                autoclose: true,
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
+            }, function(e) {
+                console.log(e);
+            });
+            
+            $('#debtToDate').datepicker({
+                autoclose: true,
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
             }, function(e) {
                 console.log(e);
             });

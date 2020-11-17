@@ -130,9 +130,8 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
 
         $scope.loading = true;
         
-        var debtDate = ($("#debtDate").val()).split(",");
-        var sDate = debtDate[0].trim();
-        var eDate = debtDate[1].trim();
+        var sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+        var eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
         var debtType = ($("#debtType").val() != '') ? $("#debtType").val() : 0;
         var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 

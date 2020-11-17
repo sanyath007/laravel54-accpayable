@@ -1,8 +1,5 @@
 app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalService, StringFormatService) {
 /** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
-
     $scope.supplierDebtData = [];
     $scope.supplierDebtToRemoveData = [];
 
@@ -50,14 +47,13 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     }
 
     $scope.getData = function(event) {
-        console.log(event);
         $scope.approvements = [];
         $scope.loading = true;
         
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
-        console.log(CONFIG.BASE_URL+ '/approve/search/' +searchKey);
+        console.log(CONFIG.baseUrl+ '/approve/search/' +searchKey);
 
-        $http.get(CONFIG.BASE_URL+ '/approve/search/' +searchKey)
+        $http.get(CONFIG.baseUrl+ '/approve/search/' +searchKey)
         .then(function(res) {
             console.log(res);
             $scope.approvements = res.data.approvements.data;
@@ -106,7 +102,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
             $scope.approve.debts =  $scope.supplierDebtData;
             console.log($scope.approve);
 
-            $http.post(CONFIG.BASE_URL + '/approve/store', $scope.approve)
+            $http.post(CONFIG.baseUrl + '/approve/store', $scope.approve)
                 .then(function(res) {
                     console.log(res);
                     toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
@@ -122,7 +118,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     }
 
     $scope.getCreditor = function(creditorId) {
-        $http.get(CONFIG.BASE_URL + '/creditor/get-creditor/' +creditorId)
+        $http.get(CONFIG.baseUrl + '/creditor/get-creditor/' +creditorId)
         .then(function(res) {
             console.log(res);
             $scope.creditor = res.data.creditor;
@@ -134,7 +130,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     $scope.edit = function(creditorId) {
         console.log(creditorId);
 
-        window.location.href = CONFIG.BASE_URL + '/creditor/edit/' + creditorId;
+        window.location.href = CONFIG.baseUrl + '/creditor/edit/' + creditorId;
     };
 
     $scope.update = function(event, form, creditorId) {
@@ -142,7 +138,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         event.preventDefault();
 
         if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.put(CONFIG.BASE_URL + '/creditor/update/', $scope.creditor)
+            $http.put(CONFIG.baseUrl + '/creditor/update/', $scope.creditor)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
@@ -157,7 +153,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         console.log(creditorId);
 
         if(confirm("คุณต้องลบเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.delete(CONFIG.BASE_URL + '/creditor/delete/' +creditorId)
+            $http.delete(CONFIG.baseUrl + '/creditor/delete/' +creditorId)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');

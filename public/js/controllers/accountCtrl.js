@@ -1,8 +1,5 @@
 app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalService, StringFormatService, PaginateService) {
 /** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
-
     $scope.creditors = [];
     $scope.payments = [];
     $scope.pager = [];
@@ -26,7 +23,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             var creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
             var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
             
-            $http.get(CONFIG.BASE_URL +URL+ '/' +debtType+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll)
+            $http.get(CONFIG.baseUrl +URL+ '/' +debtType+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll)
             .then(function(res) {
                 console.log(res);
                 $scope.debts = res.data.debts.data;
@@ -79,7 +76,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             var creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
             var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
-            window.location.href = CONFIG.BASE_URL +URL+ '/' +debtType+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
+            window.location.href = CONFIG.baseUrl +URL+ '/' +debtType+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
         }
     };
 
@@ -98,7 +95,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             var creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
             var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
             
-            $http.get(CONFIG.BASE_URL +URL+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll)
+            $http.get(CONFIG.baseUrl +URL+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll)
             .then(function(res) {
                 console.log(res);
                 $scope.payments = res.data.payments.data;
@@ -151,7 +148,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             var creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
             var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
-            window.location.href = CONFIG.BASE_URL +URL+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
+            window.location.href = CONFIG.baseUrl +URL+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
         }
     };
 
@@ -165,7 +162,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         
         $scope.loading = false;
         console.log(URL);
-        $("#frmSearch").attr('action', CONFIG.BASE_URL +URL+ '/' +sDate+ '/' +eDate+ '/' + showAll);
+        $("#frmSearch").attr('action', CONFIG.baseUrl +URL+ '/' +sDate+ '/' +eDate+ '/' + showAll);
         $("#frmSearch").submit();
     };
 
@@ -174,6 +171,6 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         var eDate = StringFormatService.convToDbDate($("#edate").val());
         var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
-        window.location.href = CONFIG.BASE_URL +URL+ '/' +sDate+ '/' +eDate+ '/' + showAll;
+        window.location.href = CONFIG.baseUrl +URL+ '/' +sDate+ '/' +eDate+ '/' + showAll;
     };
 });
