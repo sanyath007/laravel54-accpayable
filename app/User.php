@@ -14,16 +14,39 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    // protected $fillable = [
+    //     'name', 'email', 'password',
+    // ];
 
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    // protected $hidden = [
+    //     'password', 'remember_token',
+    // ];
+
+    protected $connection = 'person';
+
+    protected $table = 'personal';
+
+    protected $primaryKey = 'person_id';
+
+    protected $keyType = 'string';
+
+    public function ward()
+    {
+        return $this->belongsTo('App\Models\Ward', 'office_id', 'ward_id');
+    }
+
+    public function position()
+    {
+        return $this->belongsTo('App\Models\Position', 'position_id', 'position_id');
+    }
+
+    public function academic()
+    {
+        return $this->belongsTo('App\Models\Academic', 'ac_id', 'ac_id');
+    }
 }
