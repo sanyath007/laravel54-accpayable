@@ -15,20 +15,32 @@ use App\Models\DebtType;
 
 class ApprovementController extends Controller
 {
+    /** สถานะ 0=รอดำเนินการ,1=ขออนุมัติ,2=ชำระเงินแล้ว,3=ยกเลิก */
+
     public function index()
     {
     	return view('approvements.list');
     }
 
-    public function search($searchKey)
+    public function search($sdate, $edate, $searchKey, $showall)
     {
-    	/** สถานะ 0=รอดำเนินการ,1=ขออนุมัติ,2=ชำระเงินแล้ว,3=ยกเลิก */
-        if($searchKey == '0') {
+        $conditions = [];
+
+        if($showall == 0) {
+            if($sdate != 0 && $edate != 0) {
+                array_push($conditions, ['app_date', '>=', $sdate]);
+                array_push($conditions, ['app_date', '<=', $edate]);
+            }
+        }
+
+        if($searchKey !== '0') array_push($conditions, ['pay_to', 'like', '%'.$searchKey.'%']);
+
+        if($conditions == '0') {
             $approvements = Approvement::whereIn('app_stat', ['0', '1'])->paginate(20);
         } else {
             $approvements = Approvement::whereIn('app_stat', ['0', '1'])
-            					->where('pay_to', 'like', '%'.$searchKey.'%')
-            					->paginate(20);
+                                    ->where($conditions)
+                                    ->paginate(20);
         }
 
         return [

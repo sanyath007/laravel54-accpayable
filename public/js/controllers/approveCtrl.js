@@ -12,6 +12,20 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     $scope.approvements = [];
     $scope.approve = {};
 
+    $('#approveToDate').datepicker({
+        autoclose: true,
+        orientation: 'bottom',
+        language: 'th',
+        format: 'dd/mm/yyyy',
+        thaiyear: true
+    }).on('changeDate', function(event){
+        if($("#approveFromDate").val() == '') {
+            alert('กรุณาเลือกระหว่างวันที่ก่อน !!!');
+        }
+
+        $scope.getData();
+    });
+
     $scope.initData = function() {
         $scope.approve = {
             creditor_id: '',
@@ -50,10 +64,14 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         $scope.approvements = [];
         $scope.loading = true;
         
+        let sDate = ($("#approveFromDate").val() != '') ? StringFormatService.convToDbDate($("#approveFromDate").val()) : 0;
+        let eDate = ($("#approveToDate").val() != '') ? StringFormatService.convToDbDate($("#approveToDate").val()) : 0;
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
-        console.log(CONFIG.baseUrl+ '/approve/search/' +searchKey);
+        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
-        $http.get(CONFIG.baseUrl+ '/approve/search/' +searchKey)
+        console.log(`${CONFIG.baseUrl}/approve/search/${sDate}/${eDate}/${searchKey}/${showAll}`);
+
+        $http.get(`${CONFIG.baseUrl}/approve/search/${sDate}/${eDate}/${searchKey}/${showAll}`)
         .then(function(res) {
             console.log(res);
             $scope.approvements = res.data.approvements.data;
@@ -102,7 +120,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
             $scope.approve.debts =  $scope.supplierDebtData;
             console.log($scope.approve);
 
-            $http.post(CONFIG.baseUrl + '/approve/store', $scope.approve)
+            $http.post(`${CONFIG.baseUrl}/approve/store`, $scope.approve)
                 .then(function(res) {
                     console.log(res);
                     toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
@@ -118,7 +136,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     }
 
     $scope.getCreditor = function(creditorId) {
-        $http.get(CONFIG.baseUrl + '/creditor/get-creditor/' +creditorId)
+        $http.get(`${CONFIG.baseUrl}/creditor/get-creditor/${creditorId}`)
         .then(function(res) {
             console.log(res);
             $scope.creditor = res.data.creditor;
@@ -130,7 +148,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     $scope.edit = function(creditorId) {
         console.log(creditorId);
 
-        window.location.href = CONFIG.baseUrl + '/creditor/edit/' + creditorId;
+        window.location.href = `${CONFIG.baseUrl}/creditor/edit/${creditorId}`;
     };
 
     $scope.update = function(event, form, creditorId) {
@@ -138,7 +156,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         event.preventDefault();
 
         if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.put(CONFIG.baseUrl + '/creditor/update/', $scope.creditor)
+            $http.put(`${CONFIG.baseUrl}/creditor/update`, $scope.creditor)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
@@ -153,7 +171,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         console.log(creditorId);
 
         if(confirm("คุณต้องลบเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.delete(CONFIG.baseUrl + '/creditor/delete/' +creditorId)
+            $http.delete(`${CONFIG.baseUrl}/creditor/delete/${creditorId}`)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');
@@ -173,7 +191,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
             return;
         }
 
-        $http.get(baseUrl + '/debt/'+ creditor +'/list')
+        $http.get(`${CONFIG.baseUrl}/debt/${creditor}/list`)
             .then(function (res) {
                 console.log(res);
                 $scope.getSupplierDebtData(res.data.debts.data, res.data.debts);
@@ -268,7 +286,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
 
     $scope.popupApproveDebtList = function(appid) {
         console.log(appid);
-        $http.get(baseUrl + '/approve/detail/'+ appid)
+        $http.get(`${CONFIG.baseUrl}/approve/detail/${appid}`)
             .then(function (res) {
                 console.log(res);
                 $scope.debts = res.data.appdetails;

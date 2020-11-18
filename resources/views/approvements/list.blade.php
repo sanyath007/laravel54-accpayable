@@ -30,17 +30,36 @@
                     <form id="frmSearch" name="frmSearch" role="form">
                         <div class="box-body">
 
-                            <div class="col-md-6"> 
-                                <!-- Date and time range -->
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>ระหว่างวันที่-วันที่:</label>
+                                    <label>ระหว่างวันที่:</label>
 
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="debtDate">
-                                    </div><!-- /.input group -->
+                                        <input
+                                            type="text"
+                                            class="form-control pull-right"
+                                            id="approveFromDate"
+                                        >
+                                    </div>
+                                </div><!-- /.form group -->
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>ถึงวันที่:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            class="form-control pull-right"
+                                            id="approveToDate"
+                                        >
+                                    </div>
                                 </div><!-- /.form group -->
                             </div>
                             <div class="col-md-6"> 
@@ -49,10 +68,15 @@
                                     <input type="text" id="searchKey" ng-keyup="getData($event)" class="form-control">
                                 </div><!-- /.form group -->
                             </div>
-                            <div class="col-md-6"> 
+                            <div class="col-md-6" style="height: 60px; display: flex; align-items: flex-end;">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id="showall" name="showall" ng-click="getDebtData('/approve/search/0')"> แสดงทั้งหมด
+                                        <input
+                                            type="checkbox"
+                                            id="showall"
+                                            name="showall"
+                                            ng-click="getDebtData('/approve/search/0')"
+                                        > แสดงทั้งหมด
                                     </label>
                                 </div>
                             </div>
@@ -84,8 +108,8 @@
                                     <th style="width: 8%; text-align: center;">ภาษีหัก ณ ที่จ่าย</th>
                                     <th style="width: 8%; text-align: center;">ยอดสุทธิ</th>
                                     <th style="width: 8%; text-align: center;">ยอดเช็ค</th>
-                                    <th style="width: 5%; text-align: center;">สถานะ</th>
-                                    <th style="width: 8%; text-align: center;">Actions</th>
+                                    <!-- <th style="width: 5%; text-align: center;">สถานะ</th> -->
+                                    <th style="width: 10%; text-align: center;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,19 +123,19 @@
                                     <td style="text-align: right;">@{{ approvement.tax_val | number: 2 }}</td>
                                     <td style="text-align: right;">@{{ approvement.net_total | number: 2 }}</td>
                                     <td style="text-align: right;">@{{ approvement.cheque | number: 2 }}</td>
-                                    <td style="text-align: center;">@{{ approvement.app_stat }}</td>
+                                    <!-- <td style="text-align: center;">@{{ approvement.app_stat }}</td> -->
                                     <td style="text-align: center;">
-                                        <a ng-click="edit(approvement.app_id)" class="text-warning">
+                                        <a ng-click="edit(approvement.app_id)" class="btn btn-warning btn-xs">
                                             <i class="fa fa-edit"></i>
                                         </a>
 
-                                        <a ng-click="popupApproveDebtList(approvement.app_id)" class="text-info">
+                                        <a ng-click="popupApproveDebtList(approvement.app_id)" class="btn btn-primary btn-xs">
                                             <i class="fa fa-search"></i>
                                         </a>
 
                                         @if(Auth::user()->person_id == '1300200009261')
 
-                                            <a ng-click="delete(approvement.app_id)" class="text-danger">
+                                            <a ng-click="delete(approvement.app_id)" class="btn btn-danger btn-xs">
                                                 <i class="fa fa-trash"></i>
                                             </a>
 
@@ -223,16 +247,14 @@
 
     <script>
         $(function () {
-            //Initialize Select2 Elements
             $('.select2').select2()
 
-            //Date range picker with time picker
-            $('#debtDate').daterangepicker({
-                timePickerIncrement: 30,
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: " , ",
-                }
+            $('#approveFromDate').datepicker({
+                autoclose: true,
+                orientation: 'bottom',
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
             }, function(e) {
                 console.log(e);
             });

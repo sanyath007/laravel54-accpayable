@@ -82,15 +82,6 @@
 
                                 <div id="barContainer" style="width: 100%; height: 200px; margin: 0 auto; margin-top: 20px;"></div>
 
-                                <!-- <div class="panel panel-primary">
-                                    <div class="panel-heading">ยอดหนี้ทั้งหมด</div>
-                                    <div class="panel-body" style="height: 90px; text-align: right;">
-                                        <h2 style="color: red;">
-                                            @{{ totalDebt | number: 2 }} 
-                                        </h2>
-                                    </div>
-                                </div> -->
-
                             </div>                        
                         </div><!-- /.box-body -->
                   
