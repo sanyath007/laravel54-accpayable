@@ -15,6 +15,20 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     $scope.payments = [];
     $scope.payment = {};
 
+    $('#paymentToDate').datepicker({
+        autoclose: true,
+        orientation: 'bottom',
+        language: 'th',
+        format: 'dd/mm/yyyy',
+        thaiyear: true
+    }).on('changeDate', function(event){
+        if($("#paymentFromDate").val() == '') {
+            alert('กรุณาเลือกระหว่างวันที่ก่อน !!!');
+        }
+
+        $scope.getData();
+    });
+
     $scope.initData = function() {
         $scope.payment = {
             creditor_id: '',
@@ -50,13 +64,15 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     }
 
     $scope.getData = function(event) {
-        console.log(event);
         $scope.payments = [];
         $scope.loading = true;
         
+        let sDate = ($("#paymentFromDate").val() != '') ? StringFormatService.convToDbDate($("#paymentFromDate").val()) : 0;
+        let eDate = ($("#paymentToDate").val() != '') ? StringFormatService.convToDbDate($("#paymentToDate").val()) : 0;
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
+        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
-        $http.get(CONFIG.BASE_URL+ '/payment/search/' +searchKey)
+        $http.get(`${CONFIG.baseUrl}/payment/search/${sDate}/${eDate}/${searchKey}/${showAll}`)
         .then(function(res) {
             console.log(res);
             $scope.payments = res.data.payments.data;

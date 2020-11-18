@@ -96,7 +96,7 @@
                     </div><!-- /.box-header -->
 
                     <div class="box-body">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" style="font-size: 12px;">
                             <thead>
                                 <tr>
                                     <th style="width: 3%; text-align: center;">#</th>

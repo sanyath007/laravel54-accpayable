@@ -69,8 +69,6 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
         let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
-        console.log(`${CONFIG.baseUrl}/approve/search/${sDate}/${eDate}/${searchKey}/${showAll}`);
-
         $http.get(`${CONFIG.baseUrl}/approve/search/${sDate}/${eDate}/${searchKey}/${showAll}`)
         .then(function(res) {
             console.log(res);
