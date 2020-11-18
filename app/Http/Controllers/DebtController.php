@@ -10,6 +10,45 @@ use App\Models\Creditor;
 
 class DebtController extends Controller
 {
+    public function formValidate (Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'debt_date' => 'required',
+            'debt_doc_recno' => 'required',
+            'debt_doc_recdate' => 'required',
+            'deliver_no' => 'required',
+            'deliver_date' => 'required',
+            'debt_doc_no' => 'required',
+            'purchased_method' => 'required',
+            'budget_type' => 'required',
+            'debt_doc_date' => 'required',
+            'debt_type_id' => 'required',
+            'debt_type_detail' => 'required',
+            'debt_month' => 'required',
+            'debt_year' => 'required',
+            'supplier_id' => 'required',
+            'supplier_name' => 'required',
+            'doc_receive' => 'required',
+            'debt_amount' => 'required',
+            'debt_vatrate' => 'required',
+            'debt_vat' => 'required',
+            'debt_total' => 'required',
+            'debt_remark' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'success' => 0,
+                'errors' => $validator->getMessageBag()->toArray(),
+            ];
+        } else {
+            return [
+                'success' => 1,
+                'errors' => $validator->getMessageBag()->toArray(),
+            ];
+        }
+    }
+
     public function index()
     {
     	return view('debts.list', [
