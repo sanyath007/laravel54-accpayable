@@ -593,6 +593,7 @@
 
             $('#debtFromDate').datepicker({
                 autoclose: true,
+                orientation: 'bottom',
                 language: 'th',
                 format: 'dd/mm/yyyy',
                 thaiyear: true
@@ -602,6 +603,7 @@
             
             $('#debtToDate').datepicker({
                 autoclose: true,
+                orientation: 'bottom',
                 language: 'th',
                 format: 'dd/mm/yyyy',
                 thaiyear: true
