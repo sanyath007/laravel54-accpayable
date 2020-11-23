@@ -53,7 +53,11 @@
 
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id="showall" name="showall" ng-click="getDebtData('/debt/rpt')"> แสดงทั้งหมด
+                                        <input
+                                            type="checkbox"
+                                            id="showall"
+                                            name="showall"
+                                            ng-click="getDebtData('/debt/rpt')"> แสดงทั้งหมด
                                     </label>
                                 </div>
                                 
@@ -141,7 +145,7 @@
                                             <th style="width: 7%; text-align: center;">ภาษี</th>
                                             <th style="width: 7%; text-align: center;">สุทธิ</th>
                                             <th style="width: 6%; text-align: center;">สถานะ</th>
-                                            <th style="width: 8%; text-align: center;">Actions</th>
+                                            <th style="width: 10%; text-align: center;">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -186,10 +190,14 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                
+                                <div class="col-md-6" style="font-size: 12px;">
+                                    Total @{{ debtPager.total | currency : "" : 0 }} รายการ
+                                </div>
 
                                 <ul class="pagination pagination-sm no-margin pull-right">
                                     <li ng-if="debtPager.current_page !== 1">
-                                        <a href="#" ng-click="getDebtWithURL(debtPager.first_page_url)" aria-label="Previous">
+                                        <a href="#" ng-click="getDebtWithURL(debtPager.path+ '?page=1')" aria-label="Previous">
                                             <span aria-hidden="true">First</span>
                                         </a>
                                     </li>
@@ -219,7 +227,7 @@
                                     </li>
 
                                     <li ng-if="debtPager.current_page !== debtPager.last_page">
-                                        <a href="#" ng-click="getDebtWithURL(debtPager.last_page_url)" aria-label="Previous">
+                                        <a href="#" ng-click="getDebtWithURL(debtPager.path+ '?page=' +debtPager.last_page)" aria-label="Previous">
                                             <span aria-hidden="true">Last</span>
                                         </a>
                                     </li>
@@ -264,10 +272,14 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                
+                                <div class="col-md-6" style="font-size: 12px;">
+                                    Total @{{ appPager.total | currency : "" : 0 }} รายการ
+                                </div>
 
                                 <ul class="pagination pagination-sm no-margin pull-right">
                                     <li ng-if="appPager.current_page !== 1">
-                                        <a href="#" ng-click="getAppWithURL(appPager.first_page_url)" aria-label="Previous">
+                                        <a href="#" ng-click="getAppWithURL(appPager.path+ '?page=1')" aria-label="Previous">
                                             <span aria-hidden="true">First</span>
                                         </a>
                                     </li>
@@ -297,7 +309,7 @@
                                     </li>
 
                                     <li ng-if="appPager.current_page !== appPager.last_page">
-                                        <a href="#" ng-click="getAppWithURL(appPager.last_page_url)" aria-label="Previous">
+                                        <a href="#" ng-click="getAppWithURL(appPager.path+ '?page=' +appPager.last_page)" aria-label="Previous">
                                             <span aria-hidden="true">Last</span>
                                         </a>
                                     </li>
@@ -351,10 +363,14 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                
+                                <div class="col-md-6" style="font-size: 12px;">
+                                    Total @{{ paidPager.total | currency : "" : 0 }} รายการ
+                                </div>
 
                                 <ul class="pagination pagination-sm no-margin pull-right">
                                     <li ng-if="paidPager.current_page !== 1">
-                                        <a href="#" ng-click="getPaidWithURL(paidPager.first_page_url)" aria-label="Previous">
+                                        <a href="#" ng-click="getPaidWithURL(paidPager.path+ '?page=1')" aria-label="Previous">
                                             <span aria-hidden="true">First</span>
                                         </a>
                                     </li>
@@ -384,7 +400,7 @@
                                     </li>
 
                                     <li ng-if="paidPager.current_page !== paidPager.last_page">
-                                        <a href="#" ng-click="getPaidWithURL(paidPager.last_page_url)" aria-label="Previous">
+                                        <a href="#" ng-click="getPaidWithURL(paidPager.path+ '?page=' +paidPager.last_page)" aria-label="Previous">
                                             <span aria-hidden="true">Last</span>
                                         </a>
                                     </li>
@@ -438,10 +454,14 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                
+                                <div class="col-md-6" style="font-size: 12px;">
+                                    Total @{{ setzeroPager.total | currency : "" : 0 }} รายการ
+                                </div>
 
                                 <ul class="pagination pagination-sm no-margin pull-right">
                                     <li ng-if="setzeroPager.current_page !== 1">
-                                        <a href="#" ng-click="getSetzeroWithURL(setzeroPager.first_page_url)" aria-label="Previous">
+                                        <a href="#" ng-click="getSetzeroWithURL(setzeroPager.path+ '?page=1')" aria-label="Previous">
                                             <span aria-hidden="true">First</span>
                                         </a>
                                     </li>
@@ -471,7 +491,7 @@
                                     </li>
 
                                     <li ng-if="setzeroPager.current_page !== setzeroPager.last_page">
-                                        <a href="#" ng-click="getPaidWithURL(setzeroPager.last_page_url)" aria-label="Previous">
+                                        <a href="#" ng-click="getPaidWithURL(setzeroPager.path+ '?page=' +setzeroPager.last_page)" aria-label="Previous">
                                             <span aria-hidden="true">Last</span>
                                         </a>
                                     </li>
@@ -579,7 +599,6 @@
 
     <script>
         $(function () {
-            //Initialize Select2 Elements
             $('.select2').select2()
 
             $('#debtFromDate').datepicker({
@@ -588,8 +607,6 @@
                 language: 'th',
                 format: 'dd/mm/yyyy',
                 thaiyear: true
-            }, function(e) {
-                console.log(e);
             });
             
             $('#debtToDate').datepicker({
@@ -598,8 +615,6 @@
                 language: 'th',
                 format: 'dd/mm/yyyy',
                 thaiyear: true
-            }, function(e) {
-                console.log(e);
             });
         });
     </script>
