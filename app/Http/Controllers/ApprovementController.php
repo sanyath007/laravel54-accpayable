@@ -48,6 +48,23 @@ class ApprovementController extends Controller
         ];
     }
 
+    public function getById($appId)
+    {
+        return [
+            'approvements' => Approvement::find($appId)
+        ];
+    }
+
+    public function getAllBySupplier($supplierId)
+    {
+        return [
+            'approvements' => Approvement::where('supplier_id', '=', $supplierId)
+                                    ->whereIn('app_stat', ['0', '1'])
+                                    ->with('app_detail')
+                                    ->paginate(10)
+        ];
+    }
+    
     private function generateAutoId()
     {
         $app = \DB::table('nrhosp_acc_app')

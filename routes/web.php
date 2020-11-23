@@ -33,6 +33,7 @@ Route::group(['middleware' => 'web'], function() {
 Route::group(['middleware' => ['web','auth']], function () {
     Route::get('approve/list', 'ApprovementController@index');
     Route::get('approve/search/{sdate}/{edate}/{searchKey}/{showall}', 'ApprovementController@search');
+    Route::get('approve/get-all-bysupplier/{supplierId}', 'ApprovementController@getAllBySupplier');
     Route::get('approve/get-approve/{appId}', 'ApprovementController@getById');
     Route::get('approve/add', 'ApprovementController@add');
     Route::post('approve/store', 'ApprovementController@store');

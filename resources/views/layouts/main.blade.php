@@ -27,16 +27,18 @@
  	<!-- AdminLTE Skins. Choose a skin from the css/skins
        	folder instead of downloading all of them to reduce the load. -->
   	<link rel="stylesheet" href="{{ asset('/css/skins/_all-skins.min.css') }}">
+	
+  	<link rel="stylesheet" href="{{ asset('/css/main.css') }}">
   	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.5.0/balloon.min.css">
 	<!-- Fonts -->
 	<link rel='stylesheet' href='//fonts.googleapis.com/css?family=Roboto:400,300' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style type="text/css">
-		.has-error .select2-selection {
+		/* .has-error .select2-selection {
 		    border-color:#a94442;
 		    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
 		    box-shadow:inset 0 1px 1px rgba(0,0,0,.075)
-		}
+		} */
 	</style>
 	
 	<!-- Scripts -->

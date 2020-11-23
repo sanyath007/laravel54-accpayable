@@ -15,4 +15,9 @@ class Payment extends Model
   	{
       	return $this->hasMany('App\Models\PaymentDetail', 'payment_id', 'payment_id');
   	}
+
+    public function bank()
+  	{
+      	return $this->belongsTo('App\Models\Bank', 'bank_acc_id', 'bank_acc_id');
+  	}
 }

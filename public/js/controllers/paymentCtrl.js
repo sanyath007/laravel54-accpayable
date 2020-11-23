@@ -1,19 +1,18 @@
 app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalService, StringFormatService) {
 /** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
+    $scope.loading = false;
 
-    $scope.supplierDebtData = [];
-    $scope.supplierDebtToRemoveData = [];
+    $scope.supplierApproveData = [];
+    $scope.supplierApproveToRemoveData = [];
 
     $scope.debttypes = [];
-    $scope.debts = [];
-    $scope.debtPager = [];
+    $scope.approvements = [];
+    $scope.approvePager = [];
+    $scope.debtDetail = {};
 
-    $scope.loading = false;
-    $scope.pager = [];
-    $scope.payments = [];
     $scope.payment = {};
+    $scope.payments = [];
+    $scope.pager = [];
 
     $('#paymentToDate').datepicker({
         autoclose: true,
@@ -31,41 +30,40 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
 
     $scope.initData = function() {
         $scope.payment = {
+            payment_id: '',
+            paid_date: '',
+            paid_doc_no: '',
+            cheque_no: '',
+            cheque_date: '',
+            bank_acc_id: '',
             creditor_id: '',
-            app_doc_no: '',
-            app_date: '',
-            app_recdoc_no: '',
-            app_recdoc_date: '',
             pay_to: '',
+            cheque_receiver: '',
+            // paid_empid: '',
             budget_id: '',
-            amount: '0.00',
-            tax_val: '0.00',
-            discount: '0.00',
-            fine: '0.00',
-            vatrate: '1',
-            vatamt: '0.00',
-            net_val: '0.00',
+            // tax_type_id: '',
+            paid_num: '',
+            remark: '',
             net_amt: '0.00',
-            net_amt_str: ' ตัวอักษร ',
+            net_val: '0.00',
             net_total: '0.00',
-            net_total_str: ' ตัวอักษร ',
-            cheque: '0.00',
-            cheque_str: ' ตัวอักษร ',
-            cr_user: '',
-            chg_user: '',
-            debts: [],
+            fine: '0.00',
+            discount: '0.00',
+            remain: '0.00',
+            paid_amt: '0.00',
+            total: '0.00',
+            totalstr: ' ตัวอักษร ',
+            // computer: '',
+            cr_userid: '',
+            chg_userid: '',
+            app_debts: [],
         };
-
-        $scope.supplierDebtData = [];
-        $scope.supplierDebtToRemoveData = [];
-
-        $scope.debts = [];
-        $scope.debtPager = [];
     }
 
     $scope.getData = function(event) {
-        $scope.payments = [];
         $scope.loading = true;
+        
+        $scope.payments = [];
         
         let sDate = ($("#paymentFromDate").val() != '') ? StringFormatService.convToDbDate($("#paymentFromDate").val()) : 0;
         let eDate = ($("#paymentToDate").val() != '') ? StringFormatService.convToDbDate($("#paymentToDate").val()) : 0;
@@ -86,9 +84,8 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     }
 
     $scope.getDataWithURL = function(URL) {
-        console.log(URL);
-        $scope.payments = [];
         $scope.loading = true;
+        $scope.payments = [];
 
     	$http.get(URL)
     	.then(function(res) {
@@ -103,6 +100,28 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
     	});
     }
 
+    $scope.gePayment = function(paymentId) {
+        $scope.loading = true;
+        
+        $http.get(`${CONFIG.baseUrl}/payment/get-payment/${paymentId}`)
+        .then(function(res) {
+            console.log(res);
+            $scope.payment = res.data.payment;
+
+            $scope.loading = false;
+    	}, function(err) {
+            console.log(err);
+            
+            $scope.loading = false;
+        });
+    }
+
+    $scope.edit = function(creditorId) {
+        console.log(creditorId);
+
+        window.location.href = `${CONFIG.baseUrl}/payment/edit/${paymentId}`;
+    };
+
     $scope.store = function(event, form) {
         event.preventDefault();
 
@@ -111,121 +130,152 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
             toaster.pop('warning', "", 'กรุณาข้อมูลให้ครบก่อน !!!');
             return;
         } else {
+            $scope.loading = true;
+            /** Get supplier name */
+            $scope.payment.pay_to = $('#creditor_id option:selected').text().trim();
             /** Convert thai date to db date. */
-            $scope.payment.app_date = StringFormatService.convToDbDate($scope.payment.app_date);
-            $scope.payment.app_recdoc_date = StringFormatService.convToDbDate($scope.payment.app_recdoc_date);
+            $scope.payment.paid_date = StringFormatService.convToDbDate($scope.payment.paid_date);
+            $scope.payment.cheque_date = StringFormatService.convToDbDate($scope.payment.cheque_date);
+            /** Format to number */
+            $scope.payment.net_val = StringFormatService.numberFormat($scope.payment.net_val);
+            $scope.payment.net_amt = StringFormatService.numberFormat($scope.payment.net_amt);
+            $scope.payment.net_total = StringFormatService.numberFormat($scope.payment.net_total);
+            $scope.payment.discount = StringFormatService.numberFormat($scope.payment.discount);
+            $scope.payment.fine = StringFormatService.numberFormat($scope.payment.fine);
+            $scope.payment.remain = StringFormatService.numberFormat($scope.payment.remain);
+            $scope.payment.total = StringFormatService.numberFormat($scope.payment.total);
+            $scope.payment.paid_amt = StringFormatService.numberFormat($scope.payment.paid_amt);
+            /** Get number of debts */
+            $scope.payment.paid_num = $scope.payment.app_debts.length;
             /** Get user id */
-            $scope.payment.cr_user = $("#user").val();
-            $scope.payment.chg_user = $("#user").val();
-            /** Add debt to paymentment */
-            $scope.payment.debts =  $scope.supplierDebtData;
+            $scope.payment.cr_userid = $("#user").val();
+            $scope.payment.chg_userid = $("#user").val();
             console.log($scope.payment);
 
-            $http.post(CONFIG.BASE_URL + '/payment/store', $scope.payment)
-                .then(function(res) {
-                    console.log(res);
-                    toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
-                }, function(err) {
-                    console.log(err);
-                    toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
-                });            
-        }
-
-        /** Clear control value and model data */
-        document.getElementById('frmNewPayment').reset();
-        $scope.initData();
-    }
-
-    $scope.getCreditor = function(creditorId) {
-        $http.get(CONFIG.BASE_URL + '/payment/get-payment/' +paymentId)
-        .then(function(res) {
-            console.log(res);
-            $scope.payment = res.data.payment;
-        }, function(err) {
-            console.log(err);
-        });
-    }
-
-    $scope.edit = function(creditorId) {
-        console.log(creditorId);
-
-        window.location.href = CONFIG.BASE_URL+ '/payment/edit/' +paymentId;
-    };
-
-    $scope.update = function(event, form, creditorId) {
-        console.log(creditorId);
-        event.preventDefault();
-
-        if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.put(CONFIG.BASE_URL + '/payment/update/', $scope.payment)
+            $http.post(`${CONFIG.baseUrl}/payment/store`, $scope.payment)
             .then(function(res) {
                 console.log(res);
-                toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
+                toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
+
+                $scope.loading = false;
             }, function(err) {
                 console.log(err);
                 toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+
+                $scope.loading = false;
+            });
+        }
+
+        /** Redirect to payment list */
+        setTimeout(function (){
+            window.location.href = `${CONFIG.baseUrl}/payment/list`;
+        }, 2000);
+    }
+
+    $scope.edit = function(paymentId) {
+        console.log(paymentId);
+
+        window.location.href = `${CONFIG.baseUrl}/payment/edit/${paymentId}`;
+    };
+
+    $scope.update = function(event, form, paymentId) {
+        console.log(paymentId);
+        event.preventDefault();
+
+        if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + paymentId + " ใช่หรือไม่?")) {
+            $scope.loading = true;
+            /** Convert thai date to db date. */
+            $scope.payment.paid_date = StringFormatService.numberFormat($scope.payment.paid_date);
+            $scope.payment.cheque_date = StringFormatService.numberFormat($scope.payment.cheque_date);
+            /** Format to number */
+            $scope.payment.net_val = StringFormatService.numberFormat($scope.payment.net_val);
+            $scope.payment.net_amt = StringFormatService.numberFormat($scope.payment.net_amt);
+            $scope.payment.net_total = StringFormatService.numberFormat($scope.payment.net_total);
+            $scope.payment.discount = StringFormatService.numberFormat($scope.payment.discount);
+            $scope.payment.fine = StringFormatService.numberFormat($scope.payment.fine);
+            $scope.payment.remain = StringFormatService.numberFormat($scope.payment.remain);
+            $scope.payment.total = StringFormatService.numberFormat($scope.payment.total);
+            $scope.payment.paid_amt = StringFormatService.numberFormat($scope.payment.paid_amt);
+            /** Get number of debts */
+            $scope.payment.paid_num = $scope.payment.app_debts.length;
+            /** Get user id */
+            $scope.payment.chg_userid = $("#user").val();
+            console.log($scope.payment);
+
+            $http.put(`${CONFIG.baseUrl}/payment/update`, $scope.payment)
+            .then(function(res) {
+                console.log(res);
+                toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
+
+                $scope.loading = false;
+            }, function(err) {
+                console.log(err);
+                toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+
+                $scope.loading = false;
             });
         }
     };
 
-    $scope.delete = function(creditorId) {
-        console.log(creditorId);
+    $scope.delete = function(paymentId) {
+        console.log(paymentId);
 
-        if(confirm("คุณต้องลบเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.delete(CONFIG.BASE_URL + '/payment/delete/' +creditorId)
+        if(confirm("คุณต้องลบเจ้าหนี้เลขที่ " + paymentId + " ใช่หรือไม่?")) {
+            $scope.loading = true;
+
+            $http.delete(`${CONFIG.baseUrl}/payment/delete/${paymentId}`)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');
                 $scope.getData();
+
+                $scope.loading = false;
             }, function(err) {
                 console.log(err);
                 toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+
+                $scope.loading = false;
             });
         }
     };
 
     $scope.popupApproveSelection = function(event) {
-        // let creditor = $("#creditor_id").val();
+        $scope.loading = true;
+        $scope.approvements = [];
 
-        // if (!creditor) {
-        //     toaster.pop('error', "", 'กรุณาเลือกเจ้าหนี้ก่อน !!!');
-        //     return;
-        // }
+        let creditor = $("#creditor_id").val();
 
-        // $http.get(baseUrl + '/payment/'+ creditor +'/list')
-        //     .then(function (res) {
-        //         console.log(res);
-        //         $scope.getSupplierDebtData(res.data.debts.data, res.data.debts);
+        if (!creditor) {
+            toaster.pop('error', "", 'กรุณาเลือกเจ้าหนี้ก่อน !!!');
+            return;
+        }
 
-                $('#dlgApproveSelection').modal('show');
-            // });
+        $http.get(`${CONFIG.baseUrl}/approve/get-all-bysupplier/${creditor}`)
+        .then(function (res) {
+            // console.log(res);
+            $scope.approvements = res.data.approvements.data;
+            $scope.approvePager = res.data.approvements;
+
+            $('#dlgApproveSelection').modal('show');
+
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+
+            $scope.loading = false;
+        });
     };
 
-    $scope.getSupplierDebtData = function(data, pager) {
-        let resData = data;
-        $scope.debtPager = pager;
-
-        if ($scope.supplierDebtData.length > 0) {
-            $scope.debts = resData.filter(function(d) {
-                let tmp = [];
-                angular.forEach($scope.supplierDebtData, function(sd) {
-                    tmp.push(sd.debt_id);
-                });
-
-                return tmp.indexOf(d.debt_id) === -1;
-            });
-        } else {
-            $scope.debts = resData;
-        }
-    }
-
-    $scope.getSupplierDebtDataWithURL = function(URL) {
+    $scope.getSupplierApproveDataWithURL = function(URL) {
+        $scope.loading = true;
         console.log(URL);
 
         $http.get(URL)
         .then(function(res) {
             console.log(res);
-            $scope.getSupplierDebtData(res.data.debts.data, res.data.debts)
+            $scope.approvements = res.data.approvements.data;
+            $scope.approvePager = res.data.approvements;
 
             $scope.loading = false;
         }, function(err) {
@@ -234,101 +284,133 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         });
     }
 
-    $scope.addSupplierDebtData = function(event, supplierDebt) {
+    $scope.getApproveDebtsData = function(data) {
+        let detail = data.app_detail;
+        console.log(detail);
+
+        detail.forEach(ad => {            
+            $http.get(`${CONFIG.baseUrl}/debt/get-debt/${ad.debt_id}`)
+            .then(res => {
+                console.log(res);
+                $scope.payment.app_debts.push({
+                    app_detail_id: ad.app_detail_id,
+                    app_id: ad.app_id,
+                    debt_id: ad.debt_id,
+                    debt_date: res.data.debt.debt_date,
+                    deliver_no: res.data.debt.deliver_no,
+                    debt_amount: res.data.debt.debt_amount,
+                    debt_vatrate: res.data.debt.debt_vatrate,
+                    debt_vat: res.data.debt.debt_vat,
+                    debt_total: res.data.debt.debt_total
+                });
+            }, err => {
+                console.log(err);
+            });
+        });
+    }
+
+    $scope.addSupplierApproveData = function(event, supplierApprove) {
         if ($(event.target).is(':checked')) {            
-            $scope.supplierDebtData.push(supplierDebt);
+            $scope.supplierApproveData.push(supplierApprove);
+
+            $scope.getApproveDebtsData(supplierApprove);
         } else {
-            let removeIndex = $scope.supplierDebtData.findIndex(function(debt) {
-                return debt.debt_id === supplierDebt.debt_id;
+            let removeIndex = $scope.supplierApproveData.findIndex(approve => {
+                return approve.app_id === supplierApprove.app_id;
             });
 
-            $scope.supplierDebtData.splice(removeIndex, 1);
+            $scope.supplierApproveData.splice(removeIndex, 1);
         }
 
-        calculateSupplierDebt();
+        calculateSupplierApprove();
     };
 
-    $scope.addSupplierDebtToRemove = function(event, debt) {
-        console.log($scope.supplierDebtData);
+    $scope.addSupplierApproveToRemove = function(event, debt) {
+        console.log($scope.supplierApproveData);
         let tmp = [];
 
         if ($(event.target).is(':checked')) {            
-            $scope.supplierDebtToRemoveData.push(debt.debt_id);
-            console.log($scope.supplierDebtToRemoveData);
+            $scope.supplierApproveToRemoveData.push(debt.debt_id);
+            console.log($scope.supplierApproveToRemoveData);
         } else {
-            $scope.supplierDebtToRemoveData.splice(debt.debt_id, 1)
+            $scope.supplierApproveToRemoveData.splice(approve.app_id, 1)
         }
     }
 
-    $scope.removeSupplierDebt = function() {
-        if ($scope.supplierDebtToRemoveData.length < 1) {
+    $scope.removeSupplierApprove = function() {
+        if ($scope.supplierApproveToRemoveData.length < 1) {
             toaster.pop('error', "", 'ไม่พบรายการที่คุณต้องการลบ กรุณาเลือกรายการก่อน !!!');
             return;
         }
 
-        tmp = $scope.supplierDebtData.filter(function(d) {
-            return $scope.supplierDebtToRemoveData.indexOf(d.debt_id);
+        tmp = $scope.supplierApproveData.filter(approve => {
+            return $scope.supplierApproveToRemoveData.indexOf(approve.app_id);
         });
         
-        $scope.supplierDebtData = tmp;
-        calculateSupplierDebt();
+        $scope.supplierApproveData = tmp;
+        // calculateSupplierApprove();
 
-        $scope.supplierDebtToRemoveData = [];
+        $scope.supplierApproveToRemoveData = [];
     };
 
-    $scope.clearSupplierDebtData = function() {
-        if ($scope.supplierDebtData.length > 0) {
-            $scope.supplierDebtData = [];
+    $scope.showApproveDebtDetail = function(event, debtId) {
+        event.preventDefault();
+        $scope.debtDetail = {};
+
+        $scope.debtDetail = $scope.payment.app_debts.filter(debt => debt.debt_id == debtId);
+
+        $('#dlgApproveDebtDetail').modal('show');
+    }
+
+    $scope.clearSupplierApproveData = function() {
+        if ($scope.supplierApproveData.length > 0) {
+            $scope.supplierApproveData = [];
         }
 
         /** Set supplier name to approve.pay_to */
-        $scope.approve.pay_to = $("#creditor_id option:selected").text().trim();
+        // $scope.approve.pay_to = $("#creditor_id option:selected").text().trim();
     };
 
     $scope.popupApproveDebtList = function(appid) {
-        console.log(appid);
-        $http.get(baseUrl + '/payment/detail/'+ appid)
-            .then(function (res) {
-                console.log(res);
-                $scope.debts = res.data.appdetails;
-                $scope.debttypes = res.data.debttypes;
+        $scope.loading = true;
 
-                $('#dlgPaymentDebtList').modal('show');
-            });
+        $http.get(`${CONFIG.baseUrl}/payment/detail/${appid}`)
+        .then(res => {
+            console.log(res);
+            $scope.debts = res.data.appdetails;
+            $scope.debttypes = res.data.debttypes;
+
+            $('#dlgPaymentDebtList').modal('show');
+            
+            $scope.loading = false;
+        }, err => {
+            console.log(err);
+            $scope.loading = false;
+        });
     };
 
-    function calculateSupplierDebt() {
-        let vatAmt  = 0.0;
-        let taxVal  = 0.0;
-        let netVal  = 0.0;
-        let netTotal = 0.0;
-        let cheque = 0.0;
-        let vatRate = $("#vatrate").val();
+    function calculateSupplierApprove() {
+        let netVal  = 0.0; // ฐานภาษี
+        // let vatRate = $("#vatrate").val(); // อัตราภาษีมูลค่าเพิ่ม
+        // let vatAmt  = 0.0; // ภาษีมูลค่าเพิ่ม
+        let netTotal = 0.0; // ยอดหนี้สุทธิ
+        let taxVal  = 0.0; // ภาษีหัก ณ ที่จ่าย
+        let total = 0.0; // ยอดจ่ายเช็ค
 
-        angular.forEach($scope.supplierDebtData, function(debt) {
-            vatAmt += debt.debt_vat;
-            netVal += debt.debt_amount;
+        angular.forEach($scope.supplierApproveData, function(approvement) {
+            netVal += parseFloat(approvement.amount);
+            netTotal += parseFloat(approvement.net_total);
+            taxVal += parseFloat(approvement.tax_val);
+            total += parseFloat(approvement.cheque);
         });
 
-        taxVal = (netVal * 1) / 100;
-        netTotal = netVal + vatAmt;
-        cheque = netTotal - taxVal;
-
-        $scope.approve.amount = currencyFormat(netVal); // ฐานภาษี
-        $scope.approve.net_val = currencyFormat(netVal); // ฐานภาษี
-        $scope.approve.vatamt = currencyFormat(vatAmt); // ภาษีมูลค่าเพิ่ม
-        $scope.approve.tax_val = currencyFormat(taxVal); // ภาษีหัก ณ ที่จ่าย
-        $scope.approve.net_amt = currencyFormat(taxVal); // ภาษีหัก ณ ที่จ่าย
-        $scope.approve.net_total = currencyFormat(netTotal); // ยอดสุทธิ
-        $scope.approve.cheque = currencyFormat(cheque); // ยอดจ่ายเช็ค
-
-        $scope.approve.net_amt_str = ArabicNumberToText(taxVal.toFixed(2)); // ภาษีหัก ณ ที่จ่าย
-        $scope.approve.net_total_str = ArabicNumberToText(netTotal.toFixed(2)); // ยอดสุทธิ
-        $scope.approve.cheque_str = ArabicNumberToText(cheque.toFixed(2)); // ยอดจ่ายเช็ค
-        console.log($scope.approve);
-    }
-
-    function currencyFormat(num) {
-        return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        $scope.payment.net_val = StringFormatService.currencyFormat(netVal); // ฐานภาษี
+        // $scope.payment.vatamt = StringFormatService.currencyFormat(vatAmt); // ภาษีมูลค่าเพิ่ม
+        $scope.payment.net_total = StringFormatService.currencyFormat(netTotal); // ยอดหนี้สุทธิ
+        $scope.payment.net_amt = StringFormatService.currencyFormat(taxVal); // ภาษีหัก ณ ที่จ่าย
+    
+        $scope.payment.paid_amt = StringFormatService.currencyFormat(total); // ยอดจ่าย
+        $scope.payment.total = StringFormatService.currencyFormat(total); // ยอดจ่าย
+        $scope.payment.totalstr = ArabicNumberToText(total.toFixed(2)); // ยอดจ่าย (ตัวอักษร)
     }
 });
