@@ -99,6 +99,16 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
             $scope.loading = false;
     	});
     }
+    
+    $scope.getApprove = function(approveId) {
+        $http.get(`${CONFIG.baseUrl}/approve/get-creditor/${approveId}`)
+        .then(function(res) {
+            console.log(res);
+            $scope.creditor = res.data.creditor;
+        }, function(err) {
+            console.log(err);
+        });
+    }
 
     $scope.store = function(event, form) {
         event.preventDefault();
@@ -128,33 +138,22 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
                 });            
         }
 
-        /** Clear control value and model data */
-        document.getElementById('frmNewApprove').reset();
-        $scope.initData();
+        /** Redirect to approve list */
+        redirectToIndex('approve/list');
     }
 
-    $scope.getCreditor = function(creditorId) {
-        $http.get(`${CONFIG.baseUrl}/creditor/get-creditor/${creditorId}`)
-        .then(function(res) {
-            console.log(res);
-            $scope.creditor = res.data.creditor;
-        }, function(err) {
-            console.log(err);
-        });
-    }
+    $scope.edit = function(approveId) {
+        console.log(approveId);
 
-    $scope.edit = function(creditorId) {
-        console.log(creditorId);
-
-        window.location.href = `${CONFIG.baseUrl}/creditor/edit/${creditorId}`;
+        window.location.href = `${CONFIG.baseUrl}/approve/edit/${approveId}`;
     };
 
-    $scope.update = function(event, form, creditorId) {
-        console.log(creditorId);
+    $scope.update = function(event, form, approveId) {
+        console.log(approveId);
         event.preventDefault();
 
-        if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.put(`${CONFIG.baseUrl}/creditor/update`, $scope.creditor)
+        if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + approveId + " ใช่หรือไม่?")) {
+            $http.put(`${CONFIG.baseUrl}/approve/update`, $scope.approve)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
@@ -165,11 +164,11 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         }
     };
 
-    $scope.delete = function(creditorId) {
-        console.log(creditorId);
+    $scope.delete = function(approveId) {
+        console.log(approveId);
 
-        if(confirm("คุณต้องลบเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.delete(`${CONFIG.baseUrl}/creditor/delete/${creditorId}`)
+        if(confirm("คุณต้องลบเจ้าหนี้เลขที่ " + approveId + " ใช่หรือไม่?")) {
+            $http.delete(`${CONFIG.baseUrl}/approve/delete/${approveId}`)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');

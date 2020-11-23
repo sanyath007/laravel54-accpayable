@@ -167,9 +167,7 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         }
 
         /** Redirect to payment list */
-        setTimeout(function (){
-            window.location.href = `${CONFIG.baseUrl}/payment/list`;
-        }, 2000);
+        redirectToIndex('payment/list');
     }
 
     $scope.edit = function(paymentId) {

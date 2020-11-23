@@ -50,6 +50,18 @@ app.run(function ($rootScope, $window, $http, toaster) {
 
 		return status;
 	};
+
+	$rootScope.redirectToIndex = function(route) {
+        setTimeout(function (){
+            window.location.href = `${CONFIG.baseUrl}/${route}`;
+        }, 2000);
+	};
+	
+	$rootScope.redirectToHome = function() {
+        setTimeout(function (){
+            window.location.href = `${CONFIG.baseUrl}/`;
+        }, 2000);
+    };
 }); /** Global functions */
 
 app.filter('thdate', function($filter)
