@@ -16,12 +16,11 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         } else {
             $scope.loading = true;
 
-            var debtDate = ($("#debtDate").val()).split(",");
-            var sDate = debtDate[0].trim();
-            var eDate = debtDate[1].trim();
-            var debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
-            var creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
-            var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+            let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+            let debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
+            let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
+            let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
             
             $http.get(CONFIG.baseUrl +URL+ '/' +debtType+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll)
             .then(function(res) {
@@ -69,12 +68,11 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         if($scope.debts.length == 0) {
             toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
         } else {
-            var debtDate = ($("#debtDate").val()).split(",");
-            var sDate = debtDate[0].trim();
-            var eDate = debtDate[1].trim();
-            var debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
-            var creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
-            var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+            let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+            let debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
+            let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
+            let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
             window.location.href = CONFIG.baseUrl +URL+ '/' +debtType+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
         }
@@ -83,28 +81,27 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
     $scope.getCreditorPaidData = function(URL) {
         $scope.payments = [];
         $scope.pager = [];
-        
-        if($("#showall:checked").val() != 'on' && $("#creditor").val() == '') {
+
+        if(!$("#showall").is(":checked") && $("#creditor").val() == '') {
             toaster.pop('warning', "", "กรุณาเลือกเจ้าหนี้ก่อน !!!");
         } else {
             $scope.loading = true;
 
-            var debtDate = ($("#debtDate").val()).split(",");
-            var sDate = debtDate[0].trim();
-            var eDate = debtDate[1].trim();
-            var creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
-            var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+            let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+            let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
             
-            $http.get(CONFIG.baseUrl +URL+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll)
+            $http.get(`${CONFIG.baseUrl}/account/creditor-paid-rpt/${creditor}/${sDate}/${eDate}/${showAll}`)
             .then(function(res) {
                 console.log(res);
                 $scope.payments = res.data.payments.data;
                 $scope.pager = res.data.payments;
+
                 $scope.totalDebt = res.data.totalDebt;
 
                 $scope.pages = PaginateService.createPagerNo($scope.pager);
-
-                console.log($scope.pages);
+                
                 $scope.loading = false;
             }, function(err) {
                 console.log(err);
@@ -142,11 +139,10 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         if($scope.payments.length == 0) {
             toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
         } else {
-            var debtDate = ($("#debtDate").val()).split(",");
-            var sDate = debtDate[0].trim();
-            var eDate = debtDate[1].trim();
-            var creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
-            var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+            let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+            let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
+            let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
             window.location.href = CONFIG.baseUrl +URL+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
         }
@@ -156,9 +152,9 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         event.preventDefault();        
         $scope.loading = true;
 
-        var sDate = StringFormatService.convToDbDate($("#sdate").val());
-        var eDate = StringFormatService.convToDbDate($("#edate").val());
-        var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+        let sDate = StringFormatService.convToDbDate($("#sdate").val());
+        let eDate = StringFormatService.convToDbDate($("#edate").val());
+        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
         
         $scope.loading = false;
         console.log(URL);
@@ -167,9 +163,9 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
     };
 
     $scope.ledgerToExcel = function(URL) {
-        var sDate = StringFormatService.convToDbDate($("#sdate").val());
-        var eDate = StringFormatService.convToDbDate($("#edate").val());
-        var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+        let sDate = StringFormatService.convToDbDate($("#sdate").val());
+        let eDate = StringFormatService.convToDbDate($("#edate").val());
+        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
         window.location.href = CONFIG.baseUrl +URL+ '/' +sDate+ '/' +eDate+ '/' + showAll;
     };

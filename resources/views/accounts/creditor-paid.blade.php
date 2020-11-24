@@ -5,13 +5,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            ทะเบียนเจ้าหนี้จ่ายชำระหนี้
+            รายการเจ้าหนี้จ่ายชำระหนี้
             <!-- <small>preview of simple tables</small> -->
         </h1>
 
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">หน้าหลัก</a></li>
-            <li class="breadcrumb-item active">ทะเบียนเจ้าหนี้จ่ายชำระหนี้</li>
+            <li class="breadcrumb-item active">รายการเจ้าหนี้จ่ายชำระหนี้</li>
         </ol>
     </section>
 
@@ -28,47 +28,71 @@
 
                     <form id="frmSearch" name="frmSearch" role="form">
                         <div class="box-body">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>เจ้าหนี้</label>
-                                    <select id="creditor" class="form-control select2" style="width: 100%; font-size: 12px;">
 
-                                        <option value="" selected="selected">-- กรุณาเลือก --</option>
-                                        @foreach($creditors as $creditor)
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>เจ้าหนี้</label>
+                                        <select id="creditor" class="form-control select2" style="width: 100%; font-size: 12px;">
 
-                                            <option value="{{ $creditor->supplier_id }}">
-                                                {{ $creditor->supplier_name }}
-                                            </option>
+                                            <option value="" selected="selected">-- กรุณาเลือก --</option>
+                                            @foreach($creditors as $creditor)
 
-                                        @endforeach
-                                        
-                                    </select>
-                                </div>
-                                <!-- Date and time range -->
-                                <div class="form-group">
-                                    <label>ระหว่างวันที่-วันที่:</label>
+                                                <option value="{{ $creditor->supplier_id }}">
+                                                    {{ $creditor->supplier_name }}
+                                                </option>
 
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
+                                            @endforeach
+                                            
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-md-6 -->
+
+                                <div class="col-md-6" style="margin-top: 20px;">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                id="showall"
+                                                name="showall"
+                                                checked="checked"> แสดงทั้งหมด
+                                        </label>
+                                    </div>
+                                </div><!-- /.col-md-6 -->
+                            </div><!-- /.row -->
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>ระหว่างวันที่:</label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            <input type="text" class="form-control pull-right" id="debtFromDate">
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="debtDate">
-                                    </div><!-- /.input group -->
-                                </div><!-- /.form group -->
-                            </div>
+                                    </div><!-- /.form group -->
+                                </div><!-- /.col-md-6 -->
 
-                            <div class="col-md-6">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="showall" name="showall"> แสดงทั้งหมด
-                                    </label>
-                                </div>
-                            </div>
-                                         
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>ถึงวันที่:</label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            <input type="text" class="form-control pull-right" id="debtToDate">
+                                        </div>
+                                    </div><!-- /.form group -->
+                                </div><!-- /.col-md-6 -->
+
+                            </div><!-- /.row -->
                         </div><!-- /.box-body -->
                   
                         <div class="box-footer">
-                            <button ng-click="getCreditorPaidData('/account/creditor-paid-rpt')" class="btn btn-info">
+                            <button ng-click="getCreditorPaidData()" class="btn btn-info">
                                 ค้นหา
                             </button>
                         </div>
@@ -77,7 +101,7 @@
 
                 <div class="box">
                     <div class="box-header with-border">
-                      <h3 class="box-title">ทะเบียนเจ้าหนี้จ่ายชำระหนี้</h3>
+                      <h3 class="box-title">รายการเจ้าหนี้จ่ายชำระหนี้</h3>
                     </div><!-- /.box-header -->
 
                     <div class="box-body">
@@ -135,7 +159,7 @@
 
                         <ul ng-show="payments.length" class="pagination pagination-sm no-margin pull-right">                            
                             <li ng-if="pager.current_page !== 1">
-                                <a href="#" ng-click="getCreditorPaidWithURL(pager.first_page_url)" aria-label="First">
+                                <a href="#" ng-click="getCreditorPaidWithURL(pager.path+ '?page=1')" aria-label="First">
                                     <span aria-hidden="true">First</span>
                                 </a>
                             </li>                            
@@ -165,7 +189,7 @@
                             </li>
 
                             <li ng-if="pager.current_page !== pager.last_page">
-                                <a href="#" ng-click="getCreditorPaidWithURL(pager.last_page_url)" aria-label="Last">
+                                <a href="#" ng-click="getCreditorPaidWithURL(pager.path+ '?page=' +pager.last_page)" aria-label="Last">
                                     <span aria-hidden="true">Last</span>
                                 </a>
                             </li>
@@ -263,16 +287,22 @@
 
     <script>
         $(function () {
-            //Initialize Select2 Elements
             $('.select2').select2()
 
-            //Date range picker with time picker
-            $('#debtDate').daterangepicker({
-                timePickerIncrement: 30,
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: " , ",
-                }
+            $('#debtFromDate').datepicker({
+                autoclose: true,
+                orientation: 'bottom',
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
+            });
+            
+            $('#debtToDate').datepicker({
+                autoclose: true,
+                orientation: 'bottom',
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
             });
         });
     </script>

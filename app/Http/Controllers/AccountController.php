@@ -16,6 +16,9 @@ use App\Exports\CreditorPaidExport;
 
 class AccountController extends Controller
 {
+    
+    /** 0=รอดำเนินการ,1=ขออนุมัติ,2=ตัดจ่าย,3=ยกเลิก,4=ลดหนี้ศุนย์ */
+
     public function arrear()
     {
         return view('accounts.arrear', [
@@ -123,50 +126,44 @@ class AccountController extends Controller
     public function creditorPaidRpt($creditor, $sdate, $edate, $showall)
     {
         $debts = [];
+        $conditions1 = [];
+        $conditions2 = [];
 
-        if($showall == 1) {
-            $payments = \DB::table('nrhosp_acc_payment')
-                                ->select('nrhosp_acc_payment.*', 'nrhosp_acc_debt.debt_id', 'nrhosp_acc_debt.debt_type_detail', 
-                                    'nrhosp_acc_debt.deliver_no', 'nrhosp_acc_debt.debt_total', 'nrhosp_acc_debt.debt_status',
-                                    'nrhosp_acc_com_bank.bank_acc_no', 'nrhosp_acc_com_bank.bank_acc_name', 'nrhosp_acc_bank.bank_name',
-                                    'nrhosp_acc_debt_type.debt_type_name')
-                                ->join('nrhosp_acc_payment_detail', 'nrhosp_acc_payment.payment_id', '=', 'nrhosp_acc_payment_detail.payment_id')
-                                ->join('nrhosp_acc_debt', 'nrhosp_acc_payment_detail.debt_id', '=', 'nrhosp_acc_debt.debt_id')
-                                ->join('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
-                                ->join('nrhosp_acc_com_bank', 'nrhosp_acc_payment.bank_acc_id', '=', 'nrhosp_acc_com_bank.bank_acc_id')
-                                ->join('nrhosp_acc_bank', 'nrhosp_acc_com_bank.bank_id', '=', 'nrhosp_acc_bank.bank_id')
-                                ->where('nrhosp_acc_payment.paid_stat', '=', 'Y')
-                                ->paginate(20);
+        if($sdate != 0 && $edate != 0) {
+            array_push($conditions1, ['nrhosp_acc_payment.paid_date', '>=', $sdate]);
+            array_push($conditions1, ['nrhosp_acc_payment.paid_date', '<=', $edate]);
 
-            $totalDebt = Payment::where('paid_stat', '=', 'Y')
-                                ->sum('total');
-        } else {
-            if($creditor != 0) {
-                /** 0=รอดำเนินการ,1=ขออนุมัติ,2=ตัดจ่าย,3=ยกเลิก,4=ลดหนี้ศุนย์ */
-                
-                $payments = \DB::table('nrhosp_acc_payment')
-                                ->select('nrhosp_acc_payment.*', 'nrhosp_acc_debt.debt_id', 'nrhosp_acc_debt.debt_type_detail', 
-                                    'nrhosp_acc_debt.deliver_no', 'nrhosp_acc_debt.debt_total', 'nrhosp_acc_debt.debt_status',
-                                    'nrhosp_acc_com_bank.bank_acc_no', 'nrhosp_acc_com_bank.bank_acc_name', 'nrhosp_acc_bank.bank_name',
-                                    'nrhosp_acc_debt_type.debt_type_name')
-                                ->join('nrhosp_acc_payment_detail', 'nrhosp_acc_payment.payment_id', '=', 'nrhosp_acc_payment_detail.payment_id')
-                                ->join('nrhosp_acc_debt', 'nrhosp_acc_payment_detail.debt_id', '=', 'nrhosp_acc_debt.debt_id')
-                                ->join('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
-                                ->join('nrhosp_acc_com_bank', 'nrhosp_acc_payment.bank_acc_id', '=', 'nrhosp_acc_com_bank.bank_acc_id')
-                                ->join('nrhosp_acc_bank', 'nrhosp_acc_com_bank.bank_id', '=', 'nrhosp_acc_bank.bank_id')
-                                ->where('nrhosp_acc_payment.supplier_id', '=', $creditor)
-                                ->whereBetween('nrhosp_acc_payment.paid_date', [$sdate, $edate])
-                                ->paginate(20);
+            array_push($conditions2, ['paid_date', '>=', $sdate]);
+            array_push($conditions2, ['paid_date', '<=', $edate]);
+        }
 
-                $totalDebt = Payment::where('paid_stat', '=', 'Y')
-                                ->where('supplier_id', '=', $creditor)
-                                ->whereBetween('paid_date', [$sdate, $edate])
-                                ->sum('total');
+        if($showall != 1) {
+            if($creditor != '0') {
+                array_push($conditions1, ['nrhosp_acc_payment.supplier_id', '=', $creditor]);
+                array_push($conditions2, ['supplier_id', '=', $creditor]);
             }
         }
+                
+        $payments = \DB::table('nrhosp_acc_payment')
+                        ->select('nrhosp_acc_payment.*', 'nrhosp_acc_debt.debt_id', 'nrhosp_acc_debt.debt_type_detail', 
+                            'nrhosp_acc_debt.deliver_no', 'nrhosp_acc_debt.debt_total', 'nrhosp_acc_debt.debt_status',
+                            'nrhosp_acc_com_bank.bank_acc_no', 'nrhosp_acc_com_bank.bank_acc_name', 'nrhosp_acc_bank.bank_name',
+                            'nrhosp_acc_debt_type.debt_type_name')
+                        ->join('nrhosp_acc_payment_detail', 'nrhosp_acc_payment.payment_id', '=', 'nrhosp_acc_payment_detail.payment_id')
+                        ->join('nrhosp_acc_debt', 'nrhosp_acc_payment_detail.debt_id', '=', 'nrhosp_acc_debt.debt_id')
+                        ->join('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
+                        ->join('nrhosp_acc_com_bank', 'nrhosp_acc_payment.bank_acc_id', '=', 'nrhosp_acc_com_bank.bank_acc_id')
+                        ->join('nrhosp_acc_bank', 'nrhosp_acc_com_bank.bank_id', '=', 'nrhosp_acc_bank.bank_id')
+                        ->where($conditions1)
+                        ->orderBy('nrhosp_acc_payment.supplier_id')
+                        ->paginate(20);
+
+        $totalDebt = Payment::where('paid_stat', '=', 'Y')
+                        ->where($conditions2)
+                        ->sum('total');
         
         return [
-            "payments"     => $payments,
+            "payments"  => $payments,
             "totalDebt" => $totalDebt,
         ];
     }
