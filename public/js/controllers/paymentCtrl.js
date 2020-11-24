@@ -1,4 +1,4 @@
-app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalService, StringFormatService) {
+app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFIG, ModalService, StringFormatService) {
 /** ################################################################################## */
     $scope.loading = false;
 
@@ -167,7 +167,7 @@ app.controller('paymentCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         }
 
         /** Redirect to payment list */
-        redirectToIndex('payment/list');
+        $rootScope.redirectToIndex('payment/list');
     }
 
     $scope.edit = function(paymentId) {

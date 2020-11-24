@@ -20,7 +20,7 @@ app.run(function(editableOptions) {
 });
 
 /** Global functions */
-app.run(function ($rootScope, $window, $http, toaster) {
+app.run(function ($rootScope, $window, $http, CONFIG, toaster) {
 	$rootScope.formError = null;
 
 	$rootScope.formValidate = function (event, URL, validData, form, callback) {

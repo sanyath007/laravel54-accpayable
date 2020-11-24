@@ -1,4 +1,4 @@
-app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalService, StringFormatService) {
+app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFIG, ModalService, StringFormatService) {
 /** ################################################################################## */
     $scope.supplierDebtData = [];
     $scope.supplierDebtToRemoveData = [];
@@ -139,7 +139,7 @@ app.controller('approveCtrl', function($scope, $http, toaster, CONFIG, ModalServ
         }
 
         /** Redirect to approve list */
-        redirectToIndex('approve/list');
+        $rootScope.redirectToIndex('approve/list');
     }
 
     $scope.edit = function(approveId) {
