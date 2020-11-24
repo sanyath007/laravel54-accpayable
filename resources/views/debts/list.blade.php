@@ -57,6 +57,7 @@
                                             type="checkbox"
                                             id="showall"
                                             name="showall"
+                                            checked="checked"
                                             ng-click="getDebtData('/debt/rpt')"> แสดงทั้งหมด
                                     </label>
                                 </div>
@@ -91,7 +92,7 @@
                   
                         <div class="box-footer">
                             <a ng-click="add($event)" class="btn btn-primary">
-                                เพิ่มรายการ
+                                บันทึกรับหนี้
                             </a>
                         </div>
                     </form>

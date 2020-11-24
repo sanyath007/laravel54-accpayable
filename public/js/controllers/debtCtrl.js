@@ -133,7 +133,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
         let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
         let debtType = ($("#debtType").val() != '') ? $("#debtType").val() : 0;
-        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+        let showAll = ($('#showall').is(":checked")) ? 1 : 0;
 
         $http.get(`${CONFIG.baseUrl}${URL}/${debtType}/${sDate}/${eDate}/${showAll}`)
         .then(function(res) {
