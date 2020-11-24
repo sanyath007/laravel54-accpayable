@@ -31,6 +31,10 @@ Route::group(['middleware' => 'web'], function() {
 });
 
 Route::group(['middleware' => ['web','auth']], function () {
+    Route::get('dashboard/card-data', 'HomeController@cardData');
+    Route::get('dashboard/sum-month-chart/{month}', 'HomeController@sumMonth');     
+    Route::get('dashboard/sum-year-chart/{month}', 'HomeController@sumYear'); 
+    
     Route::get('approve/list', 'ApprovementController@index');
     Route::get('approve/search/{sdate}/{edate}/{searchKey}/{showall}', 'ApprovementController@search');
     Route::get('approve/get-all-bysupplier/{supplierId}', 'ApprovementController@getAllBySupplier');
@@ -100,7 +104,5 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('report/debt-debttype/list', 'ReportController@debtDebttype');    
     Route::get('report/debt-debttype/rpt/{debtType}/{sdate}/{edate}/{showall}', 'ReportController@debtDebttypeRpt');  
     Route::get('report/debt-debttype-excel/{debttype}/{sdate}/{edate}/{showall}', 'ReportController@debtDebttypeExcel');
-    Route::get('report/debt-chart/{creditorId}', 'ReportController@debtChart');     
-    Route::get('report/sum-month-chart/{month}', 'ReportController@sumMonth');     
-    Route::get('report/sum-year-chart/{month}', 'ReportController@sumYear');     
+    Route::get('report/debt-chart/{creditorId}', 'ReportController@debtChart');    
 });

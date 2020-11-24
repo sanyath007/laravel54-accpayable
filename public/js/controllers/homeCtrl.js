@@ -1,13 +1,28 @@
-app.controller('homeCtrl', function(CONFIG, $scope, limitToFilter, ReportService) {
+app.controller('homeCtrl', function(CONFIG, $scope, $http, limitToFilter, ReportService) {
 /** ################################################################################## */    
     $scope.pieOptions = {};
     $scope.barOptions = {};
+    $scope.cardData = {};
 
-    $scope.getSumMonthData = function () {       
-        var month = '2018';
-        console.log(month);
+    $scope.getCardData = function () {
+        $scope.loading = true;
 
-        ReportService.getSeriesData('/report/sum-month-chart/', month)
+        $http.get(`${CONFIG.baseUrl}/dashboard/card-data`)
+        .then(function(res) {
+            console.log(res);
+            $scope.cardData = res.data[0];
+
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
+    }
+
+    $scope.getSumMonthData = function () {
+        var month = '2020';
+
+        ReportService.getSeriesData('/dashboard/sum-month-chart/', month)
         .then(function(res) {
             console.log(res);
             var debtSeries = [];
@@ -25,7 +40,7 @@ app.controller('homeCtrl', function(CONFIG, $scope, limitToFilter, ReportService
             });
 
             var categories = ['ตค', 'พย', 'ธค', 'มค', 'กพ', 'มีค', 'เมย', 'พค', 'มิย', 'กค', 'สค', 'กย']
-            $scope.barOptions = ReportService.initBarChart("barContainer1", "รายงานยอดหนี้ทั้งหมด ปีงบ 2561", categories, 'จำนวน');
+            $scope.barOptions = ReportService.initBarChart("barContainer1", "รายงานยอดหนี้ ปีงบ " + (parseInt(month) + 543), categories, 'จำนวน');
             $scope.barOptions.series.push({
                 name: 'หนี้คงเหลือ',
                 data: debtSeries
@@ -44,10 +59,9 @@ app.controller('homeCtrl', function(CONFIG, $scope, limitToFilter, ReportService
     };
 
     $scope.getSumYearData = function () {       
-        var month = '2018';
-        console.log(month);
+        var month = '2020';
 
-        ReportService.getSeriesData('/report/sum-year-chart/', month)
+        ReportService.getSeriesData('/dashboard/sum-year-chart/', month)
         .then(function(res) {
             console.log(res);
             var debtSeries = [];
@@ -66,7 +80,7 @@ app.controller('homeCtrl', function(CONFIG, $scope, limitToFilter, ReportService
                 setzeroSeries.push(setzero);
             });
 
-            $scope.barOptions = ReportService.initBarChart("barContainer2", "รายงานยอดหนี้รายปี", categories, 'จำนวน');
+            $scope.barOptions = ReportService.initBarChart("barContainer2", "รายงานยอดหนี้สามปีย้อนหลัง", categories, 'จำนวน');
             $scope.barOptions.series.push({
                 name: 'หนี้คงเหลือ',
                 data: debtSeries

@@ -164,12 +164,12 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
     }
 
     $scope.getDebtWithURL = function(URL) {
-        console.log(URL);
+        $scope.loading = true;
+        
         $scope.debts = [];
         $scope.debtPager = [];
         $scope.debtPages = [];
 
-        $scope.loading = true;
 
         $http.get(URL)
         .then(function(res) {

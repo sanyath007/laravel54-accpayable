@@ -15,14 +15,18 @@
     </section>
 
     <!-- Main content -->
-    <section class="content" ng-controller="homeCtrl" ng-init="getSumMonthData(); getSumYearData()">
+    <section
+        class="content"
+        ng-controller="homeCtrl"
+        ng-init="getSumMonthData(); getSumYearData(); getCardData();">
+
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-lg-3 col-xs-6">
                 <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3>933</h3>
+                        <h4>@{{ cardData.supplier_num | currency:'':0 }}</h4>
 
                         <p><h4>เจ้าหนี้ทั้งหมด</h4></p>
                     </div>
@@ -37,7 +41,7 @@
                 <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>925,632,795.93</h3><!-- <sup style="font-size: 20px">%</sup> -->
+                        <h4>@{{ cardData.debt_total | currency:'':2 }}</h4><!-- <sup style="font-size: 20px">%</sup> -->
 
                         <p><h4>ยอดหนี้ทั้งหมด</h4></p>
                     </div>
@@ -52,9 +56,9 @@
                 <!-- small box -->
                 <div class="small-box bg-yellow">
                     <div class="inner">
-                        <h3>8,373,859.21</h3>
+                        <h4>@{{ cardData.paid | currency:'':2 }}</h4>
 
-                        <p><h4>ยอดลดหนี้ศูนย์ทั้งหมด</h4></p>
+                        <p><h4>ยอดหนี้ชำระทั้งหมด</h4></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person-add"></i>
@@ -67,9 +71,9 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3>55,297,959.03</h3>
+                        <h4>@{{ cardData.arrear | currency:'':2 }}</h4>
 
-                        <p><h4>ยอดหนี้ค้างจ่ายทั้งหมด</h4></p>
+                        <p><h4>ยอดหนี้ค้างชำระทั้งหมด</h4></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
