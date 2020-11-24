@@ -1,10 +1,13 @@
 /node_modules
-/public/bower/*
-/public/node_modules
 /public/files
 /public/hot
 /public/storage
+/public/bower/*
+/public/node_modules/*
+/public/js/env.js
 /public/uploads/*
+/public/npm*
+/public/npx*
 /storage/*.key
 /vendor
 /.idea
