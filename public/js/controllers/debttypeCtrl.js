@@ -1,8 +1,5 @@
 app.controller('debttypeCtrl', function($scope, $http, toaster, CONFIG, ModalService) {
 /** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
-
     $scope.loading = false;
     $scope.pager = [];
     $scope.debttypes = [];
@@ -19,9 +16,9 @@ app.controller('debttypeCtrl', function($scope, $http, toaster, CONFIG, ModalSer
         $scope.loading = true;
         
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
-        console.log(CONFIG.BASE_URL+ '/debttype/search/' +searchKey);
+        console.log(`${CONFIG.baseUrl}/debttype/search/${searchKey}`);
 
-        $http.get(CONFIG.BASE_URL+ '/debttype/search/' +searchKey)
+        $http.get(`${CONFIG.baseUrl}/debttype/search/${searchKey}`)
         .then(function(res) {
             console.log(res);
             $scope.debttypes = res.data.debttypes.data;
@@ -60,7 +57,7 @@ app.controller('debttypeCtrl', function($scope, $http, toaster, CONFIG, ModalSer
             toaster.pop('warning', "", 'กรุณาข้อมูลให้ครบก่อน !!!');
             return;
         } else {
-            $http.post(CONFIG.BASE_URL + '/debttype/store', $scope.debttype)
+            $http.post(`${CONFIG.baseUrl}/debttype/store`, $scope.debttype)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
@@ -74,7 +71,7 @@ app.controller('debttypeCtrl', function($scope, $http, toaster, CONFIG, ModalSer
     }
 
     $scope.getDebttype = function(debttypeId) {
-        $http.get(CONFIG.BASE_URL + '/debttype/get-debttype/' +debttypeId)
+        $http.get(`${CONFIG.baseUrl}/debttype/get-debttype/${debttypeId}`)
         .then(function(res) {
             console.log(res);
             $scope.debttype = res.data.debttype;
@@ -86,7 +83,7 @@ app.controller('debttypeCtrl', function($scope, $http, toaster, CONFIG, ModalSer
     $scope.edit = function(debttypeId) {
         console.log(debttypeId);
 
-        window.location.href = CONFIG.BASE_URL + '/debttype/edit/' + debttypeId;
+        window.location.href = `${CONFIG.baseUrl}/debttype/edit/${debttypeId}`;
     };
 
     $scope.update = function(event, form, debttypeId) {
@@ -94,7 +91,7 @@ app.controller('debttypeCtrl', function($scope, $http, toaster, CONFIG, ModalSer
         event.preventDefault();
 
         if(confirm("คุณต้องแก้ไขรายการหนี้เลขที่ " + debttypeId + " ใช่หรือไม่?")) {
-            $http.put(CONFIG.BASE_URL + '/debttype/update/', $scope.debttype)
+            $http.put(`${CONFIG.baseUrl}/debttype/update/`, $scope.debttype)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
@@ -109,7 +106,7 @@ app.controller('debttypeCtrl', function($scope, $http, toaster, CONFIG, ModalSer
         console.log(debttypeId);
 
         if(confirm("คุณต้องลบรายการหนี้เลขที่ " + debttypeId + " ใช่หรือไม่?")) {
-            $http.delete(CONFIG.BASE_URL + '/debttype/delete/' +debttypeId)
+            $http.delete(`${CONFIG.baseUrl}/debttype/delete/${debttypeId}`)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');

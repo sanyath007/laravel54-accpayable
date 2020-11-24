@@ -50,14 +50,14 @@
                     </div><!-- /.box-header -->
 
                     <div class="box-body">
-                      <table class="table table-bordered">
+                      <table class="table table-bordered" style="font-size: 12px;">
                             <thead>
                                 <tr>
                                     <th style="width: 3%; text-align: center;">#</th>
                                     <th style="width: 10%; text-align: center;">รหัส</th>
                                     <th style="text-align: center;">ชื่อ</th>
                                     <th style="width: 25%; text-align: center;">ประเภท</th>
-                                    <th style="width: 8%; text-align: center;">Actions</th>
+                                    <th style="width: 10%; text-align: center;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,13 +67,13 @@
                                     <td style="text-align: left;">@{{ debttype.debt_type_name }}</td>
                                     <td style="text-align: center;">@{{ debttype.debt_cate_name }}</td>
                                     <td style="text-align: center;">
-                                        <a ng-click="edit(debttype.debt_type_id)" class="btn btn-warning btn-sm">
+                                        <a ng-click="edit(debttype.debt_type_id)" class="btn btn-warning btn-xs">
                                             <i class="fa fa-edit"></i>
                                         </a>
 
                                         @if(Auth::user()->person_id == '1300200009261')
 
-                                            <a ng-click="delete(debttype.debt_type_id)" class="btn btn-danger btn-sm">
+                                            <a ng-click="delete(debttype.debt_type_id)" class="btn btn-danger btn-xs">
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         
@@ -86,16 +86,20 @@
                     </div><!-- /.box-body -->
 
                     <div class="box-footer clearfix">
+                        <div class="col-md-6" style="font-size: 12px;">
+                            Total @{{ pager.total | currency : "" : 0 }} รายการ
+                        </div>
+
                         <ul class="pagination pagination-sm no-margin pull-right">
 
                             <li ng-if="pager.current_page !== 1">
-                                <a ng-click="getDataWithURL(pager.first_page_url)" aria-label="Previous">
+                                <a ng-click="getDataWithURL(pager.path+ '?page=1')" aria-label="First">
                                     <span aria-hidden="true">First</span>
                                 </a>
                             </li>
                         
                             <li ng-class="{'disabled': (pager.current_page==1)}">
-                                <a ng-click="getDataWithURL(pager.first_page_url)" aria-label="Prev">
+                                <a ng-click="getDataWithURL(pager.prev_page_url)" aria-label="Prev">
                                     <span aria-hidden="true">Prev</span>
                                 </a>
                             </li>
@@ -113,7 +117,7 @@
                             </li>
 
                             <li ng-if="pager.current_page !== pager.last_page">
-                                <a ng-click="getDataWithURL(pager.last_page_url)" aria-label="Previous">
+                                <a ng-click="getDataWithURL(pager..path+ '?page=' +pager.last_page)" aria-label="Last">
                                     <span aria-hidden="true">Last</span>
                                 </a>
                             </li>

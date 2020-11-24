@@ -198,7 +198,7 @@
 
                                 <ul class="pagination pagination-sm no-margin pull-right">
                                     <li ng-if="debtPager.current_page !== 1">
-                                        <a href="#" ng-click="getDebtWithURL(debtPager.path+ '?page=1')" aria-label="Previous">
+                                        <a href="#" ng-click="getDebtWithURL(debtPager.path+ '?page=1')" aria-label="First">
                                             <span aria-hidden="true">First</span>
                                         </a>
                                     </li>
@@ -228,7 +228,7 @@
                                     </li>
 
                                     <li ng-if="debtPager.current_page !== debtPager.last_page">
-                                        <a href="#" ng-click="getDebtWithURL(debtPager.path+ '?page=' +debtPager.last_page)" aria-label="Previous">
+                                        <a href="#" ng-click="getDebtWithURL(debtPager.path+ '?page=' +debtPager.last_page)" aria-label="Last">
                                             <span aria-hidden="true">Last</span>
                                         </a>
                                     </li>
