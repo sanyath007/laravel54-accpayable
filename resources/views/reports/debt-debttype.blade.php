@@ -29,7 +29,7 @@
                     <form id="frmSearch" name="frmSearch" role="form">
                         <div class="box-body">
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label>ประเภทหนี้</label>
                                     <select id="debtType" class="form-control select2" style="width: 100%; font-size: 12px;">
@@ -49,23 +49,39 @@
                             </div>
 
                             <div class="col-md-6">
-                                <!-- Date and time range -->
                                 <div class="form-group">
-                                    <label>ระหว่างวันที่-วันที่:</label>
+                                    <label>ระหว่างวันที่:</label>
 
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="debtDate">
-                                    </div><!-- /.input group -->
+                                        <input type="text" class="form-control pull-right" id="debtFromDate">
+                                    </div>
+                                </div><!-- /.form group -->
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>ถึงวันที่:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control pull-right" id="debtToDate">
+                                    </div>
                                 </div><!-- /.form group -->
                             </div>
 
                             <div class="col-md-6">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id="showall" name="showall"> แสดงทั้งหมด
+                                    <input
+                                        type="checkbox"
+                                        id="showall"
+                                        name="showall"
+                                        checked="checked"> แสดงทั้งหมด
                                     </label>
                                 </div>
                             </div>
@@ -73,7 +89,7 @@
                         </div><!-- /.box-body -->
                   
                         <div class="box-footer">
-                            <button ng-click="getDebtData('/report/debt-debttype/rpt')" class="btn btn-primary">ค้นหา</button>
+                            <button ng-click="getDebtData('report/debt-debttype/rpt')" class="btn btn-primary">ค้นหา</button>
                         </div>
                     </form>
                 </div><!-- /.box -->
@@ -133,7 +149,7 @@
 
                         <ul class="pagination pagination-sm no-margin pull-right">
                             <li ng-if="pager.current_page !== 1">
-                                <a href="#" ng-click="getDataWithURL(pager.first_page_url)" aria-label="Previous">
+                                <a href="#" ng-click="getDataWithURL(pager.path+ '?page=1')" aria-label="First">
                                     <span aria-hidden="true">First</span>
                                 </a>
                             </li>
@@ -163,7 +179,7 @@
                             </li>
 
                             <li ng-if="pager.current_page !== pager.last_page">
-                                <a href="#" ng-click="getDataWithURL(pager.last_page_url)" aria-label="Previous">
+                                <a href="#" ng-click="getDataWithURL(pager.path+ '?page=' +pager.last_page)" aria-label="Last">
                                     <span aria-hidden="true">Last</span>
                                 </a>
                             </li>
@@ -179,16 +195,22 @@
 
     <script>
         $(function () {
-            //Initialize Select2 Elements
             $('.select2').select2()
 
-            //Date range picker with time picker
-            $('#debtDate').daterangepicker({
-                timePickerIncrement: 30,
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: " , ",
-                }
+            $('#debtFromDate').datepicker({
+                autoclose: true,
+                orientation: 'bottom',
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
+            });
+            
+            $('#debtToDate').datepicker({
+                autoclose: true,
+                orientation: 'bottom',
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
             });
         });
     </script>

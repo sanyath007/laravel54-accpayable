@@ -1,8 +1,5 @@
-app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateService) {
+app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateService, StringFormatService) {
 /** ################################################################################## */
-    console.log(CONFIG.BASE_URL);
-    let baseUrl = CONFIG.BASE_URL;
-
     $scope.debts = [];
     $scope.pager = [];
     $scope.pages = [];
@@ -13,13 +10,12 @@ app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateSe
         $scope.pager = [];
         $scope.loading = true;
         
-        var debtDate = ($("#debtDate").val()).split(",");
-        var sDate = debtDate[0].trim();
-        var eDate = debtDate[1].trim();
-        var debtType = ($("#debtType").val() != '') ? $("#debtType").val() : 0;
-        var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+        let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+        let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+        let debtType = ($("#debtType").val() != '') ? $("#debtType").val() : 0;
+        let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-        $http.get(CONFIG.BASE_URL +URL+ '/' +debtType+ '/' +sDate+ '/' +eDate+ '/' +showAll)
+        $http.get(`${CONFIG.baseUrl}/${URL}/${debtType}/${sDate}/${eDate}/${showAll}`)
         .then(function(res) {
             console.log(res);
             $scope.debts = res.data.pager.data;
@@ -57,19 +53,18 @@ app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateSe
         });
     };
 
-    $scope.debtCreditorToExcel = function(URL) {
+    $scope.debtCreditorToExcel = function() {
         console.log($scope.debts);
 
         if($scope.debts.length == 0) {
             toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
         } else {
-            var debtDate = ($("#debtDate").val()).split(",");
-            var sDate = debtDate[0].trim();
-            var eDate = debtDate[1].trim();
-            var creditor = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
-            var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+            let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+            let creditor = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-            window.location.href = CONFIG.BASE_URL +URL+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
+            window.location.href = `${CONFIG.baseUrl}/report/debt-creditor-excel/${creditor}/${sDate}/${eDate}/${showAll}`;
         }
     };
 
@@ -79,13 +74,12 @@ app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateSe
         if($scope.debts.length == 0) {
             toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
         } else {
-            var debtDate = ($("#debtDate").val()).split(",");
-            var sDate = debtDate[0].trim();
-            var eDate = debtDate[1].trim();
-            var debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
-            var showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+            let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+            let debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
             
-            window.location.href = CONFIG.BASE_URL +URL+ '/' +debtType+ '/' +sDate+ '/' +eDate+ '/' + showAll;
+            window.location.href = `${CONFIG.baseUrl}/${URL}/${debtType}/${sDate}/${eDate}/${showAll}`;
         }
     };
 });
