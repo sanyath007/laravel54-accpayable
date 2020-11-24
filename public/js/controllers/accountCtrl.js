@@ -22,7 +22,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
             let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
             
-            $http.get(CONFIG.baseUrl +URL+ '/' +debtType+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll)
+            $http.get(`${CONFIG.baseUrl}/${URL}/${debtType}/${creditor}/${sDate}/${eDate}/${showAll}`)
             .then(function(res) {
                 console.log(res);
                 $scope.debts = res.data.debts.data;

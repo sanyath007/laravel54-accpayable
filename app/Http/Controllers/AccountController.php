@@ -46,7 +46,6 @@ class AccountController extends Controller
                                 ->sum('debt_total');
         } else {
             if($debttype != 0 && $creditor != 0) {
-                /** 0=รอดำเนินการ,1=ขออนุมัติ,2=ตัดจ่าย,3=ยกเลิก,4=ลดหนี้ศุนย์ */
                 $debts = \DB::table('nrhosp_acc_debt')
                             ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_app.app_recdoc_date',
                                      'nrhosp_acc_app.app_id')

@@ -65,19 +65,31 @@
                                 </div>                                
                             </div>
 
-                            <div class="col-md-12">
-                                <!-- Date and time range -->
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>ระหว่างวันที่-วันที่:</label>
+                                    <label>ระหว่างวันที่:</label>
 
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="debtDate">
-                                    </div><!-- /.input group -->
+                                        <input type="text" class="form-control pull-right" id="debtFromDate">
+                                    </div>
                                 </div><!-- /.form group -->
-                            </div>
+                            </div><!-- /.col-md-6 -->
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>ถึงวันที่:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control pull-right" id="debtToDate">
+                                    </div>
+                                </div><!-- /.form group -->
+                            </div><!-- /.col-md-6 -->
 
                             <div class="col-md-6">
                                 <div class="checkbox">
@@ -157,7 +169,7 @@
 
                         <ul ng-show="debts.length" class="pagination pagination-sm no-margin pull-right">                            
                             <li ng-if="pager.current_page !== 1">
-                                <a href="#" ng-click="getArrearWithURL(pager.first_page_url)" aria-label="First">
+                                <a href="#" ng-click="getArrearWithURL(pager.path+ '?page=1')" aria-label="First">
                                     <span aria-hidden="true">First</span>
                                 </a>
                             </li>                            
@@ -187,7 +199,7 @@
                             </li>
 
                             <li ng-if="pager.current_page !== pager.last_page">
-                                <a href="#" ng-click="getArrearWithURL(pager.last_page_url)" aria-label="Last">
+                                <a href="#" ng-click="getArrearWithURL(pager.path+ '?page=' +pager.last_page)" aria-label="Last">
                                     <span aria-hidden="true">Last</span>
                                 </a>
                             </li>
@@ -285,16 +297,22 @@
 
     <script>
         $(function () {
-            //Initialize Select2 Elements
             $('.select2').select2()
 
-            //Date range picker with time picker
-            $('#debtDate').daterangepicker({
-                timePickerIncrement: 30,
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: " , ",
-                }
+            $('#debtFromDate').datepicker({
+                autoclose: true,
+                orientation: 'bottom',
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
+            });
+            
+            $('#debtToDate').datepicker({
+                autoclose: true,
+                orientation: 'bottom',
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true
             });
         });
     </script>
