@@ -112,8 +112,11 @@
                             <i class="fa fa-circle-o"></i> ยอดหนี้รายประเภทหนี้
                         </a>
                     </li>
-                    <!-- <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
-                    <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li> -->
+                    <li>
+                        <a href="{{ url('/account/sum-arrear') }}">
+                            <i class="fa fa-circle-o"></i> สรุปยอดหนี้ค้างชำระ
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview">

@@ -62,6 +62,32 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         });
     };
 
+    $scope.getSumArrearData = function() {
+        $scope.loading = true;
+
+        $scope.debts = [];
+        $scope.pager = [];
+
+        let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+        let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+        let showAll = $("#showall").is(":checked") ? 1 : 0;
+        
+        $http.get(`${CONFIG.baseUrl}/account/sum-arrear/${sDate}/${eDate}/${showAll}`)
+        .then(function(res) {
+            console.log(res);
+            $scope.debts = res.data.debts.data;
+            $scope.pager = res.data.debts;
+
+            $scope.pages = PaginateService.createPagerNo($scope.pager);
+
+            console.log($scope.pages);
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
+    }
+
     $scope.arrearToExcel = function(URL) {
         console.log($scope.debts);
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+
 use App\Models\Debt;
 use App\Models\DebtType;
 use App\Models\Creditor;
@@ -115,6 +117,45 @@ class AccountController extends Controller
         return (new ArrearExport($debttype, $creditor, $sdate, $edate, $showall))->download($fileName);
     }
 
+    public function sumArrear()
+    {
+        return view('accounts.sum-arrear');
+    }
+    
+    public function sumArrearData(Request $req)
+    {
+        $perpage = 10;
+        $page = (isset($req['page'])) ? $req['page'] : 1;
+        $offset = ($page * $perpage) - $perpage;
+
+        $sql = "SELECT d.supplier_id, s.supplier_name,
+            SUM(CASE WHEN (DATEDIFF(NOW(), debt_date) < 60) THEN d.debt_total END) as less60d,
+            SUM(CASE WHEN (DATEDIFF(NOW(), debt_date) >= 60 AND DATEDIFF(NOW(), debt_date) < 90) THEN d.debt_total END) as b6089d,
+            SUM(CASE WHEN (DATEDIFF(NOW(), debt_date) >= 90 AND DATEDIFF(NOW(), debt_date) < 120) THEN d.debt_total END) as b90119d,
+            SUM(CASE WHEN (DATEDIFF(NOW(), debt_date) > 120) THEN d.debt_total END) as great120d,
+            SUM(d.debt_total) as total
+            FROM nrhosp_acc_debt d
+            LEFT JOIN stock_supplier s ON (d.supplier_id=s.supplier_id) 
+            WHERE (d.debt_status IN ('0', '1'))
+            GROUP BY d.supplier_id, s.supplier_name ";
+
+        $count = count(\DB::select($sql));
+
+        $sql .= "LIMIT $offset, $perpage ";
+
+        $items = \DB::select($sql);
+        
+        $paginator = new Paginator($items, $count, $perpage, $page, [
+            'path' => $req->url(),
+            'query' => $req->query()
+        ]);
+
+        return [
+            'debts' => $paginator,
+            'page' => $page
+        ];
+    }
+    
     public function creditorPaid()
     {
         return view('accounts.creditor-paid', [
