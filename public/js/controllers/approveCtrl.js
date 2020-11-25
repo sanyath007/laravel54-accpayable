@@ -1,5 +1,6 @@
 app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFIG, ModalService, StringFormatService) {
 /** ################################################################################## */
+    $scope.loading = false;
     $scope.supplierDebtData = [];
     $scope.supplierDebtToRemoveData = [];
 
@@ -7,10 +8,12 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     $scope.debts = [];
     $scope.debtPager = [];
 
-    $scope.loading = false;
-    $scope.pager = [];
     $scope.approvements = [];
+    $scope.pager = [];
     $scope.approve = {};
+
+    $scope.approveData = {};
+    $scope.cancelData = {};
 
     $('#approveToDate').datepicker({
         autoclose: true,
@@ -83,9 +86,10 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     }
 
     $scope.getDataWithURL = function(URL) {
+        $scope.loading = true;
+
         console.log(URL);
         $scope.approvements = [];
-        $scope.loading = true;
 
     	$http.get(URL)
     	.then(function(res) {
@@ -181,6 +185,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     };
 
     $scope.showSupplierDebtList = function(event) {
+        $scope.loading = true;
         let creditor = $("#creditor_id").val();
 
         if (!creditor) {
@@ -194,6 +199,11 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
                 $scope.getSupplierDebtData(res.data.debts.data, res.data.debts);
 
                 $('#dlgSupplierDebtList').modal('show');
+
+                $scope.loading = false;
+            }, function(err) {
+                console.log(err);
+                $scope.loading = false;
             });
     };
 
@@ -216,6 +226,8 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     }
 
     $scope.getSupplierDebtDataWithURL = function(URL) {
+        $scope.loading = true;
+
         console.log(URL);
 
         $http.get(URL)
@@ -281,25 +293,70 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         $scope.approve.pay_to = $("#creditor_id option:selected").text().trim();
     };
 
-    $scope.popupApproveDebtList = function(appid) {
-        console.log(appid);
-        $http.get(`${CONFIG.baseUrl}/approve/detail/${appid}`)
-            .then(function (res) {
-                console.log(res);
-                $scope.debts = res.data.appdetails;
-                $scope.debttypes = res.data.debttypes;
+    $scope.popupApproveDebtList = function(appData) {
+        $scope.loading = true;
+        $scope.approveData = appData;
 
-                $('#dlgApproveDebtList').modal('show');
-            });
+        $http.get(`${CONFIG.baseUrl}/approve/detail/${appData.app_id}`)
+        .then(function (res) {
+            console.log(res);
+            $scope.debts = res.data.appdetails;
+            $scope.debttypes = res.data.debttypes;
+
+            $('#dlgApproveDebtList').modal('show');
+            
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
     };
 
+    $scope.popupCancelForm = function(appid) {
+        console.log(appid);
+        $scope.cancelData.app_id = appid;
+
+        $('#dlgCancelForm').modal('show');
+    };
+
+    $scope.doCancel = function(e, form) {
+        e.preventDefault();
+
+        if (form.$invalid) {
+            toaster.pop('warning', "", 'กรุณาระบุเหตุผลการยกเลิกก่อน !!!');
+            return;
+        } else {
+            if(confirm("คุณต้องยกเลิกรายการขออนุมัติเลขที่ " + $scope.cancelData.app_id + " ใช่หรือไม่?")) {
+                $scope.loading = true;
+                $scope.cancelData.user = $("#user").val();
+
+                $http.post(`${CONFIG.baseUrl}/approve/cancel`, $scope.cancelData)
+                .then(function (res) {
+                    console.log(res);
+                    toaster.pop('success', "", 'ยกเลิกรายการเรียบร้อยแล้ว !!!');
+
+                    $scope.approvements = $scope.approvements.filter(app => app.app_id !== $scope.cancelData.app_id);
+
+                    $scope.loading = false;
+                }, function(err) {
+                    console.log(err);
+                    toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+
+                    $scope.loading = false;
+                });
+
+                $('#dlgCancelForm').modal('hide');
+            }
+        }
+    }
+
     function calculateSupplierDebt() {
+        let vatRate = $("#vatrate").val();
         let vatAmt  = 0.0;
         let taxVal  = 0.0;
         let netVal  = 0.0;
         let netTotal = 0.0;
         let cheque = 0.0;
-        let vatRate = $("#vatrate").val();
 
         angular.forEach($scope.supplierDebtData, function(debt) {
             vatAmt += debt.debt_vat;
@@ -310,21 +367,16 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         netTotal = netVal + vatAmt;
         cheque = netTotal - taxVal;
 
-        $scope.approve.amount = currencyFormat(netVal); // ฐานภาษี
-        $scope.approve.net_val = currencyFormat(netVal); // ฐานภาษี
-        $scope.approve.vatamt = currencyFormat(vatAmt); // ภาษีมูลค่าเพิ่ม
-        $scope.approve.tax_val = currencyFormat(taxVal); // ภาษีหัก ณ ที่จ่าย
-        $scope.approve.net_amt = currencyFormat(taxVal); // ภาษีหัก ณ ที่จ่าย
-        $scope.approve.net_total = currencyFormat(netTotal); // ยอดสุทธิ
-        $scope.approve.cheque = currencyFormat(cheque); // ยอดจ่ายเช็ค
+        $scope.approve.amount = StringFormatService.currencyFormat(netVal); // ฐานภาษี
+        $scope.approve.net_val = StringFormatService.currencyFormat(netVal); // ฐานภาษี
+        $scope.approve.vatamt = StringFormatService.currencyFormat(vatAmt); // ภาษีมูลค่าเพิ่ม
+        $scope.approve.tax_val = StringFormatService.currencyFormat(taxVal); // ภาษีหัก ณ ที่จ่าย
+        $scope.approve.net_amt = StringFormatService.currencyFormat(taxVal); // ภาษีหัก ณ ที่จ่าย
+        $scope.approve.net_total = StringFormatService.currencyFormat(netTotal); // ยอดสุทธิ
+        $scope.approve.cheque = StringFormatService.currencyFormat(cheque); // ยอดจ่ายเช็ค
 
         $scope.approve.net_amt_str = ArabicNumberToText(taxVal.toFixed(2)); // ภาษีหัก ณ ที่จ่าย
         $scope.approve.net_total_str = ArabicNumberToText(netTotal.toFixed(2)); // ยอดสุทธิ
         $scope.approve.cheque_str = ArabicNumberToText(cheque.toFixed(2)); // ยอดจ่ายเช็ค
-        console.log($scope.approve);
-    }
-
-    function currencyFormat(num) {
-        return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
 });

@@ -14,7 +14,7 @@ class Debt extends Model
 
     public $timestamps = false; //ไม่ใช้ field updated_at และ created_at
 
-    protected $fillable = ['debt_status'];
+    protected $fillable = ['debt_chgdate', 'debt_userid', 'debt_status'];
     
     public function debttype()
   	{

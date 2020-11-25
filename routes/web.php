@@ -45,6 +45,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('approve/edit/{appId}', 'ApprovementController@edit');
     Route::put('approve/update', 'ApprovementController@update');
     Route::delete('approve/delete/{appId}', 'ApprovementController@delete');
+    Route::post('approve/cancel', 'ApprovementController@doCancel');
 
     Route::get('payment/list', 'PaymentController@index');
     Route::get('payment/search/{sdate}/{edate}/{searchKey}/{showall}', 'PaymentController@search');

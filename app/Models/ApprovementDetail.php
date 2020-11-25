@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class ApprovementDetail extends Model
 {
-    protected $table = 'nrhosp_acc_app_detail';
-    protected $primaryKey = 'app_detail_id';
-    public $incrementing = false; //ไม่ใช้ options auto increment
-    public $timestamps = false; //ไม่ใช้ field updated_at และ created_at
-    
+	protected $table = 'nrhosp_acc_app_detail';
+	
+	protected $primaryKey = 'app_detail_id';
+	
+	public $incrementing = false; //ไม่ใช้ options auto increment
+	
+	public $timestamps = false; //ไม่ใช้ field updated_at และ created_at
+	
+	protected $fillable = ['debt_id', 'ref_debt'];
+	
     public function debt()
   	{
       	return $this->belongsTo('App\Models\Debt', 'debt_id', 'debt_id');

@@ -134,8 +134,13 @@ class ApprovementController extends Controller
                 $detail->app_detail_stat = '0';
                 $detail->save();
 
-                /** Updated debt status to 1 */
-                Debt::find($debt['debt_id'])->update(['debt_status' => 1]);
+                /** Updated debt status to 1=ขออนุมัติ */
+                Debt::find($debt['debt_id'])
+                    ->update([
+                        'debt_chgdate'  => date("Y-m-d H:i:s"),
+                        'debt_userid'   => $req['chg_user'],
+                        'debt_status'   => 1
+                    ]);
             }
 
             return [
@@ -150,6 +155,45 @@ class ApprovementController extends Controller
         }
     }
 
+    public function doCancel(Request $req)
+    {
+        $approvement = Approvement::find($req['app_id']);
+        $approvement->cancel_reason = $req['reason'];
+        $approvement->chg_date =  date("Y-m-d H:i:s");
+        $approvement->chg_userid = $req['user'];
+        $approvement->app_stat = '3';
+
+        if($approvement->save()) {
+            $details  = ApprovementDetail::where('app_id', '=', $req['app_id'])->get();
+
+            foreach ($details as $detail) {
+                /** Updated debt status to 0=รอดำเนินการ */
+                Debt::find($detail->debt_id)
+                    ->update([
+                        'debt_chgdate'  => date("Y-m-d H:i:s"),
+                        'debt_userid'   => $req['user'],
+                        'debt_status'   => 0
+                    ]);
+
+                ApprovementDetail::find($detail->app_detail_id)
+                    ->update([
+                        'debt_id' => '',
+                        'ref_debt' => $detail->debt_id
+                    ]);
+            }
+            
+            return [
+                "status"    => "success",
+                "message"   => "Cancel success.",
+            ];
+        } else {
+            return [
+                "status" => "error",
+                "message" => "Cancel failed.",
+            ];
+        }
+    }
+
     public function detail($appid)
     {   
         $debttypes = [];
@@ -160,9 +204,9 @@ class ApprovementController extends Controller
 
         return [
             'appdetails' => ApprovementDetail::where(['app_id' => $appid])
-                                                ->with('debt')
-                                                ->orderBy('seq_no', 'ASC')
-                                                ->get(),
+                                ->with('debt')
+                                ->orderBy('seq_no', 'ASC')
+                                ->get(),
             'debttypes' => $debttypes,
         ];
     }

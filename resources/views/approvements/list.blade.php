@@ -125,17 +125,37 @@
                                     <td style="text-align: right;">@{{ approvement.cheque | number: 2 }}</td>
                                     <!-- <td style="text-align: center;">@{{ approvement.app_stat }}</td> -->
                                     <td style="text-align: center;">
-                                        <a ng-click="edit(approvement.app_id)" class="btn btn-warning btn-xs">
+                                        <a
+                                            ng-click="edit(approvement.app_id)"
+                                            class="btn btn-warning btn-xs"
+                                            title="แก้ไขรายการ"
+                                        >
                                             <i class="fa fa-edit"></i>
                                         </a>
 
-                                        <a ng-click="popupApproveDebtList(approvement.app_id)" class="btn btn-primary btn-xs">
+                                        <a
+                                            ng-click="popupApproveDebtList(approvement)"
+                                            class="btn btn-primary btn-xs"
+                                            title="ดูรายละเอียด"
+                                        >
                                             <i class="fa fa-search"></i>
+                                        </a>
+
+                                        <a
+                                            ng-click="popupCancelForm(approvement.app_id)"
+                                            class="btn btn-default btn-xs"
+                                            title="ยกเลิกรายการ"
+                                        >
+                                            <i class="fa fa-times"></i>
                                         </a>
 
                                         @if(Auth::user()->person_id == '1300200009261')
 
-                                            <a ng-click="delete(approvement.app_id)" class="btn btn-danger btn-xs">
+                                            <a
+                                                ng-click="delete(approvement.app_id)"
+                                                class="btn btn-danger btn-xs"
+                                                title="ลบรายการ"
+                                            >
                                                 <i class="fa fa-trash"></i>
                                             </a>
 
@@ -189,59 +209,9 @@
                 </div><!-- /.box -->
 
                 <!-- Modal -->
-                <div class="modal fade" id="dlgApproveDebtList" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="">รายการหนี้</h4>
-                            </div>
-                            <div class="modal-body" style="padding-top: 0; padding-bottom: 0;">
+                @include('approvements._cancel-modal')
 
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped" style="font-size: 12px; margin-top: 20px;">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 2%; text-align: center;">#</th>
-                                                <th style="width: 5%; text-align: center;">รหัส</th>
-                                                <th style="width: 7%; text-align: center;">วันที่ลงบัญชี</th>
-                                                <th style="width: 7%; text-align: center;">เลขที่ใบส่งของ</th>
-                                                <!-- <th style="width: 8%; text-align: center;">วันที่ใบส่งของ</th> -->
-                                                <th style="text-align: left;">ประเภทหนี้</th>
-                                                <th style="width: 20%; text-align: left;">รายละเอียด</th>
-                                                <th style="width: 6%; text-align: center;">ยอดหนี้</th>
-                                                <th style="width: 6%; text-align: center;">ภาษี</th>
-                                                <th style="width: 6%; text-align: center;">สุทธิ</th>
-                                                <!-- <th style="width: 6%; text-align: center;">สถานะ</th> -->
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-repeat="(index, debt) in debts">
-                                                <td class="text-center">@{{ debt.seq_no }}</td>
-                                                <td>@{{ debt.debt_id }}</td>
-                                                <td>@{{ debt.debt.debt_date | thdate }}</td>
-                                                <td>@{{ debt.debt.deliver_no }}</td>
-                                                <!-- <td>@{{ debt.deliver_date }}</td> -->
-                                                <td>@{{ debttypes[debt.debt.debt_type_id] }}</td>
-                                                <td>@{{ debt.debt.debt_type_detail }}</td>
-                                                <td class="text-right">@{{ debt.debt.debt_amount | number:2 }}</td>
-                                                <td class="text-right">@{{ debt.debt.debt_vat | number:2 }}</td>
-                                                <td class="text-right">@{{ debt.debt.debt_total | number:2 }}</td>
-                                                <!-- <td>@{{ debt.debt_status }}</td> -->
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div><!-- /.table-responsive -->
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                    ตกลง
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @include('approvements._debt-list-modal')
                 <!-- Modal -->
 
             </div><!-- /.col -->
