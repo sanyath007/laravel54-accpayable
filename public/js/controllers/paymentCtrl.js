@@ -6,13 +6,18 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
     $scope.supplierApproveToRemoveData = [];
 
     $scope.debttypes = [];
+
     $scope.approvements = [];
     $scope.approvePager = [];
     $scope.debtDetail = {};
 
-    $scope.payment = {};
     $scope.payments = [];
     $scope.pager = [];
+
+    $scope.payment = {};
+
+    $scope.paymentData = {};
+    $scope.cancelData = {};
 
     $('#paymentToDate').datepicker({
         autoclose: true,
@@ -369,13 +374,14 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
         // $scope.approve.pay_to = $("#creditor_id option:selected").text().trim();
     };
 
-    $scope.popupApproveDebtList = function(appid) {
+    $scope.popupPaymentDetail = function(payment) {
         $scope.loading = true;
+        $scope.paymentData = payment;
 
-        $http.get(`${CONFIG.baseUrl}/payment/detail/${appid}`)
+        $http.get(`${CONFIG.baseUrl}/payment/detail/${payment.payment_id}`)
         .then(res => {
             console.log(res);
-            $scope.debts = res.data.appdetails;
+            $scope.debts = res.data.paymentdetails;
             $scope.debttypes = res.data.debttypes;
 
             $('#dlgPaymentDebtList').modal('show');

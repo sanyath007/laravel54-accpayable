@@ -293,7 +293,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         $scope.approve.pay_to = $("#creditor_id option:selected").text().trim();
     };
 
-    $scope.popupApproveDebtList = function(appData) {
+    $scope.popupApproveDetail = function(appData) {
         $scope.loading = true;
         $scope.approveData = appData;
 

@@ -134,7 +134,7 @@
                                         </a>
 
                                         <a
-                                            ng-click="popupApproveDebtList(approvement)"
+                                            ng-click="popupApproveDetail(approvement)"
                                             class="btn btn-primary btn-xs"
                                             title="ดูรายละเอียด"
                                         >
@@ -167,14 +167,16 @@
                         </table>
                     </div><!-- /.box-body -->
                     
+                    <!-- Box Footer with pagination -->
                     @include('approvements._list-pagination')
+                    <!-- Box Footer with pagination -->
 
                 </div><!-- /.box -->
 
                 <!-- Modal -->
                 @include('approvements._cancel-modal')
 
-                @include('approvements._debt-list-modal')
+                @include('approvements._list-detail-modal')
                 <!-- Modal -->
 
             </div><!-- /.col -->
