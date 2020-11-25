@@ -41,8 +41,8 @@
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-files-o"></i>
-                    <span>บันทึกรายการ</span>
+                    <i class="fa fa-address-book-o"></i>
+                    <span>หนี้</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -50,7 +50,7 @@
                 <ul class="treeview-menu">
                     <li>
                         <a href="{{ url('/debt/list') }}">
-                            <i class="fa fa-circle-o"></i> รับหนี้
+                            <i class="fa fa-circle-o"></i> รายการหนี้
                         </a>
                     </li>
                     <li>
@@ -64,7 +64,39 @@
                         </a>
                     </li>
                 </ul>
-            </li>					
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-files-o"></i>
+                    <span>ขออนุมัติเบิก-จ่ายหนี้</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="{{ url('/approve/list') }}">
+                            <i class="fa fa-circle-o"></i> รายการขออนุมัติ
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-paper-plane-o"></i>
+                    <span>ตัดจ่ายหนี้</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="{{ url('payment/list') }}">
+                            <i class="fa fa-circle-o"></i> รายการตัดจ่ายหนี้
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-laptop"></i>
@@ -74,25 +106,28 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ url('/account/ledger/0/0/0') }}"><i class="fa fa-circle-o"></i> แยกประเภทเจ้าหนี้</a></li>
-                    <li><a href="{{ url('/account/ledger-debttype/0/0/0') }}"><i class="fa fa-circle-o"></i> แยกประเภทหนี้</a></li>
-                    <li><a href="{{ url('/account/arrear') }}"><i class="fa fa-circle-o"></i> ยอดหนี้ค้างจ่าย</a></li>
-                    <li><a href="{{ url('/account/creditor-paid') }}"><i class="fa fa-circle-o"></i> เจ้าหนี้จ่ายชำระหนี้</a></li>
+                    <li>
+                        <a href="{{ url('/account/ledger/0/0/0') }}">
+                            <i class="fa fa-circle-o"></i> แยกประเภทเจ้าหนี้
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/account/ledger-debttype/0/0/0') }}">
+                            <i class="fa fa-circle-o"></i> แยกประเภทหนี้
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/account/arrear') }}">
+                            <i class="fa fa-circle-o"></i> ยอดหนี้ค้างจ่าย
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/account/creditor-paid') }}">
+                            <i class="fa fa-circle-o"></i> เจ้าหนี้จ่ายชำระหนี้
+                        </a>
+                    </li>
                 </ul>
             </li>
-            <!-- <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-edit"></i> <span>Forms</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="pages/forms/general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
-                    <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
-                    <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
-                </ul>
-            </li> -->
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>
@@ -121,14 +156,27 @@
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-table"></i> <span>ข้อมูลพื้นฐาน</span>
+                    <i class="fa fa-cog"></i> <span>ข้อมูลพื้นฐาน</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ url('/creditor/list') }}"><i class="fa fa-circle-o"></i> เจ้าหนี้</a></li>
-                    <li><a href="{{ url('/debttype/list') }}"><i class="fa fa-circle-o"></i> ประเภทหนี้</a></li>
+                    <li>
+                        <a href="{{ url('/creditor/list') }}">
+                            <i class="fa fa-circle-o"></i> เจ้าหนี้
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/debttype/list') }}">
+                            <i class="fa fa-circle-o"></i> ประเภทหนี้
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/bank/list') }}">
+                            <i class="fa fa-circle-o"></i> ธนาคาร
+                        </a>
+                    </li>
                 </ul>
             </li>													
         </ul>
