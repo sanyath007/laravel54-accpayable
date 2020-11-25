@@ -109,7 +109,7 @@
                                 <a href="#1a" data-toggle="tab">รายการรอดำเนินการ</a>
                             </li>
                             <li>
-                                <a href="#2a" data-toggle="tab">รายหารขออนุมัติเบิก-จ่าย</a>
+                                <a href="#2a" data-toggle="tab">รายการขออนุมัติเบิก-จ่าย</a>
                             </li>
                             <li>
                                 <a href="#3a" data-toggle="tab">รายการชำระแล้ว</a>

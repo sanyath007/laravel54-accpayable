@@ -53,22 +53,22 @@
                             <i class="fa fa-circle-o"></i> รายการหนี้
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="{{ url('/approve/list') }}">
-                            <i class="fa fa-circle-o"></i> ขออนุมัติเบิก-จ่ายหนี้
+                            <i class="fa fa-circle-o"></i> รายการชำระเงินแล้ว
                         </a>
                     </li>
                     <li>
                         <a href="{{ url('payment/list') }}">
-                            <i class="fa fa-circle-o"></i> ตัดจ่ายหนี้
+                            <i class="fa fa-circle-o"></i> รายการลดหนี้ศูนย์
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-files-o"></i>
-                    <span>ขออนุมัติเบิก-จ่ายหนี้</span>
+                    <span>ขออนุมัติเบิก-จ่าย</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
