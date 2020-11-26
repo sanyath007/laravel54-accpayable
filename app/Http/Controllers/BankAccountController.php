@@ -34,15 +34,24 @@ class BankAccountController extends Controller
         ];
     }
 
+    public function getById($baId)
+    {
+        return [
+            'bankacc' => BankAccount::where(['bank_acc_id' => $baId])
+                            ->with('bank')
+                            ->with('branch')
+                            ->first(),
+        ];
+    }
+
     private function generateAutoId()
     {
-        $bankacc = \DB::table('nrhosp_acc_com_bank')
-                        ->select('bank_acc_id')
+        $bankacc = BankAccount::where('bank_acc_id', '<>', '999')
                         ->orderBy('bank_acc_id', 'DESC')
                         ->first();
 
         $tmpLastId =  ((int)($bankacc->bank_acc_id)) + 1;
-        $lastId = sprintf("%'.05d", $tmpLastId);
+        $lastId = sprintf("%'.03d", $tmpLastId);
 
         return $lastId;
     }
@@ -78,15 +87,6 @@ class BankAccountController extends Controller
                 "message" => "Insert failed.",
             ];
         }
-    }
-
-    public function getById($baId)
-    {
-        return [
-            'bankacc' => BankAccount::find($baId)
-                            ->with('bank')
-                            ->get(),
-        ];
     }
 
     public function edit($baId)

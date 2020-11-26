@@ -16,7 +16,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content" ng-controller="debttypeCtrl">
+    <section class="content" ng-controller="bankAccCtrl">
 
         <div class="row">
             <div class="col-md-12">
@@ -60,11 +60,11 @@
                                     </div>
                                 </div> 
 
-                                <div class="form-group" ng-class="{ 'has-error' : frmNewBankAcc.bank_type_id.$invalid}">
+                                <div class="form-group" ng-class="{ 'has-error' : frmNewBankAcc.bankacc_type_id.$invalid}">
                                     <label class="control-label">ประเภทบัญชี :</label>
-                                    <select id="bank_type_id"
-                                            name="bank_type_id"
-                                            ng-model="bankacc.bank_type_id"
+                                    <select id="bankacc_type_id"
+                                            name="bankacc_type_id"
+                                            ng-model="bankacc.bankacc_type_id"
                                             class="form-control select2" 
                                             style="width: 100%; font-size: 12px;" required>
                                             
@@ -79,7 +79,7 @@
                                         @endforeach
                                         
                                     </select>
-                                    <div class="help-block" ng-show="frmNewBankAcc.bank_type_id.$error.required">
+                                    <div class="help-block" ng-show="frmNewBankAcc.bankacc_type_id.$error.required">
                                         กรุณาเลือกประเภทบัญชี
                                     </div>
                                 </div>
