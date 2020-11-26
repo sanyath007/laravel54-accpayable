@@ -69,8 +69,8 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         
         let sDate = ($("#approveFromDate").val() != '') ? StringFormatService.convToDbDate($("#approveFromDate").val()) : 0;
         let eDate = ($("#approveToDate").val() != '') ? StringFormatService.convToDbDate($("#approveToDate").val()) : 0;
-        var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
-        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+        let searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
+        let showAll = $("#showall").is(":checked") ? 1 : 0;
 
         $http.get(`${CONFIG.baseUrl}/approve/search/json/${sDate}/${eDate}/${searchKey}/${showAll}`)
         .then(function(res) {
@@ -386,8 +386,8 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         } else {
             let sDate = ($("#approveFromDate").val() != '') ? StringFormatService.convToDbDate($("#approveFromDate").val()) : 0;
             let eDate = ($("#approveToDate").val() != '') ? StringFormatService.convToDbDate($("#approveToDate").val()) : 0;
-            var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
-            let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
             
             window.location.href = `${CONFIG.baseUrl}/approve/search/excel/${sDate}/${eDate}/${searchKey}/${showAll}`;
         }

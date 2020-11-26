@@ -72,10 +72,10 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
         
         let sDate = ($("#paymentFromDate").val() != '') ? StringFormatService.convToDbDate($("#paymentFromDate").val()) : 0;
         let eDate = ($("#paymentToDate").val() != '') ? StringFormatService.convToDbDate($("#paymentToDate").val()) : 0;
-        var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
-        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+        let searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
+        let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-        $http.get(`${CONFIG.baseUrl}/payment/search/${sDate}/${eDate}/${searchKey}/${showAll}`)
+        $http.get(`${CONFIG.baseUrl}/payment/search/json/${sDate}/${eDate}/${searchKey}/${showAll}`)
         .then(function(res) {
             console.log(res);
             $scope.payments = res.data.payments.data;
@@ -416,5 +416,18 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
         $scope.payment.paid_amt = StringFormatService.currencyFormat(total); // ยอดจ่าย
         $scope.payment.total = StringFormatService.currencyFormat(total); // ยอดจ่าย
         $scope.payment.totalstr = ArabicNumberToText(total.toFixed(2)); // ยอดจ่าย (ตัวอักษร)
+    }
+
+    $scope.exportListToExcel = function() {
+        if($scope.payments.length == 0) {
+            toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
+        } else {
+            let sDate = ($("#paymentFromDate").val() != '') ? StringFormatService.convToDbDate($("#paymentFromDate").val()) : 0;
+            let eDate = ($("#paymentToDate").val() != '') ? StringFormatService.convToDbDate($("#paymentToDate").val()) : 0;
+            let searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
+            
+            window.location.href = `${CONFIG.baseUrl}/payment/search/excel/${sDate}/${eDate}/${searchKey}/${showAll}`;
+        }
     }
 });

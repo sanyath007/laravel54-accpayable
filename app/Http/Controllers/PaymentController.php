@@ -24,7 +24,7 @@ class PaymentController extends Controller
     	return view('payments.list');
     }
 
-    public function search($sdate, $edate, $searchKey, $showall)
+    public function search($dataType, $sdate, $edate, $searchKey, $showall)
     {
         $conditions = [];
 
@@ -38,16 +38,33 @@ class PaymentController extends Controller
         if($searchKey !== '0') array_push($conditions, ['pay_to', 'like', '%'.$searchKey.'%']);
 
         if($conditions == '0') {
-            $payments = Payment::where(['paid_stat' => 'Y'])->paginate(20);
+            $payments = Payment::where(['paid_stat' => 'Y']);
         } else {
             $payments = Payment::where(['paid_stat' => 'Y'])
-                            ->where($conditions)
-                            ->paginate(20);
+                            ->where($conditions);
         }
 
-        return [
-            'payments' => $payments,
-        ];
+        if($dataType == 'excel') {
+            $fileName = 'payment-list-' . date('YmdHis') . '.xlsx';
+
+            $data = $payments->get();
+
+            return \Excel::create($fileName, function($excel) use ($data, $sdate, $edate) {
+                $excel->sheet('sheet1', function($sheet) use ($data, $sdate, $edate)
+                {    
+                    /** Use view */
+                    $sheet->loadView('exports.payment-list-excel', [
+                        'payments' => $data,
+                        'sdate' => $sdate,
+                        'edate' => $edate
+                    ]);                
+                });
+            })->download();
+        } else {
+            return [
+                'payments' => $payments->paginate(20),
+            ];
+        }
     }
 
     private function generateAutoId()

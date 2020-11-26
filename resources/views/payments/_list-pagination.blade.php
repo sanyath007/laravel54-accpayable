@@ -1,4 +1,12 @@
 <div class="box-footer clearfix">
+    <a
+        ng-show="payments.length"
+        ng-click="exportListToExcel()"
+        class="btn btn-success btn-sm"
+    >
+        Excel
+    </a>
+
     <div class="col-md-6" style="font-size: 12px;">
         Total @{{ pager.total | currency : "" : 0 }} รายการ
     </div>

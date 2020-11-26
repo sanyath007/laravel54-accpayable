@@ -26,7 +26,7 @@
                 <?php $cx = 0; ?>
                 @foreach($approvements as $approvement)
 
-                    <tr ng-repeat="(index, approvement) in approvements">
+                    <tr>
                         <td style="text-align: center;">{{ ++$cx }}</td>
                         <td style="text-align: center;">{{ $approvement->app_id }}</td>
                         <td style="text-align: center;">{{ $approvement->app_doc_no }}</td>

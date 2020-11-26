@@ -63,7 +63,7 @@ Route::group(['middleware' => ['web','auth']], function () {
 
     /** รายการตัดจ่ายหนี้ */
     Route::get('payment/list', 'PaymentController@index');
-    Route::get('payment/search/{sdate}/{edate}/{searchKey}/{showall}', 'PaymentController@search');
+    Route::get('payment/search/{dataType}/{sdate}/{edate}/{searchKey}/{showall}', 'PaymentController@search');
     Route::get('payment/get-payment/{appId}', 'PaymentController@getById');
     Route::get('payment/add', 'PaymentController@add');
     Route::post('payment/store', 'PaymentController@store');
