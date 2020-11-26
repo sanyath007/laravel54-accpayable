@@ -82,4 +82,44 @@ app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateSe
             window.location.href = `${CONFIG.baseUrl}/${URL}/${debtType}/${sDate}/${eDate}/${showAll}`;
         }
     };
+
+    $scope.getSumArrearData = function() {
+        $scope.loading = true;
+
+        $scope.debts = [];
+        $scope.pager = [];
+
+        let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+        let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+        let showAll = $("#showall").is(":checked") ? 1 : 0;
+        
+        $http.get(`${CONFIG.baseUrl}/report/sum-arrear/json/${sDate}/${eDate}/${showAll}`)
+        .then(function(res) {
+            console.log(res);
+            $scope.debts = res.data.debts.data;
+            $scope.pager = res.data.debts;
+
+            $scope.pages = PaginateService.createPagerNo($scope.pager);
+
+            console.log($scope.pages);
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
+    };
+
+    $scope.sumArrearToExcel = function() {
+        console.log($scope.debts);
+
+        if($scope.debts.length == 0) {
+            toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
+        } else {
+            let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+            let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
+            
+            window.location.href = `${CONFIG.baseUrl}/report/sum-arrear/excel/${sDate}/${eDate}/${showAll}`;
+        }
+    };
 });

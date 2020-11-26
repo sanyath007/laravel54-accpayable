@@ -59,9 +59,7 @@ Route::group(['middleware' => ['web','auth']], function () {
 
     Route::get('account/arrear', 'AccountController@arrear');    
     Route::get('account/arrear-rpt/{debttype}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@arrearRpt');     
-    Route::get('account/arrear-excel/{debttype}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@arrearExcel'); 
-    Route::get('account/sum-arrear', 'AccountController@sumArrear');
-    Route::get('account/sum-arrear/{sdate}/{edate}/{showall}', 'AccountController@sumArrearData');
+    Route::get('account/arrear-excel/{debttype}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@arrearExcel');
     Route::get('account/creditor-paid', 'AccountController@creditorPaid');    
     Route::get('account/creditor-paid-rpt/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@creditorPaidRpt');     
     Route::get('account/creditor-paid-excel/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@creditorPaidExcel');
@@ -106,5 +104,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('report/debt-debttype/rpt/{debtType}/{sdate}/{edate}/{showall}', 'ReportController@debtDebttypeRpt');  
     Route::get('report/debt-debttype-excel/{debttype}/{sdate}/{edate}/{showall}', 'ReportController@debtDebttypeExcel');
     Route::get('report/debt-chart/{creditorId}', 'ReportController@debtChart');
+    Route::get('report/sum-arrear', 'ReportController@sumArrear');
+    Route::get('report/sum-arrear/{sdate}/{edate}/{showall}', 'ReportController@sumArrearData');
     Route::get('report/sum-arrear/{dataType}/{sdate}/{edate}/{showall}', 'ReportController@sumArrearData'); 
 });

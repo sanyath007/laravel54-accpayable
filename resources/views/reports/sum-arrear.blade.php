@@ -16,7 +16,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content" ng-controller="accountCtrl">
+    <section class="content" ng-controller="reportCtrl">
 
         <div class="row">
             <div class="col-md-12">
@@ -58,7 +58,12 @@
                             <div class="col-md-6">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id="showall" name="showall"> แสดงทั้งหมด
+                                        <input
+                                            type="checkbox"
+                                            id="showall"
+                                            name="showall"
+                                            checked="checked"
+                                        > แสดงทั้งหมด
                                     </label>
                                 </div>
                             </div>
@@ -116,7 +121,7 @@
 
                     <div class="box-footer clearfix">
                         <a  ng-show="debts.length"
-                            ng-click="arrearToExcel('/account/arrear-excel')"
+                            ng-click="sumArrearToExcel()"
                             class="btn btn-success">
                             Excel
                         </a>

@@ -190,9 +190,14 @@ class ReportController extends Controller
         })->download();
     }
 
-    public function sumArrearData(Request $req)
+    public function sumArrear()
     {
-        $fileName = 'debt-type-' . date('YmdHis') . '.xlsx';
+        return view('reports.sum-arrear');
+    }
+
+    public function sumArrearData(Request $req, $dataType, $sdate, $edate, $showall)
+    {
+        $fileName = 'sum-arrear-' . date('YmdHis') . '.xlsx';
 
         $perpage = 10;
         $page = (isset($req['page'])) ? $req['page'] : 1;
@@ -209,26 +214,25 @@ class ReportController extends Controller
             WHERE (d.debt_status IN ('0', '1'))
             GROUP BY d.supplier_id, s.supplier_name ";
 
-        $count = count(\DB::select($sql));
-
-        $sql .= "LIMIT $offset, $perpage ";
-
-        $items = \DB::select($sql);
-
         if($dataType == 'excel') {
-            return \Excel::create($fileName, function($excel) use ($items) {
-                $excel->sheet('sheet1', function($sheet) use ($items)
-                {
-                    /** Use raw array */
-                    // $sheet->fromArray($items);
-    
+            $data = \DB::select($sql);
+
+            return \Excel::create($fileName, function($excel) use ($data) {
+                $excel->sheet('sheet1', function($sheet) use ($data)
+                {    
                     /** Use view */
-                    $sheet->loadView('exports.debt-creditor-excel', [
-                        'debts' => $items
+                    $sheet->loadView('exports.sum-arrear-excel', [
+                        'debts' => $data
                     ]);                
                 });
             })->download();
         } else {
+            $count = count(\DB::select($sql));
+
+            $sql .= "LIMIT $offset, $perpage ";
+
+            $items = \DB::select($sql);
+
             $paginator = new Paginator($items, $count, $perpage, $page, [
                 'path' => $req->url(),
                 'query' => $req->query()

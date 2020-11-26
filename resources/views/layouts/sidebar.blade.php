@@ -148,7 +148,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/account/sum-arrear') }}">
+                        <a href="{{ url('/report/sum-arrear') }}">
                             <i class="fa fa-circle-o"></i> สรุปยอดหนี้ค้างชำระ
                         </a>
                     </li>

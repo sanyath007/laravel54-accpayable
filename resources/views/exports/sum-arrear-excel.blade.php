@@ -1,4 +1,4 @@
-<h3>ยอดหนี้รายเจ้าหนี้</h3>
+<h3>สรุปยอดหนี้ค้างชำระ</h3>
 <table class="table table-bordered" style="font-size: 12px;">
     <thead>
         <tr>
@@ -21,11 +21,11 @@
                 <td style="text-align: center;">{{ ++$cx }}</td>
                 <td style="text-align: center;">{{ $debt->supplier_id }}</td>
                 <td style="text-align: left;">{{ $debt->supplier_name }}</td>
-                <td style="text-align: right;">{{ $debt->less60d }}</td>
-                <td style="text-align: right;">{{ $debt->b6089d }}</td>
-                <td style="text-align: right;">{{ $debt->b90119d }}</td>
-                <td style="text-align: right;">{{ $debt->great120d }}</td>
-                <td style="text-align: right;">{{ $debt->total }}</td>
+                <td style="text-align: right;">{{ number_format($debt->less60d, 2) }}</td>
+                <td style="text-align: right;">{{ number_format($debt->b6089d, 2) }}</td>
+                <td style="text-align: right;">{{ number_format($debt->b90119d, 2) }}</td>
+                <td style="text-align: right;">{{ number_format($debt->great120d, 2) }}</td>
+                <td style="text-align: right;">{{ number_format($debt->total, 2) }}</td>
             </tr>
 
         @endforeach
