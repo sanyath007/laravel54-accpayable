@@ -128,19 +128,19 @@
 
                         <ul ng-show="debts.length" class="pagination pagination-sm no-margin pull-right">                            
                             <li ng-if="pager.current_page !== 1">
-                                <a href="#" ng-click="getArrearWithURL(pager.path+ '?page=1')" aria-label="First">
+                                <a href="#" ng-click="getDataWithURL(pager.path+ '?page=1')" aria-label="First">
                                     <span aria-hidden="true">First</span>
                                 </a>
                             </li>                            
 
                             <li ng-class="{'disabled': (pager.current_page==1)}">
-                                <a href="#" ng-click="getArrearWithURL(pager.prev_page_url)" aria-label="Prev">
+                                <a href="#" ng-click="getDataWithURL(pager.prev_page_url)" aria-label="Prev">
                                     <span aria-hidden="true">Prev</span>
                                 </a>
                             </li>
                             
                            <li ng-repeat="i in pages" ng-class="{'active': pager.current_page==i}">
-                                <a href="#" ng-click="getArrearWithURL(pager.path + '?page=' +i)">
+                                <a href="#" ng-click="getDataWithURL(pager.path + '?page=' +i)">
                                     @{{ i }}
                                 </a>
                             </li>
@@ -152,13 +152,13 @@
                             </li> -->
                             
                             <li ng-class="{'disabled': (pager.current_page==pager.last_page)}">
-                                <a href="#" ng-click="getArrearWithURL(pager.next_page_url)" aria-label="Next">
+                                <a href="#" ng-click="getDataWithURL(pager.next_page_url)" aria-label="Next">
                                     <span aria-hidden="true">Next</span>
                                 </a>
                             </li>
 
                             <li ng-if="pager.current_page !== pager.last_page">
-                                <a href="#" ng-click="getArrearWithURL(pager.path+ '?page=' +pager.last_page)" aria-label="Last">
+                                <a href="#" ng-click="getDataWithURL(pager.path+ '?page=' +pager.last_page)" aria-label="Last">
                                     <span aria-hidden="true">Last</span>
                                 </a>
                             </li>

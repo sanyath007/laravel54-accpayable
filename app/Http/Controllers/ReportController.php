@@ -227,7 +227,7 @@ class ReportController extends Controller
             ]);
     
             return [
-                'debts' => $paginator,
+                'pager' => $paginator,
                 'page' => $page
             ];
         }

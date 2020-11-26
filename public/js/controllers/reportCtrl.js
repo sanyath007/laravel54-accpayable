@@ -96,8 +96,8 @@ app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateSe
         $http.get(`${CONFIG.baseUrl}/report/sum-arrear/json/${sDate}/${eDate}/${showAll}`)
         .then(function(res) {
             console.log(res);
-            $scope.debts = res.data.debts.data;
-            $scope.pager = res.data.debts;
+            $scope.debts = res.data.pager.data;
+            $scope.pager = res.data.pager;
 
             $scope.pages = PaginateService.createPagerNo($scope.pager);
 
