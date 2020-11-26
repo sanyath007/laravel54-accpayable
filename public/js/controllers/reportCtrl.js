@@ -53,7 +53,7 @@ app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateSe
         });
     };
 
-    $scope.debtCreditorToExcel = function(URL) {
+    $scope.debtCreditorToExcel = function() {
         console.log($scope.debts);
 
         if($scope.debts.length == 0) {
@@ -64,11 +64,11 @@ app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateSe
             let creditor = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
             let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-            window.location.href = `${CONFIG.baseUrl}//${URL}/${creditor}/${sDate}/${eDate}/${showAll}`;
+            window.location.href = `${CONFIG.baseUrl}/report/debt-creditor/excel/${creditor}/${sDate}/${eDate}/${showAll}`;
         }
     };
 
-    $scope.debttypeToExcel = function(URL) {
+    $scope.debttypeToExcel = function() {
         console.log($scope.debts);
 
         if($scope.debts.length == 0) {
@@ -79,7 +79,7 @@ app.controller('reportCtrl', function(CONFIG, $scope, $http, toaster, PaginateSe
             let debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
             let showAll = $("#showall").is(":checked") ? 1 : 0;
             
-            window.location.href = `${CONFIG.baseUrl}/${URL}/${debtType}/${sDate}/${eDate}/${showAll}`;
+            window.location.href = `${CONFIG.baseUrl}/report/debt-debttype/excel/${debtType}/${sDate}/${eDate}/${showAll}`;
         }
     };
 

@@ -29,18 +29,7 @@
                 <td style="text-align: center;">{{ number_format($debt->debt_amount, 2) }}</td>
                 <td style="text-align: center;">{{ number_format($debt->debt_vat, 2) }}</td>
                 <td style="text-align: center;">{{ number_format($debt->debt_total, 2) }}</td>
-                <td style="text-align: center;">
-                    <?php if($debt->debt_status==1) {
-                        echo 'ขออนุมัติ';
-                    } else if($debt->debt_status==2) {
-                        echo 'ชำระเงินแล้ว';
-                    } else if($debt->debt_status==3) {
-                        echo 'ยกเลิก';
-                    } else {
-                        echo 'รอดำเนินการ';
-                    }   
-                    ?>
-                </td>       
+                <td style="text-align: center;">{{ $debt->debt_status }}</td>       
             </tr>
 
         @endforeach

@@ -97,12 +97,10 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::post('debt/setzero', 'DebtController@setZero');
     Route::get('debt/{creditor}/list', 'DebtController@supplierDebt');
 
-    Route::get('report/debt-creditor/list', 'ReportController@debtCreditor');    
-    Route::get('report/debt-creditor/rpt/{creditor}/{sdate}/{edate}/{showall}', 'ReportController@debtCreditorRpt');    
-    Route::get('report/debt-creditor-excel/{creditor}/{sdate}/{edate}/{showall}', 'ReportController@debtCreditorExcel');     
-    Route::get('report/debt-debttype/list', 'ReportController@debtDebttype');    
-    Route::get('report/debt-debttype/rpt/{debtType}/{sdate}/{edate}/{showall}', 'ReportController@debtDebttypeRpt');  
-    Route::get('report/debt-debttype-excel/{debttype}/{sdate}/{edate}/{showall}', 'ReportController@debtDebttypeExcel');
+    Route::get('report/debt-creditor/list', 'ReportController@debtCreditor');   
+    Route::get('report/debt-creditor/{dataType}/{creditor}/{sdate}/{edate}/{showall}', 'ReportController@debtCreditorData');     
+    Route::get('report/debt-debttype/list', 'ReportController@debtDebttype');
+    Route::get('report/debt-debttype/{dataType}/{debttype}/{sdate}/{edate}/{showall}', 'ReportController@debtDebttypeData');
     Route::get('report/debt-chart/{creditorId}', 'ReportController@debtChart');
     Route::get('report/sum-arrear', 'ReportController@sumArrear');
     Route::get('report/sum-arrear/{sdate}/{edate}/{showall}', 'ReportController@sumArrearData');

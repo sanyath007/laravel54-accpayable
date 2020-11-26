@@ -89,7 +89,7 @@
                         </div><!-- /.box-body -->
                   
                         <div class="box-footer">
-                            <button ng-click="getDebtData('report/debt-debttype/rpt')" class="btn btn-primary">ค้นหา</button>
+                            <button ng-click="getDebtData('report/debt-debttype/json')" class="btn btn-primary">ค้นหา</button>
                         </div>
                     </form>
                 </div><!-- /.box -->
@@ -142,7 +142,7 @@
 
                     <div class="box-footer clearfix">
                         <a  ng-show="debts.length"
-                            ng-click="debttypeToExcel('/report/debt-debttype-excel')"
+                            ng-click="debttypeToExcel()"
                             class="btn btn-success">
                             Excel
                         </a>
