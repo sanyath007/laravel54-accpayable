@@ -66,19 +66,23 @@
 	<script src="{{ asset('/js/env.js') }}"></script>
 	<!-- AngularJS Components -->
 	<script src="{{ asset('/js/main.js') }}"></script>
+	
 	<script src="{{ asset('/js/controllers/mainCtrl.js') }}"></script>
 	<script src="{{ asset('/js/controllers/homeCtrl.js') }}"></script>
 	<script src="{{ asset('/js/controllers/debtCtrl.js') }}"></script>
-	<script src="{{ asset('/js/controllers/creditorCtrl.js') }}"></script>
-	<script src="{{ asset('/js/controllers/debttypeCtrl.js') }}"></script>
 	<script src="{{ asset('/js/controllers/accountCtrl.js') }}"></script>
 	<script src="{{ asset('/js/controllers/reportCtrl.js') }}"></script>
 	<script src="{{ asset('/js/controllers/approveCtrl.js') }}"></script>
 	<script src="{{ asset('/js/controllers/paymentCtrl.js') }}"></script>
-	<!--<script src="{{ asset('/js/directives/highcharts.js') }}"></script>-->
+	<script src="{{ asset('/js/controllers/creditorCtrl.js') }}"></script>
+	<script src="{{ asset('/js/controllers/debttypeCtrl.js') }}"></script>
+	<script src="{{ asset('/js/controllers/bankAccCtrl.js') }}"></script>
+
 	<script src="{{ asset('/js/services/report.js') }}"></script>
 	<script src="{{ asset('/js/services/stringFormat.js') }}"></script>
 	<script src="{{ asset('/js/services/pagination.js') }}"></script>
+
+	<!--<script src="{{ asset('/js/directives/highcharts.js') }}"></script>-->
 
 </head>
 <!-- For set collapse menu use .sidebar-collapse class in body tag -->
