@@ -139,7 +139,7 @@
                     
                     <div class="box-footer clearfix">
                         <a  ng-show="debts.length"
-                            ng-click="debtCreditorToExcel()"
+                            ng-click="debtCreditorToExcel('report/debt-creditor-excel')"
                             class="btn btn-success">
                             Excel
                         </a>
