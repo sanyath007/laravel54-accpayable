@@ -15,9 +15,10 @@ app.controller('bankAccCtrl', function($rootScope, $scope, $http, toaster, CONFI
 
     $scope.getData = function(event) {
         $scope.loading = true;
-        $scope.bankaccs = [];
+        $scope.debttypes = [];
         
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
+        console.log(`${CONFIG.baseUrl}/bankacc/search/${searchKey}`);
 
         $http.get(`${CONFIG.baseUrl}/bankacc/search/${searchKey}`)
         .then(function(res) {

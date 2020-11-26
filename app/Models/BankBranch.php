@@ -14,5 +14,10 @@ class BankBranch extends Model
     public function bankAcc()
   	{
       	return $this->hasMany('App\Models\BankAccount', 'bank_branch_id', 'bank_branch_id');
+    }
+    
+    public function bank()
+  	{
+      	return $this->belongsTo('App\Models\Bank', 'bank_id', 'bank_id');
   	}
 }

@@ -11,8 +11,13 @@ class Bank extends Model
     public $incrementing = false; //ไม่ใช้ options auto increment
     public $timestamps = false; //ไม่ใช้ field updated_at และ created_at
     
-    public function bankAccount()
+    public function account()
   	{
       	return $this->hasMany('App\Models\BankAccount', 'bank_id', 'bank_id');
+  	}
+    
+    public function branch()
+  	{
+      	return $this->hasMany('App\Models\BankBranch', 'bank_id', 'bank_id');
   	}
 }

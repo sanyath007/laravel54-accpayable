@@ -1,29 +1,28 @@
-app.controller('bankAccCtrl', function($rootScope, $scope, $http, toaster, CONFIG, ModalService) {
+app.controller('bankBranchCtrl', function($rootScope, $scope, $http, toaster, CONFIG, ModalService) {
 /** ################################################################################## */
     $scope.loading = false;
     $scope.pager = [];
-    $scope.bankaccs = [];
-    $scope.bankacc = {
-        bank_acc_id: '',
-        bank_acc_no: '',
-        bank_acc_name: '',
-        bank_id: '',
+    $scope.branches = [];
+    $scope.branch = {
         bank_branch_id: '',
-        bank_type_id: '',
-        company_id: '01'
+        bank_branch_name: '',
+        bank_id: '',
+        bank_branch_addr: '',
+        bank_branch_tel: '',
+        bank_branch_fax: '',
     };
 
     $scope.getData = function(event) {
         $scope.loading = true;
-        $scope.bankaccs = [];
+        $scope.branches = [];
         
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
 
-        $http.get(`${CONFIG.baseUrl}/bankacc/search/${searchKey}`)
+        $http.get(`${CONFIG.baseUrl}/bank-branch/search/${searchKey}`)
         .then(function(res) {
             console.log(res);
-            $scope.bankaccs = res.data.bankaccs.data;
-            $scope.pager = res.data.bankaccs;
+            $scope.branches = res.data.branches.data;
+            $scope.pager = res.data.branches;
 
             $scope.loading = false;
         }, function(err) {
@@ -34,13 +33,13 @@ app.controller('bankAccCtrl', function($rootScope, $scope, $http, toaster, CONFI
 
     $scope.getDataWithURL = function(URL) {
         $scope.loading = true;
-        $scope.bankaccs = [];
+        $scope.branches = [];
 
     	$http.get(URL)
     	.then(function(res) {
     		console.log(res);
-            $scope.bankaccs = res.data.bankaccs.data;
-            $scope.pager = res.data.bankaccs;
+            $scope.branches = res.data.branches.data;
+            $scope.pager = res.data.branches;
 
             $scope.loading = false;
     	}, function(err) {
@@ -49,17 +48,15 @@ app.controller('bankAccCtrl', function($rootScope, $scope, $http, toaster, CONFI
     	});
     }
 
-    $scope.getBankAcc = function(baId) {
+    $scope.getBranch = function(bbId) {
         $scope.loading = true;
 
-        $http.get(`${CONFIG.baseUrl}/bankacc/get-bankacc/${baId}`)
+        $http.get(`${CONFIG.baseUrl}/bank-branch/get-branch/${bbId}`)
         .then(function(res) {
             console.log(res);
-            $scope.bankacc = res.data.bankacc;
+            $scope.branch = res.data.branch;
             
-            $scope.bankacc.bank_id = $scope.bankacc.bank_id.toString();
-            $scope.bankacc.bank_branch_id = $scope.bankacc.bank_branch_id.toString();
-            $scope.bankacc.bankacc_type_id = $scope.bankacc.bankacc_type_id.toString();
+            $scope.branch.bank_id = $scope.branch.bank_id.toString();
 
             $scope.loading = false;
         }, function(err) {
@@ -76,24 +73,30 @@ app.controller('bankAccCtrl', function($rootScope, $scope, $http, toaster, CONFI
             toaster.pop('warning', "", 'กรุณาข้อมูลให้ครบก่อน !!!');
             return;
         } else {
-            $http.post(`${CONFIG.baseUrl}/bankacc/store`, $scope.bankacc)
+            $scope.loading = true;
+
+            $http.post(`${CONFIG.baseUrl}/bank-branch/store`, $scope.branch)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
+                
+                $scope.loading = false;
+
+                /** Redirect to bank account list */
+                $rootScope.redirectToIndex('bank-branch/list');
             }, function(err) {
                 console.log(err);
                 toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+
+                $scope.loading = false;
             });            
         }
-
-        /** Redirect to bank account list */
-        $rootScope.redirectToIndex('bankacc/list');
     }
 
-    $scope.edit = function(baId) {
-        console.log(baId);
+    $scope.edit = function(bbId) {
+        console.log(bbId);
 
-        window.location.href = `${CONFIG.baseUrl}/bankacc/edit/${baId}`;
+        window.location.href = `${CONFIG.baseUrl}/bank-branch/edit/${bbId}`;
     };
 
     $scope.update = function(event, form, baId) {
@@ -102,7 +105,7 @@ app.controller('bankAccCtrl', function($rootScope, $scope, $http, toaster, CONFI
         if(confirm("คุณต้องแก้ไขรายการหนี้เลขที่ " + baId + " ใช่หรือไม่?")) {
             $scope.loading = true;
 
-            $http.put(`${CONFIG.baseUrl}/bankacc/update`, $scope.bankacc)
+            $http.put(`${CONFIG.baseUrl}/bank-branch/update`, $scope.branch)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
@@ -110,7 +113,7 @@ app.controller('bankAccCtrl', function($rootScope, $scope, $http, toaster, CONFI
                 $scope.loading = false;
 
                 /** Redirect to bank account list */
-                $rootScope.redirectToIndex('bankacc/list');
+                $rootScope.redirectToIndex('bank-branch/list');
 
             }, function(err) {
                 console.log(err);
@@ -121,17 +124,20 @@ app.controller('bankAccCtrl', function($rootScope, $scope, $http, toaster, CONFI
         }
     };
 
-    $scope.delete = function(baId) {
-        if(confirm("คุณต้องลบรายการหนี้เลขที่ " + baId + " ใช่หรือไม่?")) {
+    $scope.delete = function(bbId) {
+        if(confirm("คุณต้องลบรายการหนี้เลขที่ " + bbId + " ใช่หรือไม่?")) {
             $scope.loading = true;
 
-            $http.delete(`${CONFIG.baseUrl}/bankacc/delete/${baId}`)
+            $http.delete(`${CONFIG.baseUrl}/bank-branch/delete/${bbId}`)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');
                 $scope.getData();
 
                 $scope.loading = false;
+
+                /** Redirect to bank account list */
+                $rootScope.redirectToIndex('bank-branch/list');
             }, function(err) {
                 console.log(err);
                 toaster.pop('error', "", 'พบข้อผิดพลาด !!!');

@@ -121,4 +121,22 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('bankacc/edit/{baId}', 'BankAccountController@edit');
     Route::put('bankacc/update', 'BankAccountController@update');
     Route::delete('bankacc/delete/{baId}', 'BankAccountController@delete');
+
+    Route::get('bank/list', 'BankController@index');
+	Route::get('bank/search/{searchKey}', 'BankController@search');
+    Route::get('bank/get-bank/{bankId}', 'BankController@getById');
+    Route::get('bank/add', 'BankController@add');
+    Route::post('bank/store', 'BankController@store');
+    Route::get('bank/edit/{bankId}', 'BankController@edit');
+    Route::put('bank/update', 'BankController@update');
+    Route::delete('bank/delete/{bankId}', 'BankController@delete');
+
+    Route::get('bank-branch/list', 'BankBranchController@index');
+	Route::get('bank-branch/search/{searchKey}', 'BankBranchController@search');
+    Route::get('bank-branch/get-branch/{bbId}', 'BankBranchController@getById');
+    Route::get('bank-branch/add', 'BankBranchController@add');
+    Route::post('bank-branch/store', 'BankBranchController@store');
+    Route::get('bank-branch/edit/{bbId}', 'BankBranchController@edit');
+    Route::put('bank-branch/update', 'BankBranchController@update');
+    Route::delete('bank-branch/delete/{bbId}', 'BankBranchController@delete');
 });

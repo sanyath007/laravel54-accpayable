@@ -183,7 +183,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/branch/list') }}">
+                        <a href="{{ url('/bank-branch/list') }}">
                             <i class="fa fa-circle-o"></i> สาขาธนาคาร
                         </a>
                     </li>

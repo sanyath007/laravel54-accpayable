@@ -77,6 +77,8 @@
 	<script src="{{ asset('/js/controllers/creditorCtrl.js') }}"></script>
 	<script src="{{ asset('/js/controllers/debttypeCtrl.js') }}"></script>
 	<script src="{{ asset('/js/controllers/bankAccCtrl.js') }}"></script>
+	<script src="{{ asset('/js/controllers/bankCtrl.js') }}"></script>
+	<script src="{{ asset('/js/controllers/bankBranchCtrl.js') }}"></script>
 
 	<script src="{{ asset('/js/services/report.js') }}"></script>
 	<script src="{{ asset('/js/services/stringFormat.js') }}"></script>
