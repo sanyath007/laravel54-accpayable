@@ -10,72 +10,51 @@ class BankController extends Controller
 {
     public function index()
     {
-    	return view('bankaccs.list');
+    	return view('banks.list');
     }
 
     public function search($searchKey)
     {
         if($searchKey == '0') {
-            $bankaccs = BankAccount::with('bank')
-                            ->with('branch')
-                            ->orderBy('bank_acc_no')
-                            ->paginate(10);
+            $banks = Bank::paginate(10);
         } else {
-            $bankaccs = BankAccount::where('bank_acc_name', 'like', '%'.$searchKey.'%')
-                            ->with('bank')
-                            ->with('branch')
-                            ->orderBy('bank_acc_no')
-                            ->paginate(10);
+            $banks = Bank::where('bank_name', 'like', '%'.$searchKey.'%')->paginate(10);
         }
 
         return [
-            'bankaccs' => $bankaccs,
+            'banks' => $banks,
         ];
     }
 
-    public function getById($baId)
+    public function getById($bankId)
     {
         return [
-            'bankacc' => BankAccount::where(['bank_acc_id' => $baId])
-                            ->with('bank')
-                            ->with('branch')
-                            ->first(),
+            'bank' => Bank::find($bankId)
         ];
     }
 
     private function generateAutoId()
     {
-        $bankacc = BankAccount::where('bank_acc_id', '<>', '999')
-                        ->orderBy('bank_acc_id', 'DESC')
-                        ->first();
+        $bank = Bank::orderBy('bank_id', 'DESC')->first();
 
-        $tmpLastId =  ((int)($bankacc->bank_acc_id)) + 1;
-        $lastId = sprintf("%'.03d", $tmpLastId);
+        $tmpLastId =  ((int)($bank->bank_id)) + 1;
+        $lastId = sprintf("%'.02d", $tmpLastId);
 
         return $lastId;
     }
 
     public function add()
     {
-    	return view('bankaccs.add', [
-            'banks' => Bank::all(),
-            'branches' => \DB::table('nrhosp_acc_bank_branch')->select('*')->get(),
-            'bankTypes' => \DB::table('nrhosp_acc_bankacc_type')->select('*')->get(),
-    	]);
+    	return view('banks.add');
     }
 
     public function store(Request $req)
     {
-        $bankacc = new BankAccount();
-        $bankacc->bank_acc_id = $this->generateAutoId();
-        $bankacc->bank_acc_no = $req['bank_acc_no'];
-        $bankacc->bank_acc_name = $req['bank_acc_name'];
-        $bankacc->bank_id = $req['bank_id'];
-        $bankacc->bankacc_type_id = $req['bankacc_type_id'];
-        $bankacc->bank_branch_id = $req['bank_branch_id'];
-        $bankacc->company_id = $req['company_id'];
+        $bank = new Bank();
+        $bank->bank_id = $this->generateAutoId();
+        $bank->bank_name = $req['bank_name'];
 
-        if($bankacc->save()) {
+        if($bank->save()) {
             return [
                 "status" => "success",
                 "message" => "Insert success.",
@@ -88,27 +67,19 @@ class BankController extends Controller
         }
     }
 
-    public function edit($baId)
+    public function edit($bankId)
     {
-        return view('bankaccs.edit', [
-            'bankacc'   => BankAccount::find($baId),
-            'banks'     => Bank::all(),
-            'branches'  => \DB::table('nrhosp_acc_bank_branch')->select('*')->get(),
-            'bankTypes' => \DB::table('nrhosp_acc_bankacc_type')->select('*')->get(),
+        return view('banks.edit', [
+            'bank'   => Bank::find($bankId)
         ]);
     }
 
     public function update(Request $req)
     {
-        $bankacc = BankAccount::find($req['bank_acc_id']);
-        $bankacc->bank_acc_no = $req['bank_acc_no'];
-        $bankacc->bank_acc_name = $req['bank_acc_name'];
-        $bankacc->bank_id = $req['bank_id'];
-        $bankacc->bankacc_type_id = $req['bankacc_type_id'];
-        $bankacc->bank_branch_id = $req['bank_branch_id'];
-        $bankacc->company_id = $req['company_id'];
+        $bank = Bank::find($req['bank_id']);
+        $bank->bank_name = $req['bank_name'];
 
-        if($bankacc->save()) {
+        if($bank->save()) {
             return [
                 "status" => "success",
                 "message" => "Update success.",
@@ -121,11 +92,11 @@ class BankController extends Controller
         }
     }
 
-    public function delete($baId)
+    public function delete($bankId)
     {
-        $bankacc = BankAccount::find($baId);
+        $bank = Bank::find($bankId);
 
-        if($bankacc->delete()) {
+        if($bank->delete()) {
             return [
                 "status" => "success",
                 "message" => "Delete success.",

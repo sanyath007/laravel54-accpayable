@@ -135,9 +135,6 @@ app.controller('bankBranchCtrl', function($rootScope, $scope, $http, toaster, CO
                 $scope.getData();
 
                 $scope.loading = false;
-
-                /** Redirect to bank account list */
-                $rootScope.redirectToIndex('bank-branch/list');
             }, function(err) {
                 console.log(err);
                 toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
