@@ -50,7 +50,7 @@ Route::group(['middleware' => ['web','auth']], function () {
 
     /** รายการขออนุมัติเบิก-จ่าย */
     Route::get('approve/list', 'ApprovementController@index');
-    Route::get('approve/search/{sdate}/{edate}/{searchKey}/{showall}', 'ApprovementController@search');
+    Route::get('approve/search/{dataType}/{sdate}/{edate}/{searchKey}/{showall}', 'ApprovementController@search');
     Route::get('approve/get-all-bysupplier/{supplierId}', 'ApprovementController@getAllBySupplier');
     Route::get('approve/get-approve/{appId}', 'ApprovementController@getById');
     Route::get('approve/add', 'ApprovementController@add');

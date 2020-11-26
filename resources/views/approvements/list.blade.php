@@ -84,7 +84,7 @@
                         </div><!-- /.box-body -->
                   
                         <div class="box-footer">
-                            <a href="{{ url('/approve/add') }}" class="btn btn-success"> สร้างรายการขออนุมัติ</a>
+                            <a href="{{ url('/approve/add') }}" class="btn btn-primary"> สร้างรายการขออนุมัติ</a>
                         </div>
                     </form>
                 </div><!-- /.box -->

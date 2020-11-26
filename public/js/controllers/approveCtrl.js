@@ -72,7 +72,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
         let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
 
-        $http.get(`${CONFIG.baseUrl}/approve/search/${sDate}/${eDate}/${searchKey}/${showAll}`)
+        $http.get(`${CONFIG.baseUrl}/approve/search/json/${sDate}/${eDate}/${searchKey}/${showAll}`)
         .then(function(res) {
             console.log(res);
             $scope.approvements = res.data.approvements.data;
@@ -378,5 +378,18 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         $scope.approve.net_amt_str = ArabicNumberToText(taxVal.toFixed(2)); // ภาษีหัก ณ ที่จ่าย
         $scope.approve.net_total_str = ArabicNumberToText(netTotal.toFixed(2)); // ยอดสุทธิ
         $scope.approve.cheque_str = ArabicNumberToText(cheque.toFixed(2)); // ยอดจ่ายเช็ค
+    }
+
+    $scope.exportListToExcel = function() {
+        if($scope.approvements.length == 0) {
+            toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
+        } else {
+            let sDate = ($("#approveFromDate").val() != '') ? StringFormatService.convToDbDate($("#approveFromDate").val()) : 0;
+            let eDate = ($("#approveToDate").val() != '') ? StringFormatService.convToDbDate($("#approveToDate").val()) : 0;
+            var searchKey = ($("#searchKey").val() == '') ? 0 : $("#searchKey").val();
+            let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            
+            window.location.href = `${CONFIG.baseUrl}/approve/search/excel/${sDate}/${eDate}/${searchKey}/${showAll}`;
+        }
     }
 });

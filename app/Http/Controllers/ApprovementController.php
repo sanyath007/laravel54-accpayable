@@ -22,7 +22,7 @@ class ApprovementController extends Controller
     	return view('approvements.list');
     }
 
-    public function search($sdate, $edate, $searchKey, $showall)
+    public function search($dataType, $sdate, $edate, $searchKey, $showall)
     {
         $conditions = [];
 
@@ -36,16 +36,34 @@ class ApprovementController extends Controller
         if($searchKey !== '0') array_push($conditions, ['pay_to', 'like', '%'.$searchKey.'%']);
 
         if($conditions == '0') {
-            $approvements = Approvement::whereIn('app_stat', ['0', '1'])->paginate(20);
+            $approvements = Approvement::whereIn('app_stat', ['0', '1']);
         } else {
             $approvements = Approvement::whereIn('app_stat', ['0', '1'])
-                                    ->where($conditions)
-                                    ->paginate(20);
+                                    ->where($conditions);
+                                    
         }
 
-        return [
-            'approvements' => $approvements,
-        ];
+        if($dataType == 'excel') {
+            $fileName = 'approvement-list-' . date('YmdHis') . '.xlsx';
+
+            $data = $approvements->get();
+
+            return \Excel::create($fileName, function($excel) use ($data, $sdate, $edate) {
+                $excel->sheet('sheet1', function($sheet) use ($data, $sdate, $edate)
+                {    
+                    /** Use view */
+                    $sheet->loadView('exports.approvement-list-excel', [
+                        'approvements' => $data,
+                        'sdate' => $sdate,
+                        'edate' => $edate
+                    ]);                
+                });
+            })->download();
+        } else {
+            return [
+                'approvements' => $approvements->paginate(20),
+            ];
+        }
     }
 
     public function getById($appId)
