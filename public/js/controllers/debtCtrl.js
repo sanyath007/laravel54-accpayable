@@ -1,4 +1,4 @@
-app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService, StringFormatService, ReportService, PaginateService) {
+app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, StringFormatService, ReportService, PaginateService) {
 /** ################################################################################## */
     $scope.loading = false;
 
@@ -314,27 +314,19 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
     }
 
     $scope.calculateVat = function(amount, vatRate) {
-        $scope.debt.debt_vat = ((amount * vatRate) / 100).toFixed(2);
+        let vat = parseInt(vatRate) ? parseInt(vatRate) : 0;
+        
+        $scope.debt.debt_vat = ((parseFloat(amount) * vat) / 100).toFixed(2);
         $scope.debt.debt_total = (parseFloat(amount) + parseFloat($scope.debt.debt_vat)).toFixed(2);
     }
 
     $scope.add = function(event) {
-        console.log(event);
         event.preventDefault();
 
-        var creditor = $("#debtType").val();
-        console.log(creditor);
-
-        if(creditor === '') {
-            console.log("You doesn't select creditor !!!");
-            toaster.pop('warning', "", "คุณยังไม่ได้เลือกเจ้าหนี้ !!!");
-        } else {
-            window.location.href = `${CONFIG.baseUrl}/debt/add/${creditor}`;
-        }
+        window.location.href = `${CONFIG.baseUrl}/debt/add`;
     }
 
     $scope.store = function(event, form) {
-        console.log(event);
         event.preventDefault();
 
         if (form.$invalid) {
@@ -342,6 +334,8 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
             toaster.pop('warning', "", 'กรุณาข้อมูลให้ครบก่อน !!!');
             return;
         } else {
+            $scope.loading = true;
+
             /** Convert thai date to db date. */
             $scope.debt.debt_date = StringFormatService.convToDbDate($scope.debt.debt_date);
             $scope.debt.debt_doc_recdate = StringFormatService.convToDbDate($scope.debt.debt_doc_recdate);
@@ -349,42 +343,33 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
             $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convToDbDate($scope.debt.debt_doc_date) : '';
             $scope.debt.doc_receive = StringFormatService.convToDbDate($scope.debt.doc_receive);
             /** Get supplier data */
-            $scope.debt.supplier_id = $("#supplier_id").val();
-            $scope.debt.supplier_name = $("#supplier_name").val();
+            $scope.debt.supplier_name = ($("#supplier_id").find('option:selected').text()).trim();
             /** Get user id */
             $scope.debt.debt_creby = $("#user").val();
             $scope.debt.debt_userid = $("#user").val();
-            console.log($scope.debt);
 
             $http.post(`${CONFIG.baseUrl}/debt/store`, $scope.debt)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
+
+                $scope.loading = false;
+
+                /** Redirect to debt list */
+                $rootScope.redirectToIndex('debt/list');
             }, function(err) {
                 console.log(err);
                 toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
-            });            
-        }
 
-        /** Clear control value and model data */
-        document.getElementById('frmNewDebt').reset();
-        $scope.clearDebtObj();
+                $scope.loading = false;
+            });
+        }
     }
 
-    $scope.edit = function(debtId) {
-        console.log(debtId);
+    $scope.edit = function(event, debtId) {
+        event.preventDefault();
 
-        /** Show edit form modal dialog */
-        // $('#dlgEditForm').modal('show');
-
-        var creditor = $("#debtType").val();
-
-        if(creditor === '') {
-            console.log("You doesn't select creditor !!!");
-            toaster.pop('warning', "", "คุณยังไม่ได้เลือกเจ้าหนี้ !!!");
-        } else {
-            window.location.href = `${CONFIG.baseUrl}/debt/edit/${creditor}/${debtId}`;
-        }
+        window.location.href = `${CONFIG.baseUrl}/debt/edit/${debtId}`;
     };
 
     $scope.update = function(event, form, debtId) {
@@ -394,7 +379,7 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         if (form.$invalid) {
             toaster.pop('warning', "", 'กรุณาข้อมูลให้ครบก่อน !!!');
             return;
-        } else {
+        } else {            
             /** Convert thai date to db date. */
             $scope.debt.debt_date = StringFormatService.convToDbDate($scope.debt.debt_date);
             $scope.debt.debt_doc_recdate = StringFormatService.convToDbDate($scope.debt.debt_doc_recdate);
@@ -410,16 +395,30 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
             console.log($scope.debt);
 
             if(confirm("คุณต้องแก้ไขรายการหนี้เลขที่ " + debtId + " ใช่หรือไม่?")) {
+                $scope.loading = true;
+
                 $http.put(`${CONFIG.baseUrl}/debt/update`, $scope.debt)
                 .then(function(res) {
                     console.log(res);
+                    toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
+
+                    $scope.loading = false;
+
+                    /** Redirect to debt list */
+                    $rootScope.redirectToIndex('debt/list');
                 }, function(err) {
                     console.log(err);
-                });
-            }
+                    toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
 
-            /** Redirect to debt list */
-            window.location.href = `${CONFIG.baseUrl}/debt/list`;
+                    $scope.loading = false;
+                });
+            } else {
+                $scope.debt.debt_date = StringFormatService.convFromDbDate($scope.debt.debt_date);
+                $scope.debt.debt_doc_recdate = StringFormatService.convFromDbDate($scope.debt.debt_doc_recdate);
+                $scope.debt.deliver_date = StringFormatService.convFromDbDate($scope.debt.deliver_date);
+                $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convFromDbDate($scope.debt.debt_doc_date) : '';
+                $scope.debt.doc_receive = StringFormatService.convFromDbDate($scope.debt.doc_receive);
+            }
         }
     };
 
@@ -427,44 +426,57 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         console.log(debtId);
 
         if(confirm("คุณต้องลบรายการหนี้เลขที่ " + debtId + " ใช่หรือไม่?")) {
+            $scope.loading = true;
+
             $http.delete(`${CONFIG.baseUrl}/debt/delete/${debtId}`)
             .then(function(res) {
                 console.log(res);
 
                 toaster.pop('success', "", 'ลบข้อมูลเรียบร้อยแล้ว !!!');
+
+                $scope.loading = false;
             }, function(err) {
                 console.log(err);
                 toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+
+                $scope.loading = false;
             });
         }
 
         /** Get debt list and re-render chart */
-        $scope.getDebtData('/debt/rpt'); 
-        $scope.getDebtChart($scope.cboDebtType);
+        $scope.getData();
+        // $scope.getDebtChart($scope.cboDebtType);
     };
 
     $scope.setzero = function(debtId) {
         console.log(debtId);
 
         if(confirm("คุณต้องลดหนี้เป็นศูนย์รายการหนี้เลขที่ " + debtId + " ใช่หรือไม่?")) {
+            $scope.loading = false;
+
             $http.post(`${CONFIG.baseUrl}/debt/setzero`, { debt_id: debtId })
             .then(function(res) {
-                console.log(res);
                 if(res.data.status == 'success') {
                     toaster.pop('success', "ระบบทำการงลดหนี้เป็นศูนย์สำเร็จแล้ว", "");
+
+                    $scope.loading = false;
                 } else { 
                     toaster.pop('error', "พบข้อผิดพลาดในระหว่างการดำเนินการ !!!", "");
+
+                    $scope.loading = false;
                 }
             }, function(err) {
                 console.log(err);
 
                 toaster.pop('error', "พบข้อผิดพลาดในระหว่างการดำเนินการ !!!", "");
+
+                $scope.loading = false;
             });
         }
 
         /** Get debt list and re-render chart */
-        $scope.getDebtData('/debt/rpt'); 
-        $scope.getDebtChart($scope.cboDebtType);
+        $scope.getData(); 
+        // $scope.getDebtChart($scope.cboDebtType);
     };
 
     $scope.exportListToExcel = function() {

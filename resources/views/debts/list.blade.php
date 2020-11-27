@@ -165,12 +165,14 @@
                                                 title="ลดหนี้ศูนย์">
                                                 <i class="fa fa-credit-card"></i>
                                             </a>
-                                            <a  ng-click="edit(debt.debt_id)" 
+
+                                            <a  ng-click="edit($event, debt.debt_id)" 
                                                 ng-show="(debt.debt_status==0)" 
                                                 class="btn btn-warning btn-xs"
                                                 title="แก้ไขรายการ">
                                                 <i class="fa fa-edit"></i>
                                             </a>
+
                                             <a  ng-click="delete(debt.debt_id)" 
                                                 ng-show="(debt.debt_status==0)" 
                                                 class="btn btn-danger btn-xs"

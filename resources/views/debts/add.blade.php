@@ -34,19 +34,28 @@
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    <div class="form-group">
-                                        <label class="control-label">เจ้าหนี้ :</label>
-                                        <input  type="text" 
-                                                id="supplier_name" 
-                                                name="supplier_name"
-                                                value="{{ $creditor->supplier_name }}" 
-                                                class="form-control"
-                                                readonly>
-                                        <input  type="hidden" 
-                                                id="supplier_id" 
-                                                name="supplier_id" 
-                                                value="{{ $creditor->supplier_id }}" 
-                                                class="form-control">
+                                    <div class="form-group" ng-class="{ 'has-error': frmNewDebt.supplier_id.$error.required }">
+                                        <label class="control-label">เจ้าหนี้ :</label>                                                
+                                        <select id="supplier_id" 
+                                                name="supplier_id"
+                                                ng-model="debt.supplier_id" 
+                                                class="form-control select2" 
+                                                style="width: 100%; font-size: 12px;"
+                                                tabindex="2" required>
+                                            <option value="" selected="selected">-- กรุณาเลือก --</option>
+
+                                            @foreach($creditors as $creditor)
+
+                                                <option value="{{ $creditor->supplier_id }}">
+                                                    {{ $creditor->supplier_name }}
+                                                </option>
+
+                                            @endforeach
+                                            
+                                        </select>
+                                        <div class="help-block" ng-show="frmNewDebt.supplier_id.$error.required">
+                                            กรุณาเลือกเจ้าหนี้
+                                        </div>
                                     </div>                                
 
                                     <div class="form-group" ng-class="{ 'has-error': frmNewDebt.debt_type_id.$error.required }">

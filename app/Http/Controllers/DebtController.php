@@ -157,6 +157,13 @@ class DebtController extends Controller
             "totalDebt" => $totalDebt,
         ];
     }
+    
+    public function getById($debtId)
+    {
+        return [
+            'debt' => Debt::find($debtId),
+        ];
+    }
 
     private function generateAutoId()
     {
@@ -172,10 +179,10 @@ class DebtController extends Controller
         return $lastId;
     }
 
-    public function add($creditor)
+    public function add()
     {
     	return view('debts.add', [
-    		"creditor" => Creditor::where('supplier_id', '=', $creditor)->first(),
+    		"creditors" => Creditor::all(),
             "debttypes" => DebtType::all(),
     	]);
     }
@@ -224,18 +231,13 @@ class DebtController extends Controller
         }
     }
 
-    public function getById($debtId)
+    public function edit($debtId)
     {
-        return [
-            'debt' => Debt::find($debtId),
-        ];
-    }
+        $debt = Debt::find($debtId);
 
-    public function edit($creditor, $debtId)
-    {
         return view('debts.edit', [
-            "creditor" => Creditor::where('supplier_id', '=', $creditor)->first(),
-            'debt' => Debt::find($debtId),
+            'debt' => $debt,
+            "creditor" => Creditor::where('supplier_id', '=', $debt->supplier_id)->first(),
             "debttypes" => DebtType::all(),
         ]);
     }
