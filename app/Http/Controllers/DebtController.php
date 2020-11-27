@@ -56,6 +56,54 @@ class DebtController extends Controller
     	]);
     }
 
+    public function search($dataType, $sdate, $edate, $supplier, $showall)
+    {
+        $conditions = [];
+
+        if($showall == 0) {
+            if($sdate != 0 && $edate != 0) {
+                array_push($conditions, ['debt_date', '>=', $sdate]);
+                array_push($conditions, ['debt_date', '<=', $edate]);
+            }
+        }
+
+        if($supplier !== '0') array_push($conditions, ['supplier_id', '=', $supplier]);
+
+        if(count($conditions) > 0) {
+            $debts = Debt::where('debt_status', '=', '0')
+                        ->where($conditions)
+                        ->with('debttype');
+        } else {
+            $debts = Debt::where('debt_status', '=', '0')                                   
+                        ->with('debttype');
+        }
+
+        if($dataType == 'excel') {
+            $fileName = 'debt-list-' . date('YmdHis') . '.xlsx';
+            $options = ['sdate' => $sdate, 'edate' => $edate];
+            $data = $debts->get();
+            
+            $this->exportExcel($fileName, 'exports.debt-list-excel', $data, $options);
+        } else {
+            return [
+                'debts' => $debts->paginate(20),
+            ];
+        }
+    }
+
+    private function exportExcel($fileName, $view, $data, $options)
+    {
+        return \Excel::create($fileName, function($excel) use ($view, $data, $options) {
+            $excel->sheet('sheet1', function($sheet) use ($view, $data, $options)
+            {
+                $sheet->loadView($view, [
+                    'debts' => $data,
+                    'options' => $options
+                ]);                
+            });
+        })->download();
+    }
+
     public function debtRpt($creditor, $sdate, $edate, $showall)
     {
         /** 0=รอดำเนินการ,1=ขออนุมัติ,2=ตัดจ่าย,3=ยกเลิก,4=ลดหนี้ศุนย์ */

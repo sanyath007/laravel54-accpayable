@@ -38,6 +38,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     
     /** รายการตั้งหนี้ */
     Route::get('debt/list', 'DebtController@index');
+    Route::get('debt/search/{dataType}/{sdate}/{edate}/{supplier}/{showall}', 'DebtController@search');
     Route::get('debt/rpt/{creditor}/{sdate}/{edate}/{showall}', 'DebtController@debtRpt');
     Route::get('debt/get-debt/{debtId}', 'DebtController@getById');
     Route::get('debt/add/{creditor}', 'DebtController@add');

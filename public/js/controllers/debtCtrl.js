@@ -1,7 +1,8 @@
 app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService, StringFormatService, ReportService, PaginateService) {
 /** ################################################################################## */
     $scope.loading = false;
-    $scope.cboDebtType = "";
+
+    $scope.cboSupplier = "";
     $scope.searchKeyword = "";
     $scope.searchTmp = [];
 
@@ -10,12 +11,12 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
     $scope.paids = [];
     $scope.setzeros = [];
 
-    $scope.debtPager = [];
-    $scope.appPager = [];
-    $scope.paidPager = [];
-    $scope.setzeroPager = [];
+    $scope.pager = {};
+    $scope.appPager = {};
+    $scope.paidPager = {};
+    $scope.setzeroPager = {};
 
-    $scope.debtPages = [];
+    $scope.pages = [];
     $scope.appPages = [];
     $scope.paidPages = [];
     $scope.setzeroPages = [];
@@ -48,6 +49,22 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
 
     $scope.barOptions = {};
 
+    $('#debtToDate').datepicker({
+        autoclose: true,
+        orientation: 'bottom',
+        language: 'th',
+        format: 'dd/mm/yyyy',
+        thaiyear: true
+    }).on('changeDate', function(event){
+        if($("#debtFromDate").val() == '') {
+            alert('กรุณาเลือกระหว่างวันที่ก่อน !!!');
+        }
+
+        if($('#showall').is(":checked")) $('#showall').prop("checked", false);
+        
+        $scope.getData();
+    });
+
     $scope.clearDebtObj = function() {
         $scope.debt = {
             debt_date: '',
@@ -74,91 +91,29 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         };
     };
 
-    $scope.getDebtChart = function (creditorId) {
-        ReportService.getSeriesData('/report/debt-chart/', creditorId)
-        .then(function(res) {
-            console.log(res);
-
-            var debtSeries = [];
-            var paidSeries = [];
-            var setzeroSeries = [];
-
-            angular.forEach(res.data, function(value, key) {
-                let debt = (value.debt) ? parseFloat(value.debt.toFixed(2)) : 0;
-                let paid = (value.paid) ? parseFloat(value.paid.toFixed(2)) : 0;
-                let setzero = (value.setzero) ? parseFloat(value.setzero.toFixed(2)) : 0;
-                
-                debtSeries.push(debt);
-                paidSeries.push(paid);
-                setzeroSeries.push(setzero);
-            });
-
-            var categories = ['ยอดหนี้']
-            $scope.barOptions = ReportService.initBarChart("barContainer", "", categories, 'จำนวน');
-            $scope.barOptions.series.push({
-                name: 'หนี้คงเหลือ',
-                data: debtSeries
-            }, {
-                name: 'ตัดจ่ายแล้ว',
-                data: paidSeries
-            }, {
-                name: 'ลดหนี้ศูนย์',
-                data: setzeroSeries
-            });
-
-            var chart = new Highcharts.Chart($scope.barOptions);
-        }, function(err) {
-            console.log(err);
-        });
-    };
-
-    $scope.getDebtData = function(URL) {
-        $scope.debts = [];
-        $scope.apps = [];
-        $scope.paids = [];
-        $scope.setzeros = [];
-
-        $scope.debtPager = [];
-        $scope.appPager = [];
-        $scope.paidPager = [];
-        $scope.setzeroPager = [];
-
-        $scope.debtPages = [];
-        $scope.appPages = [];
-        $scope.paidPages = [];
-        $scope.setzeroPages = [];
-
+    $scope.getData = function() {
         $scope.loading = true;
-        
+
+        $scope.debts = [];
+        $scope.pager = {};
+        $scope.pages = [];
+
         let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
         let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
-        let debtType = ($("#debtType").val() != '') ? $("#debtType").val() : 0;
-        let showAll = ($('#showall').is(":checked")) ? 1 : 0;
+        let supplier = ($scope.cboSupplier != '') ? $scope.cboSupplier : 0;
+        let showAll = $('#showall').is(":checked") ? 1 : 0;
 
-        $http.get(`${CONFIG.baseUrl}${URL}/${debtType}/${sDate}/${eDate}/${showAll}`)
+        $http.get(`${CONFIG.baseUrl}/debt/search/json/${sDate}/${eDate}/${supplier}/${showAll}`)
         .then(function(res) {
             console.log(res);
             $scope.debts = res.data.debts.data;
-            $scope.debtPager = res.data.debts;
-            $scope.debtPages = PaginateService.createPagerNo($scope.debtPager);
-
-            $scope.apps = res.data.apps.data;
-            $scope.appPager = res.data.apps;
-            $scope.appPages = PaginateService.createPagerNo($scope.appPager);
-
-            $scope.paids = res.data.paids.data;
-            $scope.paidPager = res.data.paids;
-            $scope.paidPages = PaginateService.createPagerNo($scope.paidPager);
-
-            $scope.setzeros = res.data.setzeros.data;
-            $scope.setzeroPager = res.data.setzeros;
-            $scope.setzeroPages = PaginateService.createPagerNo($scope.setzeroPager);
-
-    		$scope.totalDebt = res.data.totalDebt;
+            $scope.pager = res.data.debts;
+            $scope.pages = PaginateService.createPagerNo($scope.pager);
 
             $scope.loading = false;
     	}, function(err) {
-    		console.log(err);
+            console.log(err);
+            
             $scope.loading = false;
     	});
     }
@@ -251,6 +206,113 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         });
     }
 
+    
+    $scope.getDebtChart = function (creditorId) {
+        ReportService.getSeriesData('/report/debt-chart/', creditorId)
+        .then(function(res) {
+            console.log(res);
+
+            var debtSeries = [];
+            var paidSeries = [];
+            var setzeroSeries = [];
+
+            angular.forEach(res.data, function(value, key) {
+                let debt = (value.debt) ? parseFloat(value.debt.toFixed(2)) : 0;
+                let paid = (value.paid) ? parseFloat(value.paid.toFixed(2)) : 0;
+                let setzero = (value.setzero) ? parseFloat(value.setzero.toFixed(2)) : 0;
+                
+                debtSeries.push(debt);
+                paidSeries.push(paid);
+                setzeroSeries.push(setzero);
+            });
+
+            var categories = ['ยอดหนี้']
+            $scope.barOptions = ReportService.initBarChart("barContainer", "", categories, 'จำนวน');
+            $scope.barOptions.series.push({
+                name: 'หนี้คงเหลือ',
+                data: debtSeries
+            }, {
+                name: 'ตัดจ่ายแล้ว',
+                data: paidSeries
+            }, {
+                name: 'ลดหนี้ศูนย์',
+                data: setzeroSeries
+            });
+
+            var chart = new Highcharts.Chart($scope.barOptions);
+        }, function(err) {
+            console.log(err);
+        });
+    };
+
+    $scope.getDebtData = function(URL) {
+        $scope.debts = [];
+        $scope.apps = [];
+        $scope.paids = [];
+        $scope.setzeros = [];
+
+        $scope.debtPager = [];
+        $scope.appPager = [];
+        $scope.paidPager = [];
+        $scope.setzeroPager = [];
+
+        $scope.debtPages = [];
+        $scope.appPages = [];
+        $scope.paidPages = [];
+        $scope.setzeroPages = [];
+
+        $scope.loading = true;
+        
+        let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+        let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+        let debtType = ($("#debtType").val() != '') ? $("#debtType").val() : 0;
+        let showAll = ($('#showall').is(":checked")) ? 1 : 0;
+
+        $http.get(`${CONFIG.baseUrl}${URL}/${debtType}/${sDate}/${eDate}/${showAll}`)
+        .then(function(res) {
+            console.log(res);
+            $scope.debts = res.data.debts.data;
+            $scope.debtPager = res.data.debts;
+            $scope.debtPages = PaginateService.createPagerNo($scope.debtPager);
+
+            $scope.apps = res.data.apps.data;
+            $scope.appPager = res.data.apps;
+            $scope.appPages = PaginateService.createPagerNo($scope.appPager);
+
+            $scope.paids = res.data.paids.data;
+            $scope.paidPager = res.data.paids;
+            $scope.paidPages = PaginateService.createPagerNo($scope.paidPager);
+
+            $scope.setzeros = res.data.setzeros.data;
+            $scope.setzeroPager = res.data.setzeros;
+            $scope.setzeroPages = PaginateService.createPagerNo($scope.setzeroPager);
+
+    		$scope.totalDebt = res.data.totalDebt;
+
+            $scope.loading = false;
+    	}, function(err) {
+    		console.log(err);
+            $scope.loading = false;
+    	});
+    }
+
+    $scope.getDebt = function(debtId) {
+        $http.get(`${CONFIG.baseUrl}/debt/get-debt/${debtId}`)
+        .then(function(res) {
+            console.log(res);
+            $scope.debt = res.data.debt;
+
+            /** Convert db date to thai date. */
+            $scope.debt.debt_date = StringFormatService.convFromDbDate($scope.debt.debt_date);
+            $scope.debt.debt_doc_recdate = StringFormatService.convFromDbDate($scope.debt.debt_doc_recdate);
+            $scope.debt.deliver_date = StringFormatService.convFromDbDate($scope.debt.deliver_date);
+            $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convFromDbDate($scope.debt.debt_doc_date) : '';
+            $scope.debt.doc_receive = StringFormatService.convFromDbDate($scope.debt.doc_receive);
+        }, function(err) {
+            console.log(err);
+        });
+    }
+
     $scope.calculateVat = function(amount, vatRate) {
         $scope.debt.debt_vat = ((amount * vatRate) / 100).toFixed(2);
         $scope.debt.debt_total = (parseFloat(amount) + parseFloat($scope.debt.debt_vat)).toFixed(2);
@@ -307,23 +369,6 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         /** Clear control value and model data */
         document.getElementById('frmNewDebt').reset();
         $scope.clearDebtObj();
-    }
-
-    $scope.getDebt = function(debtId) {
-        $http.get(`${CONFIG.baseUrl}/debt/get-debt/${debtId}`)
-        .then(function(res) {
-            console.log(res);
-            $scope.debt = res.data.debt;
-
-            /** Convert db date to thai date. */
-            $scope.debt.debt_date = StringFormatService.convFromDbDate($scope.debt.debt_date);
-            $scope.debt.debt_doc_recdate = StringFormatService.convFromDbDate($scope.debt.debt_doc_recdate);
-            $scope.debt.deliver_date = StringFormatService.convFromDbDate($scope.debt.deliver_date);
-            $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convFromDbDate($scope.debt.debt_doc_date) : '';
-            $scope.debt.doc_receive = StringFormatService.convFromDbDate($scope.debt.doc_receive);
-        }, function(err) {
-            console.log(err);
-        });
     }
 
     $scope.edit = function(debtId) {
@@ -421,4 +466,17 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
         $scope.getDebtData('/debt/rpt'); 
         $scope.getDebtChart($scope.cboDebtType);
     };
+
+    $scope.exportListToExcel = function() {
+        if($scope.debts.length == 0) {
+            toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
+        } else {
+            let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
+            let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
+            let supplier = ($scope.cboSupplier != '') ? $scope.cboSupplier : 0;
+            let showAll = $('#showall').is(":checked") ? 1 : 0;
+            
+            window.location.href = `${CONFIG.baseUrl}/debt/search/excel/${sDate}/${eDate}/${supplier}/${showAll}`;
+        }
+    }
 });
