@@ -118,20 +118,20 @@ app.controller('debtCtrl', function(CONFIG, $scope, $http, toaster, ModalService
     	});
     }
 
-    $scope.getDebtWithURL = function(URL) {
+    $scope.getDataWithURL = function(URL) {
         $scope.loading = true;
         
         $scope.debts = [];
-        $scope.debtPager = [];
-        $scope.debtPages = [];
+        $scope.pager = [];
+        $scope.pages = [];
 
 
         $http.get(URL)
         .then(function(res) {
             console.log(res);
             $scope.debts = res.data.debts.data;
-            $scope.debtPager = res.data.debts;
-            $scope.debtPages = PaginateService.createPagerNo($scope.debtPager);
+            $scope.pager = res.data.debts;
+            $scope.pages = PaginateService.createPagerNo($scope.pager);
 
             $scope.loading = false;
         }, function(err) {
