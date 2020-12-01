@@ -75,11 +75,9 @@ Route::group(['middleware' => ['web','auth']], function () {
 
     /** บัญชี */
     Route::get('account/arrear', 'AccountController@arrear');    
-    Route::get('account/arrear-rpt/{debttype}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@arrearRpt');     
-    Route::get('account/arrear-excel/{debttype}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@arrearExcel');
+    Route::get('account/arrear/{dataType}/{debttype}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@arrearData');
     Route::get('account/creditor-paid', 'AccountController@creditorPaid');    
-    Route::get('account/creditor-paid-rpt/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@creditorPaidRpt');     
-    Route::get('account/creditor-paid-excel/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@creditorPaidExcel');
+    Route::get('account/creditor-paid/{dataType}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@creditorPaidData');
     Route::get('account/ledger/{sdate}/{edate}/{showall}', 'AccountController@ledger');     
     Route::get('account/ledger-excel/{sdate}/{edate}/{showall}', 'AccountController@ledgerExcel');
     Route::get('account/ledger-debttype/{sdate}/{edate}/{showall}', 'AccountController@ledgerDebttype');     

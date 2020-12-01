@@ -118,7 +118,7 @@
                                     <th style="text-align: left;">บริษัท</th>
                                     <th style="width: 5%; text-align: center;">ยอดหนี้สุทธิ</th>
                                     <th style="width: 5%; text-align: center;">ยอดหนี้</th>
-                                    <th style="width: 5%; text-align: center;">VAT1%</th>
+                                    <th style="width: 5%; text-align: center;">ภาษีหัก ณ ที่จ่าย</th>
                                     <th style="width: 5%; text-align: center;">ยอดจ่ายเช็ค</th>
                                     <th style="width: 8%; text-align: center;">ธนาคาร</th>
                                 </tr>
@@ -152,7 +152,7 @@
 
                     <div class="box-footer clearfix">
                         <a  ng-show="payments.length"
-                            ng-click="creditorPaidToExcel('/account/creditor-paid-excel')"
+                            ng-click="creditorPaidToExcel()"
                             class="btn btn-success">
                             Excel
                         </a>
@@ -200,88 +200,6 @@
 
             </div><!-- /.col -->
         </div><!-- /.row -->
-
-        <!-- Modal -->
-        <div class="modal fade" id="dlgEditForm" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="">เพิ่มรายการสถานที่</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="">ชื่อสถานที่</label>
-                            <input type="text" id="locationName" name="locationName" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="">ที่อยู่</label>
-                            <input type="text" id="locationAddress" name="locationAddress" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="">ถนน</label>
-                            <input type="text" id="locationRoad" name="locationRoad" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="ID">จังหวัด</label>
-                            <select 
-                                id="chw_id"
-                                name="chw_id" 
-                                class="form-control" 
-                                ng-model="selectedChangwat" 
-                                ng-change="getAmphur($event, selectedChangwat)">
-                                <option value="">-- กรุณาเลือกจังหวัด --</option>
-                                <option value="@{{ c.chw_id }}" ng-repeat="c in changwats">
-                                    @{{ c.changwat }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="ID">อำเภอ</label>
-                            <select 
-                                id="amp_id"
-                                name="amp_id" 
-                                class="form-control" 
-                                ng-model="selectedAmphur"
-                                ng-change="getTambon($event, selectedAmphur)">
-                                <option value="">-- กรุณาเลือกอำเภอ --</option>
-                                <option value="@{{ a.id }}" ng-repeat="a in amphurs">
-                                    @{{ a.amphur }}
-                                </option>
-                            </select>
-                        </div>                    
-
-                        <div class="form-group">
-                            <label for="ID">ตำบล</label>                    
-                            <select 
-                                id="tam_id"
-                                name="tam_id" 
-                                class="form-control" 
-                                ng-model="selectedTambon">
-                                <option value="">-- กรุณาเลือกตำบล --</option>
-                                <option value="@{{ t.id }}" ng-repeat="t in tambons">
-                                    @{{ t.tambon }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="">รหัสไปรษณี</label>
-                            <input type="text" id="locationPostcode" name="locationPostcode" class="form-control">
-                        </div>              
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" ng-click="addNewLocation($event)">
-                            Save
-                        </button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
 
     </section>
 

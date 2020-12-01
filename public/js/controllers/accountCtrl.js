@@ -7,7 +7,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
     $scope.totalDebt = 0.00;
     $scope.loading = false;
 
-    $scope.getArrearData = function(URL) {
+    $scope.getArrearData = function() {
         $scope.debts = [];
         $scope.pager = [];
         
@@ -20,9 +20,9 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
             let debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
             let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
-            let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
             
-            $http.get(`${CONFIG.baseUrl}/${URL}/${debtType}/${creditor}/${sDate}/${eDate}/${showAll}`)
+            $http.get(`${CONFIG.baseUrl}/account/arrear/json/${debtType}/${creditor}/${sDate}/${eDate}/${showAll}`)
             .then(function(res) {
                 console.log(res);
                 $scope.debts = res.data.debts.data;
@@ -62,9 +62,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         });
     };
 
-    $scope.arrearToExcel = function(URL) {
-        console.log($scope.debts);
-
+    $scope.arrearToExcel = function() {
         if($scope.debts.length == 0) {
             toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
         } else {
@@ -72,13 +70,13 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
             let debtType = ($("#debtType").val() == '') ? '0' : $("#debtType").val();
             let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
-            let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-            window.location.href = CONFIG.baseUrl +URL+ '/' +debtType+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
+            window.location.href = `${CONFIG.baseUrl}/account/arrear/excel/${debtType}/${creditor}/${sDate}/${eDate}/${showAll}`;
         }
     };
 
-    $scope.getCreditorPaidData = function(URL) {
+    $scope.getCreditorPaidData = function() {
         $scope.payments = [];
         $scope.pager = [];
 
@@ -92,7 +90,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
             let showAll = $("#showall").is(":checked") ? 1 : 0;
             
-            $http.get(`${CONFIG.baseUrl}/account/creditor-paid-rpt/${creditor}/${sDate}/${eDate}/${showAll}`)
+            $http.get(`${CONFIG.baseUrl}/account/creditor-paid/json/${creditor}/${sDate}/${eDate}/${showAll}`)
             .then(function(res) {
                 console.log(res);
                 $scope.payments = res.data.payments.data;
@@ -133,7 +131,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         });
     };
 
-    $scope.creditorPaidToExcel = function(URL) {
+    $scope.creditorPaidToExcel = function() {
         console.log($scope.payments);
 
         if($scope.payments.length == 0) {
@@ -142,9 +140,9 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
             let eDate = ($("#debtToDate").val() != '') ? StringFormatService.convToDbDate($("#debtToDate").val()) : 0;
             let creditor = ($("#creditor").val() == '') ? '0' : $("#creditor").val();
-            let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-            window.location.href = CONFIG.baseUrl +URL+ '/' +creditor+ '/' +sDate+ '/' +eDate+ '/' + showAll;
+            window.location.href = `${CONFIG.baseUrl}/account/creditor-paid/excel/${creditor}/${sDate}/${eDate}/${showAll}`;
         }
     };
 
@@ -154,19 +152,19 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
 
         let sDate = StringFormatService.convToDbDate($("#sdate").val());
         let eDate = StringFormatService.convToDbDate($("#edate").val());
-        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+        let showAll = $("#showall").is(":checked") ? 1 : 0;
         
         $scope.loading = false;
         console.log(URL);
-        $("#frmSearch").attr('action', CONFIG.baseUrl +URL+ '/' +sDate+ '/' +eDate+ '/' + showAll);
+        $("#frmSearch").attr('action', `${CONFIG.baseUrl}/account/ledger/json/${sDate}/${eDate}/${showAll}`);
         $("#frmSearch").submit();
     };
 
     $scope.ledgerToExcel = function(URL) {
         let sDate = StringFormatService.convToDbDate($("#sdate").val());
         let eDate = StringFormatService.convToDbDate($("#edate").val());
-        let showAll = ($("#showall:checked").val() == 'on') ? 1 : 0;
+        let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-        window.location.href = CONFIG.baseUrl +URL+ '/' +sDate+ '/' +eDate+ '/' + showAll;
+        window.location.href = `${CONFIG.baseUrl}/account/ledger/excel/${sDate}/${eDate}/${showAll}`;
     };
 });

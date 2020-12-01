@@ -29,7 +29,7 @@ class AccountController extends Controller
         ]);
     }
 
-    public function arrearRpt($debttype, $creditor, $sdate, $edate, $showall)
+    public function arrearData($dataType, $debttype, $creditor, $sdate, $edate, $showall)
     {
         $debts = [];
 
@@ -41,8 +41,7 @@ class AccountController extends Controller
                         ->leftJoin('nrhosp_acc_app_detail', 'nrhosp_acc_debt.debt_id', '=', 'nrhosp_acc_app_detail.debt_id')
                         ->leftJoin('nrhosp_acc_app', 'nrhosp_acc_app_detail.app_id', '=', 'nrhosp_acc_app.app_id')
                         ->whereNotIn('nrhosp_acc_debt.debt_status', [2,3,4])
-                        ->orderBy('nrhosp_acc_debt.debt_date', 'ASC')
-                        ->paginate(20);
+                        ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
 
             $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
                                 ->sum('debt_total');
@@ -58,8 +57,7 @@ class AccountController extends Controller
                             ->where('nrhosp_acc_debt.debt_type_id', '=', $debttype)
                             ->where('nrhosp_acc_debt.supplier_id', '=', $creditor)
                             ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
-                            ->orderBy('nrhosp_acc_debt.debt_date', 'ASC')
-                            ->paginate(20);
+                            ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
 
                 $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
                                 ->where('debt_type_id', '=', $debttype)
@@ -77,8 +75,7 @@ class AccountController extends Controller
                                 ->whereNotIn('nrhosp_acc_debt.debt_status', [2,3,4])
                                 ->where('nrhosp_acc_debt.debt_type_id', '=', $debttype)
                                 ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
-                                ->orderBy('nrhosp_acc_debt.debt_date', 'ASC')
-                                ->paginate(20);
+                                ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
 
                     $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
                                     ->where('debt_type_id', '=', $debttype)
@@ -94,8 +91,7 @@ class AccountController extends Controller
                                     ->whereNotIn('nrhosp_acc_debt.debt_status', [2,3,4])
                                     ->where('nrhosp_acc_debt.supplier_id', '=', $creditor)
                                     ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
-                                    ->orderBy('nrhosp_acc_debt.debt_date', 'ASC')
-                                    ->paginate(20);
+                                    ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
 
                     $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
                                     ->where('supplier_id', '=', $creditor)
@@ -104,17 +100,26 @@ class AccountController extends Controller
                 }   
             }   
         }
-        
-        return [
-            "debts"     => $debts,
-            "totalDebt" => $totalDebt,
-        ];
-    }
 
-    public function arrearExcel($debttype, $creditor, $sdate, $edate, $showall)
-    {
-        $fileName = 'arrear-' . date('YmdHis') . '.xlsx';
-        return (new ArrearExport($debttype, $creditor, $sdate, $edate, $showall))->download($fileName);
+        if($dataType == 'excel') {
+            $fileName = 'arrear-' . date('YmdHis') . '.xlsx';
+
+            $data = $debts->get();
+
+            return \Excel::create($fileName, function($excel) use ($data) {
+                $excel->sheet('sheet1', function($sheet) use ($data)
+                {
+                    $sheet->loadView('exports.arrear-excel', [
+                        'debts' => $data
+                    ]);                
+                });
+            })->download();
+        } else {
+            return [
+                "debts"     => $debts->paginate(20),
+                "totalDebt" => $totalDebt,
+            ];
+        }
     }
     
     public function creditorPaid()
@@ -124,7 +129,7 @@ class AccountController extends Controller
         ]);
     }
 
-    public function creditorPaidRpt($creditor, $sdate, $edate, $showall)
+    public function creditorPaidData($dataType, $creditor, $sdate, $edate, $showall)
     {
         $debts = [];
         $conditions1 = [];
@@ -156,26 +161,34 @@ class AccountController extends Controller
                         ->join('nrhosp_acc_com_bank', 'nrhosp_acc_payment.bank_acc_id', '=', 'nrhosp_acc_com_bank.bank_acc_id')
                         ->join('nrhosp_acc_bank', 'nrhosp_acc_com_bank.bank_id', '=', 'nrhosp_acc_bank.bank_id')
                         ->where($conditions1)
-                        ->orderBy('nrhosp_acc_payment.supplier_id')
-                        ->paginate(20);
+                        ->orderBy('nrhosp_acc_payment.supplier_id');
 
         $totalDebt = Payment::where('paid_stat', '=', 'Y')
                         ->where($conditions2)
                         ->sum('total');
         
-        return [
-            "payments"  => $payments,
-            "totalDebt" => $totalDebt,
-        ];
+        if($dataType == 'excel') {
+            $fileName = 'creditor-paid-' . date('YmdHis') . '.xlsx';
+
+            $data = $payments->get();
+
+            return \Excel::create($fileName, function($excel) use ($data) {
+                $excel->sheet('sheet1', function($sheet) use ($data)
+                {
+                    $sheet->loadView('exports.creditor-paid-excel', [
+                        'payments' => $data
+                    ]);                
+                });
+            })->download();
+        } else {
+            return [
+                "payments"  => $payments->paginate(20),
+                "totalDebt" => $totalDebt,
+            ];
+        }
     }
 
-    public function creditorPaidExcel($creditor, $sdate, $edate, $showall)
-    {
-        $fileName = 'creditor-paid-' . date('YmdHis') . '.xlsx';
-        return (new CreditorPaidExport($creditor, $sdate, $edate, $showall))->download($fileName);
-    }
-
-    public function ledger($sdate, $edate, $showall)
+    public function ledger($dataType, $sdate, $edate, $showall)
     {
         $debts = [];
 
@@ -213,7 +226,7 @@ class AccountController extends Controller
         return (new LedgerExport($sdate, $edate, $showall))->download($fileName);
     }
 
-    public function ledgerDebttype($sdate, $edate, $showall)
+    public function ledgerDebttype($dataType, $sdate, $edate, $showall)
     {
         $debts = [];
         $paidOutOfDates = '';

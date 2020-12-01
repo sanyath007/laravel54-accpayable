@@ -88,7 +88,7 @@
 
 </head>
 <!-- For set collapse menu use .sidebar-collapse class in body tag -->
-<body class="hold-transition skin-blue sidebar-mini" ng-app="app" ng-controller="mainCtrl">
+<body class="hold-transition skin-blue sidebar-collapse sidebar-mini" ng-app="app" ng-controller="mainCtrl">
 	<div class="wrapper">
 
 		@include('layouts.header')
