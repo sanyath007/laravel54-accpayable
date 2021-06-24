@@ -243,19 +243,18 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
     };
 
     $scope.popupApproveSelection = function(event) {
+        if (!$("#creditor_id").val()) {
+            toaster.pop('error', "", 'กรุณาเลือกเจ้าหนี้ก่อน !!!');
+            return;
+        }
+
         $scope.loading = true;
         $scope.approvements = [];
 
         let creditor = $("#creditor_id").val();
 
-        if (!creditor) {
-            toaster.pop('error', "", 'กรุณาเลือกเจ้าหนี้ก่อน !!!');
-            return;
-        }
-
         $http.get(`${CONFIG.baseUrl}/approve/get-all-bysupplier/${creditor}`)
         .then(function (res) {
-            // console.log(res);
             $scope.approvements = res.data.approvements.data;
             $scope.approvePager = res.data.approvements;
 
@@ -315,6 +314,9 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
     $scope.addSupplierApproveData = function(event, supplierApprove) {
         if ($(event.target).is(':checked')) {            
             $scope.supplierApproveData.push(supplierApprove);
+
+            /** Remove from popup list */
+            // $scope.approvements = $scope.approvements.filter(app => app.app_id !== supplierApprove.app_id);
 
             $scope.getApproveDebtsData(supplierApprove);
         } else {

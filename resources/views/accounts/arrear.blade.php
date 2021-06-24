@@ -135,7 +135,7 @@
                                 <tr ng-repeat="(index, debt) in debts">
                                     <td style="text-align: center;">@{{ index+pager.from }}</td>
                                     <td style="text-align: center;">@{{ debt.debt_id }}</td>
-                                    <td style="text-align: left;">@{{ debt.debttype.debt_type_name }}</td>
+                                    <td style="text-align: left;">@{{ debt.debt_type_name }}</td>
                                     <td style="text-align: left;">@{{ debt.debt_type_detail }}</td>
                                     <td style="text-align: center;">@{{ debt.debt_date | thdate }}</td>
                                     <td style="text-align: center;">@{{ debt.debt_doc_recdate | thdate }}</td>
