@@ -21,7 +21,7 @@ class PaymentController extends Controller
 
     public function index()
     {
-    	return view('payments.list');
+        return view('payments.list');
     }
 
     public function search($dataType, $sdate, $edate, $searchKey, $showall)
@@ -83,11 +83,11 @@ class PaymentController extends Controller
 
     public function add()
     {
-    	return view('payments.add', [
+        return view('payments.add', [
             'creditors' => Creditor::all(),
-    		'banks'	    => Bank::all(),
-    		'budgets'	=> Budget::all(),
-    	]);
+            'banks'	    => Bank::all(),
+            'budgets'	=> Budget::all(),
+        ]);
     }
 
     public function store(Request $req)

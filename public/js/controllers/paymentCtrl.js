@@ -92,17 +92,17 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
         $scope.loading = true;
         $scope.payments = [];
 
-    	$http.get(URL)
-    	.then(function(res) {
-    		console.log(res);
+        $http.get(URL)
+        .then(function(res) {
+            console.log(res);
             $scope.payments = res.data.payments.data;
             $scope.pager = res.data.payments;
 
             $scope.loading = false;
-    	}, function(err) {
-    		console.log(err);
+        }, function(err) {
+            console.log(err);
             $scope.loading = false;
-    	});
+        });
     }
 
     $scope.gePayment = function(paymentId) {
@@ -114,7 +114,7 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
             $scope.payment = res.data.payment;
 
             $scope.loading = false;
-    	}, function(err) {
+        }, function(err) {
             console.log(err);
             
             $scope.loading = false;
@@ -328,16 +328,14 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
         calculateSupplierApprove();
     };
 
-    $scope.addSupplierApproveToRemove = function(event, debt) {
-        console.log($scope.supplierApproveData);
-        let tmp = [];
-
-        if ($(event.target).is(':checked')) {            
-            $scope.supplierApproveToRemoveData.push(debt.debt_id);
-            console.log($scope.supplierApproveToRemoveData);
+    $scope.addSupplierApproveToRemove = function(event, approve) {
+        if ($(event.target).is(':checked')) {
+            $scope.supplierApproveToRemoveData.push(approve.app_id);
         } else {
             $scope.supplierApproveToRemoveData.splice(approve.app_id, 1)
         }
+
+        console.log($scope.supplierApproveToRemoveData);
     }
 
     $scope.removeSupplierApprove = function() {
@@ -346,12 +344,12 @@ app.controller('paymentCtrl', function($rootScope, $scope, $http, toaster, CONFI
             return;
         }
 
-        tmp = $scope.supplierApproveData.filter(approve => {
-            return $scope.supplierApproveToRemoveData.indexOf(approve.app_id);
+        let tmp = $scope.supplierApproveData.filter(approve => {
+            return !$scope.supplierApproveToRemoveData.includes(approve.app_id);
         });
         
         $scope.supplierApproveData = tmp;
-        // calculateSupplierApprove();
+        calculateSupplierApprove();
 
         $scope.supplierApproveToRemoveData = [];
     };

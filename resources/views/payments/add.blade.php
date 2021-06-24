@@ -188,7 +188,7 @@
 
                                     <div class="col-md-12">
                                         <a class="btn btn-primary" ng-click="popupApproveSelection($event)">เพิ่ม</a>
-                                        <a class="btn btn-danger" ng-click="removeSupplierDebt()">ลบ</a>
+                                        <a class="btn btn-danger" ng-click="removeSupplierApprove()">ลบ</a>
 
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-striped" style="font-size: 12px; margin-top: 10px;">
@@ -336,7 +336,7 @@
                             <!-- Tab Component -->
                             
                         </div><!-- /.box-body -->
-                  
+
                         <div class="box-footer clearfix">
                             <button ng-click="store($event, frmNewPayment)" class="btn btn-success pull-right">
                                 บันทึก

@@ -257,9 +257,6 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     };
 
     $scope.addSupplierDebtToRemove = function(event, debt) {
-        console.log($scope.supplierDebtData);
-        let tmp = [];
-
         if ($(event.target).is(':checked')) {            
             $scope.supplierDebtToRemoveData.push(debt.debt_id);
             console.log($scope.supplierDebtToRemoveData);
@@ -274,8 +271,8 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
             return;
         }
 
-        tmp = $scope.supplierDebtData.filter(function(d) {
-            return $scope.supplierDebtToRemoveData.indexOf(d.debt_id);
+        let tmp = $scope.supplierDebtData.filter(function(d) {
+            return !$scope.supplierDebtToRemoveData.includes(d.debt_id);
         });
         
         $scope.supplierDebtData = tmp;
