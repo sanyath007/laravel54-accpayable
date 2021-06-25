@@ -324,6 +324,9 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     $scope.addSupplierDebtData = function(event, supplierDebt) {
         if ($(event.target).is(':checked')) {            
             $scope.supplierDebtData.push(supplierDebt);
+
+            /** Update debt status to 1 */
+            updateDebtStatus(supplierDebt.debt_id, 1);
         } else {
             let removeIndex = $scope.supplierDebtData.findIndex(debt => debt.debt_id === supplierDebt.debt_id);
             $scope.supplierDebtData.splice(removeIndex, 1);
@@ -341,15 +344,36 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         }
     }
 
+    const updateDebtStatus = function (id, _status) {
+        const req_data = {
+            user: $("#user").val(),
+            status: _status
+        };
+
+        $http.put(`${CONFIG.baseUrl}/debt/${id}/update-status`, req_data)
+        .then(function (res) {
+            console.log(res);
+        }, function(err) {
+            console.log(err);
+        });
+    }
+
     $scope.removeSupplierDebt = function() {
         if ($scope.supplierDebtToRemoveData.length < 1) {
             toaster.pop('error', "", 'ไม่พบรายการที่คุณต้องการลบ กรุณาเลือกรายการก่อน !!!');
             return;
         }
-        
-        $scope.supplierDebtData = $scope.supplierDebtData.filter(d => !$scope.supplierDebtToRemoveData.includes(d.debt_id));
-        calculateSupplierDebt();
 
+        /** Update debt status to 0 of debts to remove list */
+        $scope.supplierDebtData
+            .filter(debt => $scope.supplierDebtToRemoveData.includes(debt.debt_id))
+            .forEach(debt => updateDebtStatus(debt.debt_id, 0));
+
+        $scope.supplierDebtData = $scope.supplierDebtData.filter(d => {
+            return !$scope.supplierDebtToRemoveData.includes(d.debt_id)
+        });
+
+        calculateSupplierDebt();
         $scope.supplierDebtToRemoveData = [];
     };
 

@@ -301,7 +301,7 @@ class DebtController extends Controller
         }   
     }
 
-    public function updateStatus ($id)
+    public function updateStatus (Request $req, $id)
     {
         $debt = Debt::find($id)->update([
                     'debt_chgdate'  => date("Y-m-d H:i:s"),
