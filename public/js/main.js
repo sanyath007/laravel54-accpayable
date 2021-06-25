@@ -1,12 +1,12 @@
 /**
-  AngularJS
-*/
+ * AngularJS
+ */
 
 var env = {};
 
 // Import variables if present (from env.js)
 if(window){  
-  Object.assign(env, window.__env);
+	Object.assign(env, window.__env);
 }
 
 var app = angular.module('app', ['xeditable','ngTagsInput','toaster','ngAnimate','angularModalService']);
@@ -66,13 +66,13 @@ app.run(function ($rootScope, $window, $http, CONFIG, toaster) {
 
 app.filter('thdate', function($filter)
 {
- 	return function(input)
- 	{
-  		if(input == null){ return ""; } 
+	return function(input)
+	{
+		if(input == null){ return ""; } 
 
-  		var arrDate = input.split('-');
-  		var thdate = arrDate[2]+ '/' +arrDate[1]+ '/' +(parseInt(arrDate[0])+543);
- 
-  		return thdate;
- 	};
+		var arrDate = input.split('-');
+		var thdate = arrDate[2]+ '/' +arrDate[1]+ '/' +(parseInt(arrDate[0])+543);
+
+		return thdate;
+	};
 });
