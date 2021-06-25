@@ -111,11 +111,11 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             $scope.pages = PaginateService.createPagerNo($scope.pager);
 
             $scope.loading = false;
-    	}, function(err) {
+        }, function(err) {
             console.log(err);
             
             $scope.loading = false;
-    	});
+        });
     }
 
     $scope.getDataWithURL = function(URL) {
@@ -287,13 +287,13 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             $scope.setzeroPager = res.data.setzeros;
             $scope.setzeroPages = PaginateService.createPagerNo($scope.setzeroPager);
 
-    		$scope.totalDebt = res.data.totalDebt;
+            $scope.totalDebt = res.data.totalDebt;
 
             $scope.loading = false;
-    	}, function(err) {
-    		console.log(err);
+        }, function(err) {
+            console.log(err);
             $scope.loading = false;
-    	});
+        });
     }
 
     $scope.getDebt = function(debtId) {

@@ -51,9 +51,9 @@ class DebtController extends Controller
 
     public function index()
     {
-    	return view('debts.list', [
+        return view('debts.list', [
             "creditors" => Creditor::all(),
-    	]);
+        ]);
     }
 
     public function search($dataType, $sdate, $edate, $supplier, $showall)
@@ -181,10 +181,10 @@ class DebtController extends Controller
 
     public function add()
     {
-    	return view('debts.add', [
-    		"creditors" => Creditor::all(),
+        return view('debts.add', [
+            "creditors" => Creditor::all(),
             "debttypes" => DebtType::all(),
-    	]);
+        ]);
     }
 
     public function store(Request $req)

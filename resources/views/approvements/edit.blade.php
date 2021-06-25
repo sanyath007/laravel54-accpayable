@@ -10,8 +10,10 @@
         </h1>
 
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">หน้าหลัก</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('/') }}">หน้าหลัก</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('/approve/list') }}">รายการขออนุมัติเบิก-จ่ายหนี้</a></li>
             <li class="breadcrumb-item active">แก้ไขรายการขออนุมัติเบิก-จ่ายหนี้</li>
+            <li class="breadcrumb-item active">{{ $approvement->app_id }}</li>
         </ol>
     </section>
 
@@ -23,10 +25,10 @@
 
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">แก้ไขรายการขออนุมัติ</h3>
+                        <h3 class="box-title">แก้ไขรายการขออนุมัติเบิก-จ่ายหนี้ [เลขที่ {{ $approvement->app_id }}]</h3>
                     </div>
 
-                    <form id="frmNewApprove" name="frmNewApprove" method="post" action="{{ url('/approve/store') }}" role="form">
+                    <form id="frmEditApprove" name="frmEditApprove" method="post" action="{{ url('/approve/store') }}" role="form">
                         <input type="hidden" id="user" name="user" value="{{ Auth::user()->person_id }}">
                         {{ csrf_field() }}
                     
@@ -34,7 +36,7 @@
                             <div class="row">
                                 <div class="col-md-12">                                
 
-                                    <div class="form-group" ng-class="{ 'has-error': frmNewApprove.creditor_id.$error.required }">
+                                    <div class="form-group" ng-class="{ 'has-error': frmEditApprove.creditor_id.$error.required }">
                                         <label>เจ้าหนี้ :</label>
                                         <select id="creditor_id" 
                                                 name="creditor_id"
@@ -54,7 +56,7 @@
                                             @endforeach
                                             
                                         </select>
-                                        <div class="help-block" ng-show="frmNewApprove.creditor_id.$error.required">
+                                        <div class="help-block" ng-show="frmEditApprove.creditor_id.$error.required">
                                             กรุณาเลือกเจ้าหนี้
                                         </div>
                                     </div>
@@ -62,7 +64,7 @@
 
                                 <div class="col-md-6">
                                     
-                                    <div class="form-group" ng-class="{ 'has-error': frmNewApprove.app_doc_no.$error.required }">
+                                    <div class="form-group" ng-class="{ 'has-error': frmEditApprove.app_doc_no.$error.required }">
                                         <label>เลขที่ขออนุมัติ :</label>
                                         <input  type="text" 
                                                 id="app_doc_no" .
@@ -70,12 +72,12 @@
                                                 ng-model="approve.app_doc_no" 
                                                 class="form-control"
                                                 tabindex="4" required>
-                                        <div class="help-block" ng-show="frmNewApprove.app_doc_no.$error.required">
+                                        <div class="help-block" ng-show="frmEditApprove.app_doc_no.$error.required">
                                             กรุณาระบุเลขที่ขออนุมัติ
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-class="{ 'has-error': frmNewApprove.app_recdoc_no.$error.required }">
+                                    <div class="form-group" ng-class="{ 'has-error': frmEditApprove.app_recdoc_no.$error.required }">
                                         <label>เลขที่รับเอกสาร :</label>
                                         <input  type="text" 
                                                 id="app_recdoc_no" 
@@ -83,7 +85,7 @@
                                                 ng-model="approve.app_recdoc_no" 
                                                 class="form-control"
                                                 tabindex="8" required>
-                                        <div class="help-block" ng-show="frmNewApprove.app_recdoc_no.$error.required">
+                                        <div class="help-block" ng-show="frmEditApprove.app_recdoc_no.$error.required">
                                             กรุณาระบุเลขที่รับเอกสาร
                                         </div>
                                     </div>
@@ -92,7 +94,7 @@
 
                                 <div class="col-md-6">
 
-                                    <div class="form-group" ng-class="{ 'has-error': frmNewApprove.app_date.$error.required }">
+                                    <div class="form-group" ng-class="{ 'has-error': frmEditApprove.app_date.$error.required }">
                                         <label>วันที่ขออนุมัติ :</label>
 
                                         <div class="input-group">
@@ -106,12 +108,12 @@
                                                     class="form-control pull-right"
                                                     tabindex="1" required>
                                         </div><!-- /.input group -->
-                                        <div class="help-block" ng-show="frmNewApprove.app_date.$error.required">
+                                        <div class="help-block" ng-show="frmEditApprove.app_date.$error.required">
                                             กรุณาเลือกวันที่ขออนุมัติ
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-class="{ 'has-error': frmNewApprove.app_recdoc_date.$error.required }">
+                                    <div class="form-group" ng-class="{ 'has-error': frmEditApprove.app_recdoc_date.$error.required }">
                                         <label>วันที่รับเอกสาร :</label>
 
                                         <div class="input-group">
@@ -125,7 +127,7 @@
                                                     class="form-control pull-right"
                                                     tabindex="5" required>
                                         </div><!-- /.input group -->
-                                        <div class="help-block" ng-show="frmNewApprove.app_recdoc_date.$error.required">
+                                        <div class="help-block" ng-show="frmEditApprove.app_recdoc_date.$error.required">
                                             กรุณาเลือกวันที่รับเอกสาร
                                         </div>
                                     </div>
@@ -156,23 +158,23 @@
                                                         <th style="width: 15%; text-align: center;">เลขที่ใบส่งของ</th>
                                                         <th style="width: 8%; text-align: center;">วันที่ใบส่งของ</th>
                                                         <th style="text-align: left;">ประเภทหนี้</th>
-                                                        <th style="width: 7%; text-align: center;">ยอดหนี้</th>
-                                                        <th style="width: 7%; text-align: center;">ภาษี</th>
-                                                        <th style="width: 7%; text-align: center;">สุทธิ</th>
+                                                        <th style="width: 7%; text-align: right;">ยอดหนี้</th>
+                                                        <th style="width: 7%; text-align: right;">ภาษี</th>
+                                                        <th style="width: 7%; text-align: right;">สุทธิ</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr ng-repeat="(index, debt) in supplierDebtData">
-                                                        <td>
+                                                        <td class="text-center">
                                                             <input
                                                                 type="checkbox" 
                                                                 ng-click="addSupplierDebtToRemove($event, debt)"
                                                             >
                                                         </td>
-                                                        <td>@{{ debt.debt_id }}</td>
-                                                        <td>@{{ debt.debt_date | thdate }}</td>
-                                                        <td>@{{ debt.deliver_no }}</td>
-                                                        <td>@{{ debt.deliver_date | thdate }}</td>
+                                                        <td class="text-center">@{{ debt.debt_id }}</td>
+                                                        <td class="text-center">@{{ debt.debt_date | thdate }}</td>
+                                                        <td class="text-center">@{{ debt.deliver_no }}</td>
+                                                        <td class="text-center">@{{ debt.deliver_date | thdate }}</td>
                                                         <td>@{{ debttypes[debt.debt_type_id] }}</td>
                                                         <td class="text-right">@{{ debt.debt_amount | number:2 }}</td>
                                                         <td class="text-right">@{{ debt.debt_vat | number:2 }}</td>
@@ -185,7 +187,7 @@
                                         <hr style="margin: 0; margin-bottom: 10px;">
 
                                         <div class="col-md-6">
-                                            <div class="form-group col-md-6" ng-class="{ 'has-error': frmNewApprove.budget_id.$error.required }">
+                                            <div class="form-group col-md-6" ng-class="{ 'has-error': frmEditApprove.budget_id.$error.required }">
                                                 <label>ประเภทงบประมาณ :</label>
                                                 <select id="budget_id" 
                                                         name="budget_id"
@@ -204,7 +206,7 @@
                                                     @endforeach
                                                     
                                                 </select>
-                                                <div class="help-block" ng-show="frmNewApprove.budget_id.$error.required">
+                                                <div class="help-block" ng-show="frmEditApprove.budget_id.$error.required">
                                                     กรุณาเลือกประเภทงบประมาณ
                                                 </div>
                                             </div>
@@ -302,7 +304,7 @@
                         </div><!-- /.box-body -->
 
                         <div class="box-footer clearfix">
-                            <button ng-click="store($event, frmNewApprove)" class="btn btn-warning pull-right">
+                            <button ng-click="update($event, frmEditApprove)" class="btn btn-warning pull-right">
                                 แก้ไข
                             </button>
                         </div><!-- /.box-footer -->
@@ -323,19 +325,21 @@
         $(function () {
             $('.select2').select2()
 
-            $('#app_date').datepicker({
-                autoclose: true,
-                language: 'th',
-                format: 'dd/mm/yyyy',
-                thaiyear: true
-            });
+            // $('#app_date').datepicker({
+            //     autoclose: true,
+            //     language: 'th',
+            //     format: 'dd/mm/yyyy',
+            //     thaiyear: true,
+            //     orientation: 'bottom'
+            // });
 
-            $('#app_recdoc_date').datepicker({
-                autoclose: true,
-                language: 'th',
-                format: 'dd/mm/yyyy',
-                thaiyear: true
-            });
+            // $('#app_recdoc_date').datepicker({
+            //     autoclose: true,
+            //     language: 'th',
+            //     format: 'dd/mm/yyyy',
+            //     thaiyear: true,
+            //     orientation: 'bottom'
+            // });
         });
     </script>
 

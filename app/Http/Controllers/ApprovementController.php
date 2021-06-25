@@ -70,7 +70,7 @@ class ApprovementController extends Controller
     public function getById($appId)
     {
         return [
-            'approvements' => Approvement::find($appId)
+            'approvement' => Approvement::find($appId)
         ];
     }
 
@@ -209,13 +209,8 @@ class ApprovementController extends Controller
         $approvement->cheque = floatval(str_replace(",", "", $req['cheque']));
         $approvement->cheque_str = $req['cheque_str'];
         /** user info */
-        $approvement->cr_userid = $req['cr_user'];
-        $approvement->cr_date = date("Y-m-d H:i:s");
         $approvement->chg_userid = $req['chg_user'];
         $approvement->chg_date = date("Y-m-d H:i:s");
-        /** สถานะ 0=รอดำเนินการ,1=ขออนุมัติ,2=ชำระเงินแล้ว,3=ยกเลิก */
-        $approvement->app_stat = '0';
-        $approvement->is_approve = 'N';
 
         if($approvement->save()) {
             $index = 0;

@@ -58,7 +58,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::post('approve/store', 'ApprovementController@store');
     Route::get('approve/detail/{appId}', 'ApprovementController@detail');
     Route::get('approve/{id}/edit', 'ApprovementController@edit');
-    Route::put('approve/update', 'ApprovementController@update');
+    Route::put('approve/{id}/update', 'ApprovementController@update');
     Route::delete('approve/delete/{appId}', 'ApprovementController@delete');
     Route::post('approve/cancel', 'ApprovementController@doCancel');
 

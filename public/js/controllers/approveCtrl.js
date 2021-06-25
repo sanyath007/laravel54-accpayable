@@ -63,14 +63,29 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
             $scope.debts = [];
             $scope.debtPager = [];
         } else {
-            console.log(data);
+            $('#app_date').datepicker({
+                autoclose: true,
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true,
+                orientation: 'bottom'
+            }).datepicker('update', moment(data.app_date).format('DD-MM-YYYY'));
+
+            $('#app_recdoc_date').datepicker({
+                autoclose: true,
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true,
+                orientation: 'bottom'
+            }).datepicker('update', moment(data.app_recdoc_date).format('DD-MM-YYYY'));
+
             $scope.approve = {
                 app_id: data.app_id,
                 creditor_id: data.supplier_id,
                 app_doc_no: data.app_doc_no,
-                app_date: data.app_date,
+                app_date: StringFormatService.convFromDbDate(data.app_date),
                 app_recdoc_no: data.app_recdoc_no,
-                app_recdoc_date: data.app_recdoc_date,
+                app_recdoc_date: StringFormatService.convFromDbDate(data.app_recdoc_date),
                 pay_to: data.pay_to,
                 budget_id: data.budget_id,
                 amount: data.amount,
@@ -86,9 +101,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
                 net_total_str: data.net_total_str,
                 cheque: data.cheque,
                 cheque_str: data.cheque_str,
-                cr_user: data.cr_userid,
-                chg_user: data.chg_userid,
-                debts: data.app_detail,
+                debts: []
             };
 
             
@@ -200,26 +213,44 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         window.location.href = `${CONFIG.baseUrl}/approve/${approveId}/edit`;
     };
 
-    $scope.update = function(event, form, approveId) {
-        console.log(approveId);
+    $scope.update = function(event, form) {
         event.preventDefault();
+        
+        const { app_id } = $scope.approve;
 
-        if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + approveId + " ใช่หรือไม่?")) {
-            $http.put(`${CONFIG.baseUrl}/approve/update`, $scope.approve)
-            .then(function(res) {
-                console.log(res);
-                toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
-            }, function(err) {
-                console.log(err);
-                toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
-            });
+        if(confirm(`คุณต้องแก้ไขเจ้าหนี้เลขที่ ${app_id} ใช่หรือไม่?`)) {
+            if (form.$invalid) {
+                console.log(form.$error);
+                toaster.pop('warning', "", 'กรุณาข้อมูลให้ครบก่อน !!!');
+                return;
+            } else {
+                /** Convert thai date to db date. */
+                $scope.approve.app_date = StringFormatService.convToDbDate($scope.approve.app_date);
+                $scope.approve.app_recdoc_date = StringFormatService.convToDbDate($scope.approve.app_recdoc_date);
+                /** Get user id */
+                $scope.approve.chg_user = $("#user").val();
+                /** Add debt to approvement */
+                $scope.approve.debts =  $scope.supplierDebtData;
+                console.log($scope.approve);
+
+                $http.put(`${CONFIG.baseUrl}/approve/${app_id}/update`, $scope.approve)
+                .then(function(res) {
+                    console.log(res);
+                    toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
+                }, function(err) {
+                    console.log(err);
+                    toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+                });
+
+                window.location.href = `${CONFIG.baseUrl}/approve/list`;
+            }
         }
     };
 
     $scope.delete = function(approveId) {
         console.log(approveId);
 
-        if(confirm("คุณต้องลบเจ้าหนี้เลขที่ " + approveId + " ใช่หรือไม่?")) {
+        if(confirm(`คุณต้องลบเจ้าหนี้เลขที่ ${approveId} ใช่หรือไม่?`)) {
             $http.delete(`${CONFIG.baseUrl}/approve/delete/${approveId}`)
             .then(function(res) {
                 console.log(res);
@@ -294,10 +325,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         if ($(event.target).is(':checked')) {            
             $scope.supplierDebtData.push(supplierDebt);
         } else {
-            let removeIndex = $scope.supplierDebtData.findIndex(function(debt) {
-                return debt.debt_id === supplierDebt.debt_id;
-            });
-
+            let removeIndex = $scope.supplierDebtData.findIndex(debt => debt.debt_id === supplierDebt.debt_id);
             $scope.supplierDebtData.splice(removeIndex, 1);
         }
 
@@ -318,12 +346,8 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
             toaster.pop('error', "", 'ไม่พบรายการที่คุณต้องการลบ กรุณาเลือกรายการก่อน !!!');
             return;
         }
-
-        let tmp = $scope.supplierDebtData.filter(function(d) {
-            return !$scope.supplierDebtToRemoveData.includes(d.debt_id);
-        });
         
-        $scope.supplierDebtData = tmp;
+        $scope.supplierDebtData = $scope.supplierDebtData.filter(d => !$scope.supplierDebtToRemoveData.includes(d.debt_id));
         calculateSupplierDebt();
 
         $scope.supplierDebtToRemoveData = [];
