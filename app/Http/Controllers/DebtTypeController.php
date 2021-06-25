@@ -10,7 +10,7 @@ class DebtTypeController extends Controller
 {
     public function index()
     {
-    	return view('debttypes.list');
+        return view('debttypes.list');
     }
 
     public function search($searchKey)
@@ -41,9 +41,9 @@ class DebtTypeController extends Controller
 
     public function add()
     {
-    	return view('debttypes.add', [
+        return view('debttypes.add', [
             'cates' => \DB::table('nrhosp_acc_debt_cate')->select('*')->get(),
-    	]);
+        ]);
     }
 
     public function store(Request $req)
@@ -121,5 +121,12 @@ class DebtTypeController extends Controller
                 "message" => "Delete failed.",
             ];
         }
+    }
+
+    public function jsonList()
+    {
+        return [
+            'debttypes' => DebtType::all()->pluck('debt_type_name', 'debt_type_id')
+        ];
     }
 }

@@ -173,7 +173,7 @@
                                                         <td>@{{ debt.debt_date | thdate }}</td>
                                                         <td>@{{ debt.deliver_no }}</td>
                                                         <td>@{{ debt.deliver_date | thdate }}</td>
-                                                        <td>@{{ debt.debttype.debt_type_name }}</td>
+                                                        <td>@{{ debttypes[debt.debt_type_id] }}</td>
                                                         <td class="text-right">@{{ debt.debt_amount | number:2 }}</td>
                                                         <td class="text-right">@{{ debt.debt_vat | number:2 }}</td>
                                                         <td class="text-right">@{{ debt.debt_total | number:2 }}</td>

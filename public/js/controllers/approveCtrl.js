@@ -56,10 +56,10 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
                 chg_user: '',
                 debts: [],
             };
-    
+
             $scope.supplierDebtData = [];
             $scope.supplierDebtToRemoveData = [];
-    
+
             $scope.debts = [];
             $scope.debtPager = [];
         } else {
@@ -90,22 +90,25 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
                 chg_user: data.chg_userid,
                 debts: data.app_detail,
             };
-    
+
             
             $scope.supplierDebtData = data.app_detail.map(detail => detail.debts);
             $scope.supplierDebtToRemoveData = [];
-    
+
             $scope.debts = [];
             $scope.debtPager = [];
 
-            $http.get(`${CONFIG.baseUrl}/debttype/json`)
-            .then(res => {
-                console.log(res);
-                debttypes = res.data
-            }, err => {
-                console.log(err);
-            });
+            getJsonDebtType();
         }        
+    }
+
+    const getJsonDebtType = function () {
+        $http.get(`${CONFIG.baseUrl}/debttype/json`)
+        .then(res => {
+            $scope.debttypes = res.data.debttypes;
+        }, err => {
+            console.log(err);
+        });
     }
 
     $scope.getData = function(event) {
