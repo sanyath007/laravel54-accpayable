@@ -82,7 +82,7 @@
                             </div>
 
                         </div><!-- /.box-body -->
-                  
+
                         <div class="box-footer">
                             <a href="{{ url('/payment/add') }}" class="btn btn-primary"> สร้างรายการตัดจ่ายหนี้</a>
                         </div>
