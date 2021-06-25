@@ -98,9 +98,9 @@
                                     </label>
                                 </div>
                             </div>
-                                         
+
                         </div><!-- /.box-body -->
-                  
+
                         <div class="box-footer">
                             <button ng-click="getArrearData()" class="btn btn-info">
                                 ค้นหา
@@ -111,7 +111,7 @@
 
                 <div class="box">
                     <div class="box-header with-border">
-                      <h3 class="box-title">ยอดหนี้ค้างจ่าย</h3>
+                        <h3 class="box-title">ยอดหนี้ค้างจ่าย</h3>
                     </div><!-- /.box-header -->
 
                     <div class="box-body">
@@ -180,7 +180,7 @@
                                 </a>
                             </li>
                             
-                           <li ng-repeat="i in pages" ng-class="{'active': pager.current_page==i}">
+                            <li ng-repeat="i in pages" ng-class="{'active': pager.current_page==i}">
                                 <a href="#" ng-click="getArrearWithURL(pager.path + '?page=' +i)">
                                     @{{ i }}
                                 </a>

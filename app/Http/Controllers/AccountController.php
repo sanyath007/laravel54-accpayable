@@ -36,69 +36,47 @@ class AccountController extends Controller
         if($showall == 1) {
             $debts = \DB::table('nrhosp_acc_debt')
                         ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_app.app_recdoc_date',
-                                 'nrhosp_acc_app.app_id')
+                                'nrhosp_acc_app.app_id')
                         ->leftJoin('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
                         ->leftJoin('nrhosp_acc_app_detail', 'nrhosp_acc_debt.debt_id', '=', 'nrhosp_acc_app_detail.debt_id')
                         ->leftJoin('nrhosp_acc_app', 'nrhosp_acc_app_detail.app_id', '=', 'nrhosp_acc_app.app_id')
                         ->whereNotIn('nrhosp_acc_debt.debt_status', [2,3,4])
                         ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
 
-            $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
-                                ->sum('debt_total');
+            $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])->sum('debt_total');
         } else {
-            if($debttype != 0 && $creditor != 0) {
-                $debts = \DB::table('nrhosp_acc_debt')
-                            ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_app.app_recdoc_date',
-                                     'nrhosp_acc_app.app_id')
-                            ->leftJoin('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
-                            ->leftJoin('nrhosp_acc_app_detail', 'nrhosp_acc_debt.debt_id', '=', 'nrhosp_acc_app_detail.debt_id')
-                            ->leftJoin('nrhosp_acc_app', 'nrhosp_acc_app_detail.app_id', '=', 'nrhosp_acc_app.app_id')
-                            ->whereNotIn('nrhosp_acc_debt.debt_status', [2,3,4])
-                            ->where('nrhosp_acc_debt.debt_type_id', '=', $debttype)
-                            ->where('nrhosp_acc_debt.supplier_id', '=', $creditor)
-                            ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
-                            ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
+            $debtsConditions = [
+                ['nrhosp_acc_debt.debt_date', '>=', $sdate],
+                ['nrhosp_acc_debt.debt_date', '<=', $edate]
+            ];
+            $totalConditions = [
+                ['debt_date', '>=', $sdate],
+                ['debt_date', '<=', $edate]
+            ];
 
-                $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
-                                ->where('debt_type_id', '=', $debttype)
-                                ->where('supplier_id', '=', $creditor)
-                                ->whereBetween('debt_date', [$sdate, $edate])
-                                ->sum('debt_total');
-            } else {
-                if($debttype != 0 && $creditor == 0) {
-                    $debts = \DB::table('nrhosp_acc_debt')
-                                ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_app.app_recdoc_date',
-                                         'nrhosp_acc_app.app_id')
-                                ->leftJoin('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
-                                ->leftJoin('nrhosp_acc_app_detail', 'nrhosp_acc_debt.debt_id', '=', 'nrhosp_acc_app_detail.debt_id')
-                                ->leftJoin('nrhosp_acc_app', 'nrhosp_acc_app_detail.app_id', '=', 'nrhosp_acc_app.app_id')
-                                ->whereNotIn('nrhosp_acc_debt.debt_status', [2,3,4])
-                                ->where('nrhosp_acc_debt.debt_type_id', '=', $debttype)
-                                ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
-                                ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
+            if($debttype != 0) {
+                array_push($debtsConditions, ['nrhosp_acc_debt.debt_type_id', '=', $debttype]);
+                array_push($totalConditions, ['debt_type_id', '=', $debttype]);
+            }
 
-                    $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
-                                    ->where('debt_type_id', '=', $debttype)
-                                    ->whereBetween('debt_date', [$sdate, $edate])
-                                    ->sum('debt_total');
-                } else if($debttype == 0 && $creditor != 0) {
-                     $debts = \DB::table('nrhosp_acc_debt')
-                                    ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_app.app_recdoc_date',
-                                             'nrhosp_acc_app.app_id')
-                                    ->leftJoin('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
-                                    ->leftJoin('nrhosp_acc_app_detail', 'nrhosp_acc_debt.debt_id', '=', 'nrhosp_acc_app_detail.debt_id')
-                                    ->leftJoin('nrhosp_acc_app', 'nrhosp_acc_app_detail.app_id', '=', 'nrhosp_acc_app.app_id')
-                                    ->whereNotIn('nrhosp_acc_debt.debt_status', [2,3,4])
-                                    ->where('nrhosp_acc_debt.supplier_id', '=', $creditor)
-                                    ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
-                                    ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
+            if($creditor != 0) {
+                array_push($debtsConditions, ['nrhosp_acc_debt.supplier_id', '=', $creditor]);
+                array_push($totalConditions, ['supplier_id', '=', $creditor]);
+            }
 
-                    $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
-                                    ->where('supplier_id', '=', $creditor)
-                                    ->whereBetween('debt_date', [$sdate, $edate])
-                                    ->sum('debt_total');
-                }   
-            }   
+            $debts = \DB::table('nrhosp_acc_debt')
+                        ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_app.app_recdoc_date',
+                                'nrhosp_acc_app.app_id')
+                        ->leftJoin('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
+                        ->leftJoin('nrhosp_acc_app_detail', 'nrhosp_acc_debt.debt_id', '=', 'nrhosp_acc_app_detail.debt_id')
+                        ->leftJoin('nrhosp_acc_app', 'nrhosp_acc_app_detail.app_id', '=', 'nrhosp_acc_app.app_id')
+                        ->whereNotIn('nrhosp_acc_debt.debt_status', [2,3,4])
+                        ->where($debtsConditions)
+                        ->orderBy('nrhosp_acc_debt.debt_date', 'ASC');
+
+            $totalDebt = Debt::whereNotIn('debt_status', [2,3,4])
+                            ->where($totalConditions)
+                            ->sum('debt_total');
         }
 
         if($dataType == 'excel') {

@@ -11,9 +11,9 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         $scope.debts = [];
         $scope.pager = [];
         
-        if($("#showall:checked").val() != 'on' && ($("#debtType").val() == '' && $("#creditor").val() == '')) {
-            toaster.pop('warning', "", "กรุณาเลือกเจ้าหนี้หรือประเภทหนี้ก่อน !!!");
-        } else {
+        // if($("#showall:checked").val() != 'on' && ($("#debtType").val() == '' && $("#creditor").val() == '')) {
+        //     toaster.pop('warning', "", "กรุณาเลือกเจ้าหนี้หรือประเภทหนี้ก่อน !!!");
+        // } else {
             $scope.loading = true;
 
             let sDate = ($("#debtFromDate").val() != '') ? StringFormatService.convToDbDate($("#debtFromDate").val()) : 0;
@@ -37,7 +37,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
                 console.log(err);
                 $scope.loading = false;
             });
-        }
+        // }
     };
 
     $scope.getArrearWithURL = function(URL) {
