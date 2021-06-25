@@ -19,7 +19,7 @@ class ApprovementController extends Controller
 
     public function index()
     {
-    	return view('approvements.list');
+        return view('approvements.list');
     }
 
     public function search($dataType, $sdate, $edate, $searchKey, $showall)
@@ -36,11 +36,12 @@ class ApprovementController extends Controller
         if($searchKey !== '0') array_push($conditions, ['pay_to', 'like', '%'.$searchKey.'%']);
 
         if($conditions == '0') {
-            $approvements = Approvement::whereIn('app_stat', ['0', '1']);
+            $approvements = Approvement::whereIn('app_stat', ['0', '1'])
+                                ->orderBy('app_date', 'DESC');
         } else {
             $approvements = Approvement::whereIn('app_stat', ['0', '1'])
-                                    ->where($conditions);
-                                    
+                                ->orderBy('app_date', 'DESC')
+                                ->where($conditions);
         }
 
         if($dataType == 'excel') {
@@ -99,10 +100,10 @@ class ApprovementController extends Controller
 
     public function add()
     {
-    	return view('approvements.add', [
+        return view('approvements.add', [
             'creditors' => Creditor::all(),
-    		'budgets'	=> Budget::all(),
-    	]);
+            'budgets'	=> Budget::all(),
+        ]);
     }
 
     public function store(Request $req)
