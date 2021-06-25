@@ -36,7 +36,12 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="debtFromDate">
+                                        <input
+                                            type="text"
+                                            id="debtFromDate"
+                                            class="form-control pull-right"
+                                            autocomplete="off"
+                                        />
                                     </div><!-- /.input group -->
                                 </div><!-- /.form group -->
                             </div><!-- /.col-md-6 -->
@@ -49,7 +54,12 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
                                         </div>
-                                        <input type="text" class="form-control pull-right" id="debtToDate">
+                                        <input
+                                            type="text"
+                                            id="debtToDate"
+                                            class="form-control pull-right"
+                                            autocomplete="off"
+                                        />
                                     </div><!-- /.input group -->
                                 </div><!-- /.form group -->
                             </div><!-- /.col-md-6 -->

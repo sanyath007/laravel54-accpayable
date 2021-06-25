@@ -42,7 +42,8 @@
                                             type="text"
                                             class="form-control pull-right"
                                             id="paymentFromDate"
-                                        >
+                                            autocomplete="off"
+                                        />
                                     </div>
                                 </div><!-- /.form group -->
                             </div>
@@ -58,14 +59,21 @@
                                             type="text"
                                             class="form-control pull-right"
                                             id="paymentToDate"
-                                        >
+                                            autocomplete="off"
+                                        />
                                     </div>
                                 </div><!-- /.form group -->
                             </div>
                             <div class="col-md-6"> 
                                 <div class="form-group">
                                     <label>เจ้าหนี้</label>
-                                    <input type="text" id="searchKey" ng-keyup="getData($event)" class="form-control">
+                                    <input
+                                        type="text"
+                                        id="searchKey"
+                                        ng-keyup="getData($event)"
+                                        class="form-control"
+                                        autocomplete="off"
+                                    />
                                 </div><!-- /.form group -->
                             </div>
                             <div class="col-md-6" style="height: 60px; display: flex; align-items: flex-end;">
