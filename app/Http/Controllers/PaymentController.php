@@ -38,10 +38,9 @@ class PaymentController extends Controller
         if($searchKey !== '0') array_push($conditions, ['pay_to', 'like', '%'.$searchKey.'%']);
 
         if($conditions == '0') {
-            $payments = Payment::where(['paid_stat' => 'Y']);
+            $payments = Payment::where(['paid_stat' => 'Y'])->orderBy('paid_date', 'DESC');
         } else {
-            $payments = Payment::where(['paid_stat' => 'Y'])
-                            ->where($conditions);
+            $payments = Payment::where(['paid_stat' => 'Y'])->where($conditions)->orderBy('paid_date', 'DESC');
         }
 
         if($dataType == 'excel') {
