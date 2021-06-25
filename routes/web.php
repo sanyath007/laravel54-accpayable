@@ -57,7 +57,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('approve/add', 'ApprovementController@add');
     Route::post('approve/store', 'ApprovementController@store');
     Route::get('approve/detail/{appId}', 'ApprovementController@detail');
-    Route::get('approve/edit/{appId}', 'ApprovementController@edit');
+    Route::get('approve/{id}/edit', 'ApprovementController@edit');
     Route::put('approve/update', 'ApprovementController@update');
     Route::delete('approve/delete/{appId}', 'ApprovementController@delete');
     Route::post('approve/cancel', 'ApprovementController@doCancel');
@@ -69,7 +69,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('payment/add', 'PaymentController@add');
     Route::post('payment/store', 'PaymentController@store');
     Route::get('payment/detail/{appId}', 'PaymentController@detail');
-    Route::get('payment/edit/{appId}', 'PaymentController@edit');
+    Route::get('payment/{id}/edit', 'PaymentController@edit');
     Route::put('payment/update', 'PaymentController@update');
     Route::delete('payment/delete/{appId}', 'PaymentController@delete');
 

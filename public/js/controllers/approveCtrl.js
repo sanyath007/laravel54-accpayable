@@ -147,9 +147,9 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     }
 
     $scope.edit = function(approveId) {
-        console.log(approveId);
+        console.log(`Edit approve data id: ${approveId} !!`);
 
-        window.location.href = `${CONFIG.baseUrl}/approve/edit/${approveId}`;
+        // window.location.href = `${CONFIG.baseUrl}/approve/${approveId}/edit`;
     };
 
     $scope.update = function(event, form, approveId) {

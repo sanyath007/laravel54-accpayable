@@ -174,6 +174,82 @@ class ApprovementController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        return view('approvements.edit', [
+            'approvement'   => Approvement::find($id),
+            'creditors'     => Creditor::all(),
+            'budgets'	    => Budget::all(),
+        ]);
+    }
+
+    public function update(Request $req, $id)
+    {
+        $approvement = Approvement::find($id);
+        $approvement->app_doc_no = $req['app_doc_no'];
+        $approvement->app_date = $req['app_date'];
+        $approvement->app_recdoc_no = $req['app_recdoc_no'];
+        $approvement->app_recdoc_date = $req['app_recdoc_date'];
+
+        $approvement->supplier_id = $req['creditor_id'];
+        $approvement->pay_to = $req['pay_to'];
+        $approvement->budget_id = $req['budget_id'];
+
+        $approvement->amount = floatval(str_replace(",", "", $req['amount']));
+        $approvement->tax_val = floatval(str_replace(",", "", $req['tax_val']));
+        $approvement->discount = floatval(str_replace(",", "", $req['discount']));
+        $approvement->fine = floatval(str_replace(",", "", $req['fine']));
+        $approvement->vatrate = $req['vatrate'];
+        $approvement->vatamt = floatval(str_replace(",", "", $req['vatamt']));
+        $approvement->net_val = floatval(str_replace(",", "", $req['net_val']));
+        $approvement->net_amt = floatval(str_replace(",", "", $req['net_amt']));
+        $approvement->net_amt_str = $req['net_amt_str'];
+        $approvement->net_total = floatval(str_replace(",", "", $req['net_total']));
+        $approvement->net_total_str = $req['net_total_str'];
+        $approvement->cheque = floatval(str_replace(",", "", $req['cheque']));
+        $approvement->cheque_str = $req['cheque_str'];
+        /** user info */
+        $approvement->cr_userid = $req['cr_user'];
+        $approvement->cr_date = date("Y-m-d H:i:s");
+        $approvement->chg_userid = $req['chg_user'];
+        $approvement->chg_date = date("Y-m-d H:i:s");
+        /** สถานะ 0=รอดำเนินการ,1=ขออนุมัติ,2=ชำระเงินแล้ว,3=ยกเลิก */
+        $approvement->app_stat = '0';
+        $approvement->is_approve = 'N';
+
+        if($approvement->save()) {
+            $index = 0;
+            foreach ($req['debts'] as $debt) {
+                /** Added Approvement Detail */
+                $detail = new ApprovementDetail();
+                $detail->app_id = $approvement->app_id;
+                $detail->debt_id = $debt['debt_id'];
+                $detail->seq_no = ++$index;
+                $detail->is_paid = 'N';
+                $detail->app_detail_stat = '0';
+                $detail->save();
+
+                /** Updated debt status to 1=ขออนุมัติ */
+                Debt::find($debt['debt_id'])
+                    ->update([
+                        'debt_chgdate'  => date("Y-m-d H:i:s"),
+                        'debt_userid'   => $req['chg_user'],
+                        'debt_status'   => 1
+                    ]);
+            }
+
+            return [
+                "status"    => "success",
+                "message"   => "Insert success.",
+            ];
+        } else {
+            return [
+                "status" => "error",
+                "message" => "Insert failed.",
+            ];
+        }
+    }
+
     public function doCancel(Request $req)
     {
         $approvement = Approvement::find($req['app_id']);
