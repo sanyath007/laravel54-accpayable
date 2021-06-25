@@ -16,13 +16,13 @@ class ApprovementDetail extends Model
 	
 	protected $fillable = ['debt_id', 'ref_debt'];
 	
-    public function debt()
-  	{
-      	return $this->belongsTo('App\Models\Debt', 'debt_id', 'debt_id');
-  	}
+	public function debts()
+	{
+		return $this->belongsTo('App\Models\Debt', 'debt_id', 'debt_id');
+	}
 
-  	public function approve()
-  	{
-      	return $this->belongsTo('App\Models\Approvement', 'app_id', 'app_id');
-  	}
+	public function approve()
+	{
+		return $this->belongsTo('App\Models\Approvement', 'app_id', 'app_id');
+	}
 }

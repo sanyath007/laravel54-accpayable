@@ -29,38 +29,83 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         $scope.getData();
     });
 
-    $scope.initData = function() {
-        $scope.approve = {
-            creditor_id: '',
-            app_doc_no: '',
-            app_date: '',
-            app_recdoc_no: '',
-            app_recdoc_date: '',
-            pay_to: '',
-            budget_id: '',
-            amount: '0.00',
-            tax_val: '0.00',
-            discount: '0.00',
-            fine: '0.00',
-            vatrate: '1',
-            vatamt: '0.00',
-            net_val: '0.00',
-            net_amt: '0.00',
-            net_amt_str: ' ตัวอักษร ',
-            net_total: '0.00',
-            net_total_str: ' ตัวอักษร ',
-            cheque: '0.00',
-            cheque_str: ' ตัวอักษร ',
-            cr_user: '',
-            chg_user: '',
-            debts: [],
-        };
+    $scope.initData = function (data) {
+        if (!data) {
+            $scope.approve = {
+                creditor_id: '',
+                app_doc_no: '',
+                app_date: '',
+                app_recdoc_no: '',
+                app_recdoc_date: '',
+                pay_to: '',
+                budget_id: '',
+                amount: '0.00',
+                tax_val: '0.00',
+                discount: '0.00',
+                fine: '0.00',
+                vatrate: '1',
+                vatamt: '0.00',
+                net_val: '0.00',
+                net_amt: '0.00',
+                net_amt_str: ' ตัวอักษร ',
+                net_total: '0.00',
+                net_total_str: ' ตัวอักษร ',
+                cheque: '0.00',
+                cheque_str: ' ตัวอักษร ',
+                cr_user: '',
+                chg_user: '',
+                debts: [],
+            };
+    
+            $scope.supplierDebtData = [];
+            $scope.supplierDebtToRemoveData = [];
+    
+            $scope.debts = [];
+            $scope.debtPager = [];
+        } else {
+            console.log(data);
+            $scope.approve = {
+                app_id: data.app_id,
+                creditor_id: data.supplier_id,
+                app_doc_no: data.app_doc_no,
+                app_date: data.app_date,
+                app_recdoc_no: data.app_recdoc_no,
+                app_recdoc_date: data.app_recdoc_date,
+                pay_to: data.pay_to,
+                budget_id: data.budget_id,
+                amount: data.amount,
+                tax_val: data.tax_val,
+                discount: data.discount,
+                fine: data.fine,
+                vatrate: data.vatrate,
+                vatamt: data.vatamt,
+                net_val: data.net_val,
+                net_amt: data.net_amt,
+                net_amt_str: data.net_amt_str,
+                net_total: data.net_total,
+                net_total_str: data.net_total_str,
+                cheque: data.cheque,
+                cheque_str: data.cheque_str,
+                cr_user: data.cr_userid,
+                chg_user: data.chg_userid,
+                debts: data.app_detail,
+            };
+    
+            
+            $scope.supplierDebtData = data.app_detail.map(detail => detail.debts);
+            $scope.supplierDebtToRemoveData = [];
+    
+            $scope.debts = [];
+            $scope.debtPager = [];
 
-        $scope.supplierDebtData = [];
-        $scope.supplierDebtToRemoveData = [];
-
-        $scope.debts = [];
-        $scope.debtPager = [];
+            $http.get(`${CONFIG.baseUrl}/debttype/json`)
+            .then(res => {
+                console.log(res);
+                debttypes = res.data
+            }, err => {
+                console.log(err);
+            });
+        }        
     }
 
     $scope.getData = function(event) {
@@ -91,17 +136,17 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         console.log(URL);
         $scope.approvements = [];
 
-    	$http.get(URL)
-    	.then(function(res) {
-    		console.log(res);
+        $http.get(URL)
+        .then(function(res) {
+            console.log(res);
             $scope.approvements = res.data.approvements.data;
             $scope.pager = res.data.approvements;
 
             $scope.loading = false;
-    	}, function(err) {
-    		console.log(err);
+        }, function(err) {
+            console.log(err);
             $scope.loading = false;
-    	});
+        });
     }
     
     $scope.getApprove = function(approveId) {
@@ -149,7 +194,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     $scope.edit = function(approveId) {
         console.log(`Edit approve data id: ${approveId} !!`);
 
-        // window.location.href = `${CONFIG.baseUrl}/approve/${approveId}/edit`;
+        window.location.href = `${CONFIG.baseUrl}/approve/${approveId}/edit`;
     };
 
     $scope.update = function(event, form, approveId) {

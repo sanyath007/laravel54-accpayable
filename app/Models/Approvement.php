@@ -17,12 +17,12 @@ class Approvement extends Model
 	protected $fillable = ['app_stat'];
 	
     public function app_detail()
-  	{
-      	return $this->hasMany('App\Models\ApprovementDetail', 'app_id', 'app_id');
-  	}
+	{
+		return $this->hasMany('App\Models\ApprovementDetail', 'app_id', 'app_id');
+	}
 
-  	public function payment_detail()
-  	{
-      	return $this->hasMany('App\Models\PaymentDetail', 'app_id', 'app_id');
-  	}
+	public function payment_detail()
+	{
+		return $this->hasMany('App\Models\PaymentDetail', 'app_id', 'app_id');
+	}
 }

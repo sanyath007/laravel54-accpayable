@@ -1,5 +1,5 @@
 <div class="modal fade" id="dlgSupplierDebtList" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="width: 80vw;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -14,12 +14,13 @@
                                 <th style="width: 2%; text-align: center;">#</th>
                                 <th style="width: 5%; text-align: center;">รหัส</th>
                                 <th style="width: 10%; text-align: center;">วันที่ลงบัญชี</th>
-                                <th style="width: 12%; text-align: center;">เลขที่ใบส่งของ</th>
+                                <th style="width: 25%; text-align: center;">เลขที่ใบส่งของ</th>
                                 <!-- <th style="width: 8%; text-align: center;">วันที่ใบส่งของ</th> -->
                                 <th style="text-align: left;">ประเภทหนี้</th>
-                                <th style="width: 6%; text-align: center;">ยอดหนี้</th>
-                                <th style="width: 6%; text-align: center;">ภาษี</th>
-                                <th style="width: 6%; text-align: center;">สุทธิ</th>
+                                <th style="width: 20%; text-align: left;">รายการ</th>
+                                <th style="width: 6%; text-align: right;">ยอดหนี้</th>
+                                <th style="width: 6%; text-align: right;">ภาษี</th>
+                                <th style="width: 6%; text-align: right;">สุทธิ</th>
                                 <!-- <th style="width: 6%; text-align: center;">สถานะ</th> -->
                             </tr>
                         </thead>
@@ -36,6 +37,7 @@
                                 <td class="text-center">@{{ debt.deliver_no }}</td>
                                 <!-- <td>@{{ debt.deliver_date }}</td> -->
                                 <td>@{{ debt.debttype.debt_type_name }}</td>
+                                <td>@{{ debt.debttype.debt_type_detail }}</td>
                                 <td class="text-right">@{{ debt.debt_amount | number:2 }}</td>
                                 <td class="text-right">@{{ debt.debt_vat | number:2 }}</td>
                                 <td class="text-right">@{{ debt.debt_total | number:2 }}</td>

@@ -177,7 +177,7 @@ class ApprovementController extends Controller
     public function edit($id)
     {
         return view('approvements.edit', [
-            'approvement'   => Approvement::find($id),
+            'approvement'   => Approvement::with('app_detail', 'app_detail.debts')->find($id),
             'creditors'     => Creditor::all(),
             'budgets'	    => Budget::all(),
         ]);

@@ -5,25 +5,25 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            สร้างรายการขออนุมัติเบิก-จ่ายหนี้
+            แก้ไขรายการขออนุมัติเบิก-จ่ายหนี้
             <!-- <small>preview of simple tables</small> -->
         </h1>
 
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">หน้าหลัก</a></li>
-            <li class="breadcrumb-item active">สร้างรายการขออนุมัติเบิก-จ่ายหนี้</li>
+            <li class="breadcrumb-item active">แก้ไขรายการขออนุมัติเบิก-จ่ายหนี้</li>
         </ol>
     </section>
 
     <!-- Main content -->
-    <section class="content" ng-controller="approveCtrl" ng-init="initData()">
+    <section class="content" ng-controller="approveCtrl" ng-init="initData({{ $approvement }})">
 
         <div class="row">
             <div class="col-md-12">
 
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">สร้างรายการขออนุมัติ</h3>
+                        <h3 class="box-title">แก้ไขรายการขออนุมัติ</h3>
                     </div>
 
                     <form id="frmNewApprove" name="frmNewApprove" method="post" action="{{ url('/approve/store') }}" role="form">
@@ -214,7 +214,14 @@
                                             </span>
                                         </div>
                                         
-                                        <div class="col-md-6">                                            
+                                        <div class="col-md-6">
+                                            <div
+                                                class="alert alert-danger"
+                                                style="padding: 5px; margin-bottom: 10px;"
+                                            >
+                                                <span><b>หมายเหตุ :</b> ไม่ต้องใส่เครื่องหมาย Comma (,)</span>
+                                            </div>
+
                                             <div class="form-group col-md-6">
                                                 <label>ฐานภาษี :</label>
                                                 <input type="text" 
@@ -293,10 +300,10 @@
                             </div><!-- /.tab-content -->
                             
                         </div><!-- /.box-body -->
-                  
+
                         <div class="box-footer clearfix">
-                            <button ng-click="store($event, frmNewApprove)" class="btn btn-success pull-right">
-                                บันทึก
+                            <button ng-click="store($event, frmNewApprove)" class="btn btn-warning pull-right">
+                                แก้ไข
                             </button>
                         </div><!-- /.box-footer -->
                     </form>

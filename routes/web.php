@@ -111,6 +111,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('debttype/edit/{debttypeId}', 'DebttypeController@edit');
     Route::put('debttype/update', 'DebttypeController@update');
     Route::delete('debttype/delete/{debttypeId}', 'DebttypeController@delete');
+    Route::delete('debttype/json', 'DebttypeController@jsonList');
 
     Route::get('bankacc/list', 'BankAccountController@index');
 	Route::get('bankacc/search/{searchKey}', 'BankAccountController@search');
