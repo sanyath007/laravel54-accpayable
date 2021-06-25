@@ -301,6 +301,22 @@ class DebtController extends Controller
         }   
     }
 
+    public function updateStatus ($id)
+    {
+        $debt = Debt::find($id)->update([
+                    'debt_chgdate'  => date("Y-m-d H:i:s"),
+                    'debt_userid'   => $req['user'],
+                    'debt_status'   => $req['status']
+                ]);
+
+        if ($debt) {
+            return [
+                'status' => 'success',
+                'message' => 'Updated id ' . $req['debt_id'] . 'is successed.',
+            ];
+        }
+    }
+
     public function setZero(Request $req)
     {
         if(Debt::where('debt_id', '=', $req['debt_id'])->update(['debt_status' => '4']) <> 0) {

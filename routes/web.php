@@ -48,6 +48,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::delete('debt/delete/{debtId}', 'DebtController@delete');
     Route::post('debt/setzero', 'DebtController@setZero');
     Route::get('debt/{creditor}/list', 'DebtController@supplierDebt');
+    Route::put('debt/{id}/update-status', 'DebtController@updateStatus');
 
     /** รายการขออนุมัติเบิก-จ่าย */
     Route::get('approve/list', 'ApprovementController@index');
