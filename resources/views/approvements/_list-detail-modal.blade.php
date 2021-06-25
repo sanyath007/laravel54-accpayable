@@ -1,5 +1,5 @@
 <div class="modal fade" id="dlgApproveDebtList" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="width: 80vw;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -41,18 +41,18 @@
                                 <!-- <th style="width: 8%; text-align: center;">วันที่ใบส่งของ</th> -->
                                 <th style="text-align: left;">ประเภทหนี้</th>
                                 <th style="width: 20%; text-align: left;">รายละเอียด</th>
-                                <th style="width: 8%; text-align: center;">ยอดหนี้</th>
-                                <th style="width: 8%; text-align: center;">VAT</th>
-                                <th style="width: 8%; text-align: center;">สุทธิ</th>
+                                <th style="width: 8%; text-align: right;">ยอดหนี้</th>
+                                <th style="width: 8%; text-align: right;">VAT</th>
+                                <th style="width: 8%; text-align: right;">สุทธิ</th>
                                 <!-- <th style="width: 6%; text-align: center;">สถานะ</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="(index, debt) in debts">
                                 <td class="text-center">@{{ debt.seq_no }}</td>
-                                <td>@{{ debt.debt_id }}</td>
-                                <td>@{{ debt.debt.debt_date | thdate }}</td>
-                                <td>@{{ debt.debt.deliver_no }}</td>
+                                <td class="text-center">@{{ debt.debt_id }}</td>
+                                <td class="text-center">@{{ debt.debt.debt_date | thdate }}</td>
+                                <td class="text-center">@{{ debt.debt.deliver_no }}</td>
                                 <!-- <td>@{{ debt.deliver_date }}</td> -->
                                 <td>@{{ debttypes[debt.debt.debt_type_id] }}</td>
                                 <td>@{{ debt.debt.debt_type_detail }}</td>
