@@ -101,6 +101,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
                 net_total_str: data.net_total_str,
                 cheque: data.cheque,
                 cheque_str: data.cheque_str,
+                app_stat: data.app_stat,
                 debts: []
             };
 

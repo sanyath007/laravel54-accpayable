@@ -51,14 +51,14 @@
                             <tr ng-repeat="(index, debt) in debts">
                                 <td class="text-center">@{{ debt.seq_no }}</td>
                                 <td class="text-center">@{{ debt.debt_id }}</td>
-                                <td class="text-center">@{{ debt.debt.debt_date | thdate }}</td>
-                                <td class="text-center">@{{ debt.debt.deliver_no }}</td>
+                                <td class="text-center">@{{ debt.debts.debt_date | thdate }}</td>
+                                <td class="text-center">@{{ debt.debts.deliver_no }}</td>
                                 <!-- <td>@{{ debt.deliver_date }}</td> -->
-                                <td>@{{ debttypes[debt.debt.debt_type_id] }}</td>
-                                <td>@{{ debt.debt.debt_type_detail }}</td>
-                                <td class="text-right">@{{ debt.debt.debt_amount | number:2 }}</td>
-                                <td class="text-right">@{{ debt.debt.debt_vat | number:2 }}</td>
-                                <td class="text-right">@{{ debt.debt.debt_total | number:2 }}</td>
+                                <td>@{{ debttypes[debt.debts.debt_type_id] }}</td>
+                                <td>@{{ debt.debts.debt_type_detail }}</td>
+                                <td class="text-right">@{{ debt.debts.debt_amount | number:2 }}</td>
+                                <td class="text-right">@{{ debt.debts.debt_vat | number:2 }}</td>
+                                <td class="text-right">@{{ debt.debts.debt_total | number:2 }}</td>
                                 <!-- <td>@{{ debt.debt_status }}</td> -->
                             </tr>
                         </tbody>

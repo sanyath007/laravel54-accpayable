@@ -137,7 +137,7 @@ class ApprovementController extends Controller
         $approvement->cr_date = date("Y-m-d H:i:s");
         $approvement->chg_userid = $req['chg_user'];
         $approvement->chg_date = date("Y-m-d H:i:s");
-        /** สถานะ 0=รอดำเนินการ,1=ขออนุมัติ,2=ชำระเงินแล้ว,3=ยกเลิก */
+        /** สถานะ 0=รอดำเนินการ,2=ชำระเงินแล้ว,3=ยกเลิก */
         $approvement->app_stat = '0';
         $approvement->is_approve = 'N';
 
@@ -294,7 +294,7 @@ class ApprovementController extends Controller
 
         return [
             'appdetails' => ApprovementDetail::where(['app_id' => $appid])
-                                ->with('debt')
+                                ->with('debts')
                                 ->orderBy('seq_no', 'ASC')
                                 ->get(),
             'debttypes' => $debttypes,
