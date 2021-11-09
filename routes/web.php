@@ -32,9 +32,9 @@ Route::group(['middleware' => 'web'], function() {
 
 Route::group(['middleware' => ['web','auth']], function () {
     /** Dashboard */
-    Route::get('dashboard/card-data', 'HomeController@cardData');
-    Route::get('dashboard/sum-month-chart/{month}', 'HomeController@sumMonth');     
-    Route::get('dashboard/sum-year-chart/{month}', 'HomeController@sumYear'); 
+    Route::get('dashboard/card-data/{year}', 'HomeController@cardData');
+    Route::get('dashboard/sum-month-chart/{year}', 'HomeController@sumMonth');     
+    Route::get('dashboard/sum-year-chart/{year}', 'HomeController@sumYear'); 
     
     /** รายการตั้งหนี้ */
     Route::get('debt/list', 'DebtController@index');
