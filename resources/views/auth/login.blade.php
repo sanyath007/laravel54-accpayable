@@ -33,13 +33,23 @@
     <div class="wrapper">
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper" style="display: flex; justify-content: center; align-items: center;">
 
-            <div class="row">
+            <div class="row" style="width: 100vw">
                 <div class="col-md-8 col-md-offset-2" style="padding-top: 80px;">
 
+                    @if (session('status'))
+                        <div class="alert alert-danger">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <div style="text-align: center;">
+                        <h1>AccPayable <b>MS<b></h1>
+                    </div>
+
                     <div class="panel panel-default">
-                        <div class="panel-heading">Login</div>
+                        <div class="panel-heading">ลงชื่อเข้าใช้งานระบบ</div>
                         <div class="panel-body">
                             <form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/signin') }}">
                                 {{ csrf_field() }}
@@ -72,7 +82,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <div class="col-md-6 col-md-offset-4">
                                         <div class="checkbox">
                                             <label>
@@ -80,7 +90,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="form-group">
                                     <div class="col-md-6 col-md-offset-4">
@@ -88,10 +98,19 @@
                                             <i class="fa fa-btn fa-sign-in"></i> Login
                                         </button>
 
-                                        <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
+                                        <!-- <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a> -->
                                     </div>
                                 </div>
                             </form>
+
+                            <div class="row">
+                                <div class="col-md-12 col-md-offset-4">
+                                    <a href="{{ asset('/uploads/manuals/v1.pdf') }}">
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        คู่มือการใช้งาน
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div><!--- /.panel -->
 
