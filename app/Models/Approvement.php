@@ -15,7 +15,7 @@ class Approvement extends Model
 	public $timestamps = false; //ไม่ใช้ field updated_at และ created_at
 	
 	protected $fillable = ['app_stat'];
-	
+
     public function app_detail()
 	{
 		return $this->hasMany('App\Models\ApprovementDetail', 'app_id', 'app_id');
