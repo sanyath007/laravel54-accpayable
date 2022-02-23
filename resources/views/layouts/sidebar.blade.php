@@ -83,7 +83,7 @@
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-paper-plane-o"></i>
+                    <i class="fa fa-money"></i>
                     <span>ตัดจ่ายหนี้</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
