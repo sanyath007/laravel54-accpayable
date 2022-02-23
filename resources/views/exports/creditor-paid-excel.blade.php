@@ -11,7 +11,7 @@
             <th style="width: 15%; text-align: left;">รายการ</th>
             <th style="text-align: left;">บริษัท</th>
             <th style="width: 8%; text-align: center;">ยอดหนี้สุทธิ</th>
-             <th style="width: 5%; text-align: center;">ยอดหนี้</th>
+            <th style="width: 5%; text-align: center;">ยอดหนี้</th>
             <th style="width: 8%; text-align: center;">ภาษีหัก ณ ที่จ่าย</th>
             <th style="width: 8%; text-align: center;">ยอดจ่ายเช็ค</th>
             <th style="width: 8%; text-align: center;">ธนาคาร</th>

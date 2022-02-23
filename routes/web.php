@@ -79,10 +79,10 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('account/arrear/{dataType}/{debttype}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@arrearData');
     Route::get('account/creditor-paid', 'AccountController@creditorPaid');    
     Route::get('account/creditor-paid/{dataType}/{creditor}/{sdate}/{edate}/{showall}', 'AccountController@creditorPaidData');
-    Route::get('account/ledger/{sdate}/{edate}/{showall}', 'AccountController@ledger');     
-    Route::get('account/ledger-excel/{sdate}/{edate}/{showall}', 'AccountController@ledgerExcel');
-    Route::get('account/ledger-debttype/{sdate}/{edate}/{showall}', 'AccountController@ledgerDebttype');     
-    Route::get('account/ledger-debttype-excel/{sdate}/{edate}/{showall}', 'AccountController@ledgerDebttypeExcel'); 
+    Route::get('account/ledger-creditors', 'AccountController@ledgerCreditors');
+    Route::get('account/ledger-creditors/{dataType}/{sdate}/{edate}', 'AccountController@ledgerCreditorsData');
+    Route::get('account/ledger-debttypes', 'AccountController@ledgerDebttypes');     
+    Route::get('account/ledger-debttypes/{dataType}/{sdate}/{edate}', 'AccountController@ledgerDebttypesData'); 
 
     /** รายงาน */
     Route::get('report/debt-creditor/list', 'ReportController@debtCreditor');   

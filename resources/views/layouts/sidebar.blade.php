@@ -107,12 +107,12 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="{{ url('/account/ledger/0/0/0') }}">
+                        <a href="{{ url('/account/ledger-creditors') }}">
                             <i class="fa fa-circle-o"></i> แยกประเภทเจ้าหนี้
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/account/ledger-debttype/0/0/0') }}">
+                        <a href="{{ url('/account/ledger-debttypes') }}">
                             <i class="fa fa-circle-o"></i> แยกประเภทหนี้
                         </a>
                     </li>

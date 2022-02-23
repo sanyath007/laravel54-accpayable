@@ -166,13 +166,19 @@ class AccountController extends Controller
         }
     }
 
-    public function ledger($dataType, $sdate, $edate, $showall)
+    public function ledgerCreditors()
+    {
+        return view('accounts.ledger-creditors');
+    }
+
+    public function ledgerCreditorsData(Request $req, $dataType, $sdate, $edate)
     {
         $debts = [];
+        $showall = $req->input('showall');
 
         $debts = \DB::table('nrhosp_acc_debt')
                         ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_payment_detail.cheque_amt',
-                                 'nrhosp_acc_payment_detail.rcpamt', 'nrhosp_acc_payment.cheque_no', 'nrhosp_acc_payment.payment_id')
+                                'nrhosp_acc_payment_detail.rcpamt', 'nrhosp_acc_payment.cheque_no', 'nrhosp_acc_payment.payment_id')
                         ->leftJoin('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
                         ->leftJoin('nrhosp_acc_payment_detail', 'nrhosp_acc_debt.debt_id', '=', 'nrhosp_acc_payment_detail.debt_id')
                         ->leftJoin('nrhosp_acc_payment', 'nrhosp_acc_payment_detail.payment_id', '=', 'nrhosp_acc_payment.payment_id')
@@ -186,74 +192,78 @@ class AccountController extends Controller
                         ->groupBy('nrhosp_acc_debt.supplier_id', 'nrhosp_acc_debt.supplier_name');
 
         $creditors = \DB::table(\DB::raw("(" .$subQuery->toSql() . ") as creditors"))
-                        ->mergeBindings($subQuery)
-                        ->get();
+                        ->mergeBindings($subQuery);
 
-        return view('accounts.ledger', [
-            "creditors" => $creditors,
-            "debts"     => $debts,
-            "sdate"     => $sdate,
-            "edate"     => $edate,
-            "showall"  => $showall,
-        ]);
+        if($dataType == 'excel') {
+            $fileName = 'ledger-creditors-' . date('YmdHis') . '.xlsx';
+
+            $data = [
+                "creditors" => $creditors->get(),
+                "debts"     => $debts
+            ];
+
+            return \Excel::create($fileName, function($excel) use ($data) {
+                $excel->sheet('sheet1', function($sheet) use ($data)
+                {
+                    $sheet->loadView('exports.ledger-creditors-excel', $data);                
+                });
+            })->download();
+        } else {
+            return [
+                "creditors" => $creditors->paginate(10),
+                "debts"     => $debts
+            ];
+        }
     }
 
-    public function ledgerExcel($sdate, $edate, $showall)
+    public function ledgerDebttypes()
     {
-        $fileName = 'ledger-' . date('YmdHis') . '.xlsx';
-        return (new LedgerExport($sdate, $edate, $showall))->download($fileName);
+        return view('accounts.ledger-debttypes');
     }
 
-    public function ledgerDebttype($dataType, $sdate, $edate, $showall)
+    public function ledgerDebttypesData(Request $req, $dataType, $sdate, $edate)
     {
         $debts = [];
-        $paidOutOfDates = '';
-        $index = 0;
+        $showall = $req->input('showall');
 
-        $objPaidOutOfDates = \DB::select("SELECT payment_id, debt_id FROM nrhosp_acc_payment_detail WHERE (
-                                    payment_id in (
-                                        SELECT payment_id FROM nrhosp_acc_payment
-                                        WHERE (paid_date NOT BETWEEN '$sdate' AND '$edate') 
-                                        AND (paid_stat='Y')
-                                    )
-                                )");
+        $debts = \DB::table('nrhosp_acc_debt')
+                        ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_payment_detail.cheque_amt',
+                                'nrhosp_acc_payment_detail.rcpamt', 'nrhosp_acc_payment.cheque_no', 'nrhosp_acc_payment.payment_id')
+                        ->leftJoin('nrhosp_acc_debt_type', 'nrhosp_acc_debt.debt_type_id', '=', 'nrhosp_acc_debt_type.debt_type_id')
+                        ->leftJoin('nrhosp_acc_payment_detail', 'nrhosp_acc_debt.debt_id', '=', 'nrhosp_acc_payment_detail.debt_id')
+                        ->leftJoin('nrhosp_acc_payment', 'nrhosp_acc_payment_detail.payment_id', '=', 'nrhosp_acc_payment.payment_id')
+                        ->whereNotIn('nrhosp_acc_debt.debt_status', [3,4])
+                        ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
+                        ->get();
 
-        foreach($objPaidOutOfDates as $p) {
-            if(++$index == count($objPaidOutOfDates)) {
-                $paidOutOfDates .= "'" .$p->debt_id. "'";
-            }
-            else {
-                $paidOutOfDates .= "'" .$p->debt_id. "',";
-            }
+        $subQuery = \DB::table('nrhosp_acc_debt')
+                        ->join('nrhosp_acc_debt_type','nrhosp_acc_debt_type.debt_type_id','=','nrhosp_acc_debt.debt_type_id')
+                        ->select('nrhosp_acc_debt.debt_type_id', 'nrhosp_acc_debt_type.debt_type_name')
+                        ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
+                        ->groupBy('nrhosp_acc_debt.debt_type_id', 'nrhosp_acc_debt_type.debt_type_name');
+
+        $debttypes = \DB::table(\DB::raw("(" .$subQuery->toSql() . ") as debttypes"))
+                        ->mergeBindings($subQuery);
+
+        if($dataType == 'excel') {
+            $fileName = 'ledger-debttypes-' . date('YmdHis') . '.xlsx';
+
+            $data = [
+                "debttypes" => $debttypes->get(),
+                "debts"     => $debts
+            ];
+
+            return \Excel::create($fileName, function($excel) use ($data) {
+                $excel->sheet('sheet1', function($sheet) use ($data)
+                {
+                    $sheet->loadView('exports.ledger-debttypes-excel', $data);                
+                });
+            })->download();
+        } else {
+            return [
+                "debttypes" => $debttypes->paginate(20),
+                "debts"     => $debts,
+            ];
         }
-
-        $sql = "SELECT d.debt_type_id, dt.debt_type_name,
-                SUM(d.debt_total) as credit,
-                SUM(CASE WHEN (d.debt_id NOT IN ($paidOutOfDates)) THEN pd.rcpamt END) as debit
-                FROM nrhosp_acc_debt d 
-                LEFT JOIN nrhosp_acc_debt_type dt ON (d.debt_type_id=dt.debt_type_id)
-                LEFT JOIN nrhosp_acc_payment_detail pd ON (d.debt_id=pd.debt_id) "; //#AND (d.debt_status NOT IN ('3','4'))
-
-        if($showall == '1') {
-            $sql .= "WHERE (d.debt_date BETWEEN '$sdate' AND '$edate') ";
-        }
-
-        $sql .= "GROUP BY d.debt_type_id, dt.debt_type_name
-                 ORDER BY debt_type_id";
-
-        $debts = \DB::select($sql);
-
-        return view('accounts.ledger-debttype', [
-            "debts"             => $debts,
-            "sdate"             => $sdate,
-            "edate"             => $edate,
-            "showall"           => $showall,
-        ]);
-    }
-
-    public function ledgerDebttypeExcel($sdate, $edate, $showall)
-    {
-        $fileName = 'ledger-debttype' . date('YmdHis') . '.xlsx';
-        return (new LedgerDebttypeExport($sdate, $edate, $showall))->download($fileName);
     }
 }

@@ -1,8 +1,9 @@
 app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalService, StringFormatService, PaginateService) {
 /** ################################################################################## */
     $scope.creditors = [];
+    $scope.debttypes = [];
     $scope.payments = [];
-    $scope.pager = [];
+    $scope.pager = null;
     $scope.pages = [];
     $scope.totalDebt = 0.00;
     $scope.loading = false;
@@ -146,25 +147,134 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         }
     };
 
-    $scope.getLedgerData = function(event, URL) {
-        event.preventDefault();        
+    $scope.getLedgerCreditors = function(event) {
+        event.preventDefault();
+
+        $scope.creditors = [];
+        $scope.pager = null;
         $scope.loading = true;
 
         let sDate = StringFormatService.convToDbDate($("#sdate").val());
         let eDate = StringFormatService.convToDbDate($("#edate").val());
         let showAll = $("#showall").is(":checked") ? 1 : 0;
-        
-        $scope.loading = false;
-        console.log(URL);
-        $("#frmSearch").attr('action', `${CONFIG.baseUrl}/account/ledger/json/${sDate}/${eDate}/${showAll}`);
-        $("#frmSearch").submit();
+
+        $http.get(`${CONFIG.baseUrl}/account/ledger-creditors/json/${sDate}/${eDate}?showall=${showAll}`)
+        .then(function(res) {
+            const { data, ...pager } = res.data.creditors;
+
+            $scope.pager = pager;
+            $scope.creditors = data.map(creditor => {
+                const debts = res.data.debts.filter(debt => debt.supplier_id == creditor.supplier_id);
+                const credit = debts.reduce((credit, curVal) => credit += curVal.debt_amount, 0);
+                const debit = debts.reduce((debit, curVal) => debit += curVal.rcpamt, 0);
+                const balance = credit - debit;
+
+                return {
+                    ...creditor,
+                    debts,
+                    credit,
+                    debit,
+                    balance
+                };
+            });
+
+            // $scope.pages = PaginateService.createPagerNo($scope.pager);
+
+            // console.log($scope.pages);
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
     };
 
-    $scope.ledgerToExcel = function(URL) {
+    $scope.ledgerCreditorsToExcel = function() {
+        if($scope.creditors.length == 0) {
+            toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
+        } else {
+            console.log('sdate ', $("#edate").val());
+            let sDate = ($("#sdate").val() != '') ? StringFormatService.convToDbDate($("#sdate").val()) : 0;
+            let eDate = ($("#edate").val() != '') ? StringFormatService.convToDbDate($("#edate").val()) : 0;
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
+
+            window.location.href = `${CONFIG.baseUrl}/account/ledger-creditors/excel/${sDate}/${eDate}?showall=${showAll}`;
+        }
+    };
+
+    $scope.getLedgerDebttypes = function(event) {
+        event.preventDefault();
+
+        $scope.debttypes = [];
+        $scope.pager = null;
+        $scope.loading = true;
+
         let sDate = StringFormatService.convToDbDate($("#sdate").val());
         let eDate = StringFormatService.convToDbDate($("#edate").val());
         let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-        window.location.href = `${CONFIG.baseUrl}/account/ledger/excel/${sDate}/${eDate}/${showAll}`;
+        $http.get(`${CONFIG.baseUrl}/account/ledger-debttypes/json/${sDate}/${eDate}?showall=${showAll}`)
+        .then(function(res) {
+            const { data, ...pager } = res.data.debttypes;
+
+            $scope.pager = pager;
+            $scope.debttypes = data.map(debttype => {
+                const debts = res.data.debts.filter(debt => debt.debt_type_id == debttype.debt_type_id);
+                const credit = debts.reduce((credit, curVal) => credit += curVal.debt_amount, 0);
+                const debit = debts.reduce((debit, curVal) => debit += curVal.rcpamt, 0);
+                const balance = credit - debit;
+
+                return {
+                    ...debttype,
+                    debts,
+                    credit,
+                    debit,
+                    balance
+                };
+            });
+
+            // $scope.pages = PaginateService.createPagerNo($scope.pager);
+
+            // console.log($scope.pages);
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
+    };
+
+    $scope.ledgerDebttypesToExcel = function() {
+        if($scope.debttypes.length == 0) {
+            toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
+        } else {
+            console.log('sdate ', $("#edate").val());
+            let sDate = ($("#sdate").val() != '') ? StringFormatService.convToDbDate($("#sdate").val()) : 0;
+            let eDate = ($("#edate").val() != '') ? StringFormatService.convToDbDate($("#edate").val()) : 0;
+            let showAll = $("#showall").is(":checked") ? 1 : 0;
+
+            window.location.href = `${CONFIG.baseUrl}/account/ledger-debttypes/excel/${sDate}/${eDate}?showall=${showAll}`;
+        }
+    };
+
+    $scope.getLedgerWithURL = function(URL) {
+        $scope.creditors = [];
+        $scope.debts = [];
+        $scope.pager = null;
+
+        $scope.loading = true;
+
+        $http.get(URL)
+        .then(function(res) {
+            console.log(res);
+            $scope.creditors = res.data.creditors.data;
+            $scope.pager = res.data.creditors;
+
+            // $scope.pages = PaginateService.createPagerNo($scope.pager);
+
+            // console.log($scope.pages);
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
     };
 });
