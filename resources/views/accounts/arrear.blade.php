@@ -145,8 +145,8 @@
                                     <td style="text-align: center;">@{{ debt.app_recdoc_date | thdate }}</td>
                                     <td style="text-align: center;">
                                         @{{ (debt.debt_status==1) ? 'ขออนุมัติ' : 
-                                            (debt.debt_status==2) ? 'ชำระเงินแล้ว' : 
-                                            (debt.debt_status==3) ? 'ยกเลิก' : 'รอดำเนินการ' }}
+                                            (debt.debt_status==2) ? 'ตัดจ่าย' : 
+                                            (debt.debt_status==3) ? 'ยกเลิก' : 'ตั้งหนี้' }}
                                     </td>       
                                 </tr>
                             </tbody>
