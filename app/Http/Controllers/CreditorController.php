@@ -13,7 +13,7 @@ class CreditorController extends Controller
 {
     public function index()
     {
-    	return view('creditors.list');
+        return view('creditors.list');
     }
 
     public function search($searchKey)
@@ -44,9 +44,9 @@ class CreditorController extends Controller
 
     public function add()
     {
-    	return view('creditors.add', [
+        return view('creditors.add', [
             'prefixs' => SupplierPrefix::all(),
-    	]);
+        ]);
     }
 
     public function store(Request $req)

@@ -49,17 +49,17 @@ app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalSer
         $scope.creditors = [];
         $scope.loading = true;
 
-    	$http.get(URL)
-    	.then(function(res) {
-    		console.log(res);
+        $http.get(URL)
+        .then(function(res) {
+            console.log(res);
             $scope.creditors = res.data.creditors.data;
             $scope.pager = res.data.creditors;
 
             $scope.loading = false;
-    	}, function(err) {
-    		console.log(err);
+        }, function(err) {
+            console.log(err);
             $scope.loading = false;
-    	});
+        });
     }
 
     $scope.add = function(event, form) {
@@ -104,7 +104,7 @@ app.controller('creditorCtrl', function($scope, $http, toaster, CONFIG, ModalSer
         event.preventDefault();
 
         if(confirm("คุณต้องแก้ไขเจ้าหนี้เลขที่ " + creditorId + " ใช่หรือไม่?")) {
-            $http.put(CONFIG.baseUrl + '/creditor/update/', $scope.creditor)
+            $http.put(CONFIG.baseUrl + '/creditor/update', $scope.creditor)
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'แก้ไขข้อมูลเรียบร้อยแล้ว !!!');
