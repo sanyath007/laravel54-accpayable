@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 use App\Models\Debt;
 use App\Models\DebtType;
@@ -192,16 +191,13 @@ class AccountController extends Controller
                         })
                         ->get();
 
-        $subQuery = \DB::table('nrhosp_acc_debt')
-                        ->select('nrhosp_acc_debt.supplier_id', 'nrhosp_acc_debt.supplier_name')
-                        ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
+        $suppliersList = Debt::whereBetween('debt_date', [$sdate, $edate])
                         ->when(!empty($supplier), function($q) use ($supplier) {
-                            $q->where('nrhosp_acc_debt.supplier_id', $supplier);
+                            $q->where('supplier_id', $supplier);
                         })
-                        ->groupBy('nrhosp_acc_debt.supplier_id', 'nrhosp_acc_debt.supplier_name');
+                        ->pluck('supplier_id');
 
-        $creditors = \DB::table(\DB::raw("(" .$subQuery->toSql() . ") as creditors"))
-                        ->mergeBindings($subQuery);
+        $creditors = Creditor::whereIn('supplier_id', $suppliersList);
 
         if($dataType == 'excel') {
             $fileName = 'ledger-creditors-' . date('YmdHis') . '.xlsx';

@@ -114,7 +114,7 @@
                         </div>
 
                         <div ng-show="creditors.length > 0" ng-repeat="(index, creditor) in creditors">
-                            <h4>@{{ index+1 }}.@{{ creditor.supplier_name }} (@{{ creditor.supplier_id }})</h4>
+                            <h4>@{{ pager.from+index }}.@{{ creditor.supplier_name }} (@{{ creditor.supplier_id }})</h4>
 
                             <table class="table table-bordered table-striped" style="font-size: 12px;">
                                 <thead>
@@ -132,7 +132,7 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(index, debt) in creditor.debts">
-                                        <td style="text-align: center;">@{{ $index+1 }}</td>
+                                        <td style="text-align: center;">@{{ index+1 }}</td>
                                         <td style="text-align: center;">@{{ debt.debt_id }}</td>
                                         <td style="text-align: center;">@{{ debt.debt_date | thdate }}</td>
                                         <td style="text-align: center;">@{{ debt.deliver_no }}</td>
@@ -156,50 +156,56 @@
                         </div>
                     </div><!-- /.box-body -->
                     <div class="box-footer clearfix">
-                        <a  ng-show="creditors.length > 0"
-                            ng-click="ledgerCreditorsToExcel()"
-                            class="btn btn-success">
-                            Excel
-                        </a>
+                        <div class="row" ng-show="creditors.length > 0">
+                            <div class="col-md-4">
+                                <a ng-click="ledgerCreditorsToExcel()" class="btn btn-success">
+                                    Excel
+                                </a>
+                            </div>
+                            <div class="col-md-4" style="text-align: center;">
+                                <span>หน้า @{{ pager.current_page }} / @{{ pager.last_page }}</span>
+                                <span>จำนวนทั้งสิ้น @{{ pager.total }} รายการ</span>
+                            </div>
+                            <div class="col-md-4">
+                                <ul ng-show="creditors.length > 0" class="pagination pagination-sm no-margin pull-right">                            
+                                    <li ng-if="pager.current_page !== 1">
+                                        <a href="#" ng-click="getLedgerCreditorsWithURL(pager.path+ '?page=1')" aria-label="First">
+                                            <span aria-hidden="true">First</span>
+                                        </a>
+                                    </li>                            
 
-                        <ul ng-show="creditors.length > 0" class="pagination pagination-sm no-margin pull-right">                            
-                            <li ng-if="pager.current_page !== 1">
-                                <a href="#" ng-click="getLedgerWithURL(pager.first_page_url)" aria-label="First">
-                                    <span aria-hidden="true">First</span>
-                                </a>
-                            </li>                            
+                                    <li ng-class="{'disabled': (pager.current_page==1)}">
+                                        <a href="#" ng-click="getLedgerCreditorsWithURL(pager.prev_page_url)" aria-label="Prev">
+                                            <span aria-hidden="true">Prev</span>
+                                        </a>
+                                    </li>
+                                    
+                                    <li ng-repeat="i in pages" ng-class="{'active': pager.current_page==i}">
+                                        <a href="#" ng-click="getLedgerCreditorsWithURL(pager.path + '?page=' +i)">
+                                            @{{ i }}
+                                        </a>
+                                    </li>
 
-                            <li ng-class="{'disabled': (pager.current_page==1)}">
-                                <a href="#" ng-click="getLedgerWithURL(pager.prev_page_url)" aria-label="Prev">
-                                    <span aria-hidden="true">Prev</span>
-                                </a>
-                            </li>
-                            
-                            <li ng-repeat="i in pages" ng-class="{'active': pager.current_page==i}">
-                                <a href="#" ng-click="getLedgerWithURL(pager.path + '?page=' +i)">
-                                    @{{ i }}
-                                </a>
-                            </li>
+                                    <!-- <li ng-if="pager.current_page < pager.last_page && (pager.last_page - pager.current_page) > 10">
+                                        <a href="#" ng-click="getDataWithURL(pager.path)">
+                                            ...
+                                        </a>
+                                    </li> -->
+                                    
+                                    <li ng-class="{'disabled': (pager.current_page==pager.last_page)}">
+                                        <a href="#" ng-click="getLedgerCreditorsWithURL(pager.next_page_url)" aria-label="Next">
+                                            <span aria-hidden="true">Next</span>
+                                        </a>
+                                    </li>
 
-                            <!-- <li ng-if="pager.current_page < pager.last_page && (pager.last_page - pager.current_page) > 10">
-                                <a href="#" ng-click="getDataWithURL(pager.path)">
-                                    ...
-                                </a>
-                            </li> -->
-                            
-                            <li ng-class="{'disabled': (pager.current_page==pager.last_page)}">
-                                <a href="#" ng-click="getLedgerWithURL(pager.next_page_url)" aria-label="Next">
-                                    <span aria-hidden="true">Next</span>
-                                </a>
-                            </li>
-
-                            <li ng-if="pager.current_page !== pager.last_page">
-                                <a href="#" ng-click="getLedgerWithURL(pager.last_page_url)" aria-label="Last">
-                                    <span aria-hidden="true">Last</span>
-                                </a>
-                            </li>
-                        </ul>
-
+                                    <li ng-if="pager.current_page !== pager.last_page">
+                                        <a href="#" ng-click="getLedgerCreditorsWithURL(pager.path+ '?page=' +pager.last_page)" aria-label="Last">
+                                            <span aria-hidden="true">Last</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div><!-- /.box-footer -->
                 </div><!-- /.box -->
 
