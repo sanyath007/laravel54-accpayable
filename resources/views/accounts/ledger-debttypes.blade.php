@@ -122,8 +122,8 @@
                                         <th style="width: 8%; text-align: center;">เลขที่เอกสาร</th>
                                         <th style="width: 15%; text-align: left;">เจ้าหนี้</th>
                                         <th style="text-align: left;">รายการ</th>
-                                        <th style="width: 8%; text-align: center;">เครดิต</th>
-                                        <th style="width: 8%; text-align: center;">เดบิต</th>
+                                        <th style="width: 8%; text-align: center;">ยอดหนี้</th>
+                                        <th style="width: 8%; text-align: center;">ยอดชำระ</th>
                                         <th style="width: 8%; text-align: center;">ยอดคงเหลือ</th>
                                     </tr>
                                 </thead>
@@ -135,10 +135,10 @@
                                         <td style="text-align: center;">@{{ debt.deliver_no }}</td>
                                         <td style="text-align: left;">@{{ debt.supplier_name }}</td>
                                         <td style="text-align: left;">@{{ debt.debt_type_detail }}</td>
-                                        <td style="text-align: right;">@{{ debt.debt_amount | currency:'':2 }}</td>
+                                        <td style="text-align: right;">@{{ debt.debt_total | currency:'':2 }}</td>
                                         <td style="text-align: right;">@{{ debt.rcpamt | currency:'':2 }}</td>
                                         <td style="text-align: right;">
-                                            @{{ debt.rcpamt ? (debt.rcpamt - debt.debt_amount) : debt.debt_amount  | currency:'':2 }}
+                                            @{{ debt.rcpamt ? (debt.rcpamt - debt.debt_total) : debt.debt_total  | currency:'':2 }}
                                         </td>
                                     </tr>
                                     <tr style="background-color: gray;">
@@ -153,7 +153,7 @@
                         </div>
                     </div><!-- /.box-body -->
                     <div class="box-footer clearfix">
-                        <div class="row" ng-show="creditors.length > 0">
+                        <div class="row" ng-show="debttypes.length > 0">
                             <div class="col-md-4">
                                 <a ng-click="ledgerDebttypesToExcel()" class="btn btn-success">
                                     Excel
@@ -166,7 +166,7 @@
                             <div class="col-md-4">
                                 <ul ng-show="debttypes.length > 0" class="pagination pagination-sm no-margin pull-right">                            
                                     <li ng-if="pager.current_page !== 1">
-                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.first_page_url)" aria-label="First">
+                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.path+ '?page=1')" aria-label="First">
                                             <span aria-hidden="true">First</span>
                                         </a>
                                     </li>                            
@@ -196,7 +196,7 @@
                                     </li>
 
                                     <li ng-if="pager.current_page !== pager.last_page">
-                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.last_page_url)" aria-label="Last">
+                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.path+ '?page=' +pager.last_page)" aria-label="Last">
                                             <span aria-hidden="true">Last</span>
                                         </a>
                                     </li>

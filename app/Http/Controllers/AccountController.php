@@ -232,6 +232,7 @@ class AccountController extends Controller
     {
         $debts = [];
         $showall = $req->input('showall');
+        $debttype = $req->input('debttype');
 
         $debts = \DB::table('nrhosp_acc_debt')
                         ->select('nrhosp_acc_debt.*', 'nrhosp_acc_debt_type.debt_type_name', 'nrhosp_acc_payment_detail.cheque_amt',
@@ -241,16 +242,18 @@ class AccountController extends Controller
                         ->leftJoin('nrhosp_acc_payment', 'nrhosp_acc_payment_detail.payment_id', '=', 'nrhosp_acc_payment.payment_id')
                         ->whereNotIn('nrhosp_acc_debt.debt_status', [3,4])
                         ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
+                        ->when(!empty($debttype), function($q) use ($debttype) {
+                            $q->where('nrhosp_acc_debt.debt_type_id', $debttype);
+                        })
                         ->get();
 
-        $subQuery = \DB::table('nrhosp_acc_debt')
-                        ->join('nrhosp_acc_debt_type','nrhosp_acc_debt_type.debt_type_id','=','nrhosp_acc_debt.debt_type_id')
-                        ->select('nrhosp_acc_debt.debt_type_id', 'nrhosp_acc_debt_type.debt_type_name')
-                        ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
-                        ->groupBy('nrhosp_acc_debt.debt_type_id', 'nrhosp_acc_debt_type.debt_type_name');
+        $debttypesList = Debt::whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
+                        ->when(!empty($debttype), function($q) use ($debttype) {
+                            $q->where('nrhosp_acc_debt.debt_type_id', $debttype);
+                        })
+                        ->pluck('debt_type_id');
 
-        $debttypes = \DB::table(\DB::raw("(" .$subQuery->toSql() . ") as debttypes"))
-                        ->mergeBindings($subQuery);
+        $debttypes = DebtType::whereIn('debt_type_id', $debttypesList);
 
         if($dataType == 'excel') {
             $fileName = 'ledger-debttypes-' . date('YmdHis') . '.xlsx';
@@ -268,7 +271,7 @@ class AccountController extends Controller
             })->download();
         } else {
             return [
-                "debttypes" => $debttypes->paginate(20),
+                "debttypes" => $debttypes->paginate(10),
                 "debts"     => $debts,
             ];
         }
