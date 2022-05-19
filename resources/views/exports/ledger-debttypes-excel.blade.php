@@ -14,8 +14,8 @@
                     <th style="width: 8%; text-align: center;">เลขที่เอกสาร</th>
                     <th style="width: 15%; text-align: left;">เจ้าหนี้</th>
                     <th style="text-align: left;">รายการ</th>
-                    <th style="width: 8%; text-align: center;">เครดิต</th>
-                    <th style="width: 8%; text-align: center;">เดบิต</th>
+                    <th style="width: 8%; text-align: center;">ยอดหนี้</th>
+                    <th style="width: 8%; text-align: center;">ยอดชำระ</th>
                     <th style="width: 8%; text-align: center;">ยอดคงเหลือ</th>
                 </tr>
             </thead>
