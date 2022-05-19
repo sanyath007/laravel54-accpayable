@@ -14,9 +14,9 @@ class ReportController extends Controller
 {
     public function debtCreditor()
     {
-    	return view('reports.debt-creditor', [
-    		"creditors" => Creditor::all(),
-    	]);
+        return view('reports.debt-creditor', [
+            "creditors" => Creditor::all(),
+        ]);
     }
 
     public function debtCreditorData(Request $req, $dataType, $creditor, $sdate, $edate, $showall)
@@ -100,9 +100,9 @@ class ReportController extends Controller
 
     public function debtDebttype()
     {
-    	return view('reports.debt-debttype', [
-    		"debttypes" => DebtType::all(),
-    	]);
+        return view('reports.debt-debttype', [
+            "debttypes" => DebtType::all(),
+        ]);
     }
 
     public function debtDebttypeData(Request $req, $dataType, $debttype, $sdate, $edate, $showall)

@@ -168,12 +168,15 @@ class AccountController extends Controller
 
     public function ledgerCreditors()
     {
-        return view('accounts.ledger-creditors');
+        return view('accounts.ledger-creditors', [
+            "creditors" => Creditor::all(),
+        ]);
     }
 
     public function ledgerCreditorsData(Request $req, $dataType, $sdate, $edate)
     {
         $debts = [];
+        $supplier = $req->input('supplier');
         $showall = $req->input('showall');
 
         $debts = \DB::table('nrhosp_acc_debt')
@@ -184,11 +187,17 @@ class AccountController extends Controller
                         ->leftJoin('nrhosp_acc_payment', 'nrhosp_acc_payment_detail.payment_id', '=', 'nrhosp_acc_payment.payment_id')
                         ->whereNotIn('nrhosp_acc_debt.debt_status', [3,4])
                         ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
+                        ->when(!empty($supplier), function($q) use ($supplier) {
+                            $q->where('nrhosp_acc_debt.supplier_id', $supplier);
+                        })
                         ->get();
 
         $subQuery = \DB::table('nrhosp_acc_debt')
                         ->select('nrhosp_acc_debt.supplier_id', 'nrhosp_acc_debt.supplier_name')
                         ->whereBetween('nrhosp_acc_debt.debt_date', [$sdate, $edate])
+                        ->when(!empty($supplier), function($q) use ($supplier) {
+                            $q->where('nrhosp_acc_debt.supplier_id', $supplier);
+                        })
                         ->groupBy('nrhosp_acc_debt.supplier_id', 'nrhosp_acc_debt.supplier_name');
 
         $creditors = \DB::table(\DB::raw("(" .$subQuery->toSql() . ") as creditors"))

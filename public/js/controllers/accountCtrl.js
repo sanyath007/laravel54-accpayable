@@ -154,11 +154,12 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         $scope.pager = null;
         $scope.loading = true;
 
+        let supplier = $("#supplier").val();
         let sDate = StringFormatService.convToDbDate($("#sdate").val());
         let eDate = StringFormatService.convToDbDate($("#edate").val());
         let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-        $http.get(`${CONFIG.baseUrl}/account/ledger-creditors/json/${sDate}/${eDate}?showall=${showAll}`)
+        $http.get(`${CONFIG.baseUrl}/account/ledger-creditors/json/${sDate}/${eDate}?supplier=${supplier}&showall=${showAll}`)
         .then(function(res) {
             const { data, ...pager } = res.data.creditors;
 

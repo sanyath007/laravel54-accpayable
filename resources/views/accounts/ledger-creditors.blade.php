@@ -28,8 +28,24 @@
 
                     <form id="frmSearch" name="frmSearch" role="form" action="{{ url(('/account/ledger')) }}" method="GET">
                         <div class="box-body">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>เจ้าหนี้</label>
+                                    <select id="supplier" class="form-control select2" style="width: 100%; font-size: 12px;">
 
+                                        <option value="" selected="selected">-- กรุณาเลือก --</option>
+                                        @foreach($creditors as $creditor)
+
+                                            <option value="{{ $creditor->supplier_id }}">
+                                                {{ $creditor->supplier_name }}
+                                            </option>
+
+                                        @endforeach
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>ระหว่างวันที่ :</label>
 
@@ -44,7 +60,6 @@
                                                 tabindex="1" required>
                                     </div><!-- /.input group -->
                                 </div>
-
                             </div>
 
                             <div class="col-md-6">
@@ -65,13 +80,13 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id="showall" name="showall"> แสดงทั้งหมด
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
                         </div><!-- /.box-body -->
 
                         <div class="box-footer">
@@ -195,23 +210,21 @@
 
     <script>
         $(function () {
+            const initDatePicker = {
+                autoclose: true,
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true,
+                orientation: 'bottom'
+            };
+
             //Initialize Select2 Elements
             $('.select2').select2()
 
-            $('#sdate').datepicker({
-                autoclose: true,
-                language: 'th',
-                format: 'dd/mm/yyyy',
-                thaiyear: true
-            })
+            $('#sdate').datepicker(initDatePicker)
             // .datepicker("setDate", moment().format('YYYY-MM-DD'));;
 
-            $('#edate').datepicker({
-                autoclose: true,
-                language: 'th',
-                format: 'dd/mm/yyyy',
-                thaiyear: true
-            })
+            $('#edate').datepicker(initDatePicker)
             // .datepicker("setDate", moment().format('YYYY-MM-DD'));
         });
     </script>
