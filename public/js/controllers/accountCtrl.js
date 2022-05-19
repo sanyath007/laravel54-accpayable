@@ -212,11 +212,12 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         $scope.pager = null;
         $scope.loading = true;
 
+        let debttype = $("#debttype").val();
         let sDate = StringFormatService.convToDbDate($("#sdate").val());
         let eDate = StringFormatService.convToDbDate($("#edate").val());
         let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-        $http.get(`${CONFIG.baseUrl}/account/ledger-debttypes/json/${sDate}/${eDate}?showall=${showAll}`)
+        $http.get(`${CONFIG.baseUrl}/account/ledger-debttypes/json/${sDate}/${eDate}?debttype=${debttype}&showall=${showAll}`)
         .then(function(res) {
             $scope.setLedgerDebttypesData(res);
 
@@ -254,12 +255,12 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
         if($scope.debttypes.length == 0) {
             toaster.pop('warning', "", "ไม่พบข้อมูล !!!");
         } else {
-            console.log('sdate ', $("#edate").val());
+            let debttype = $("#debttype").val();
             let sDate = ($("#sdate").val() != '') ? StringFormatService.convToDbDate($("#sdate").val()) : 0;
             let eDate = ($("#edate").val() != '') ? StringFormatService.convToDbDate($("#edate").val()) : 0;
             let showAll = $("#showall").is(":checked") ? 1 : 0;
 
-            window.location.href = `${CONFIG.baseUrl}/account/ledger-debttypes/excel/${sDate}/${eDate}?showall=${showAll}`;
+            window.location.href = `${CONFIG.baseUrl}/account/ledger-debttypes/excel/${sDate}/${eDate}?debttype=${debttype}&showall=${showAll}`;
         }
     };
 
