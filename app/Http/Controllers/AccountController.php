@@ -223,7 +223,9 @@ class AccountController extends Controller
 
     public function ledgerDebttypes()
     {
-        return view('accounts.ledger-debttypes');
+        return view('accounts.ledger-debttypes', [
+            "debttypes" => DebtType::all(),
+        ]);
     }
 
     public function ledgerDebttypesData(Request $req, $dataType, $sdate, $edate)

@@ -28,8 +28,25 @@
 
                     <form id="frmSearch" name="frmSearch" role="form" action="{{ url(('/account/ledger-debttype')) }}" method="GET">
                         <div class="box-body">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>ประเภทหนี้</label>
+                                    <select id="debttype" class="form-control select2" style="width: 100%; font-size: 12px;">
 
+                                        <option value="" selected="selected">-- กรุณาเลือก --</option>
+                                        
+                                        @foreach($debttypes as $debttype)
+
+                                            <option value="{{ $debttype->debt_type_id }}">
+                                                {{ $debttype->debt_type_name }}
+                                            </option>
+
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>ระหว่างวันที่ :</label>
 
@@ -44,14 +61,10 @@
                                                 tabindex="1" required>
                                     </div><!-- /.input group -->
                                 </div>
-
                             </div>
-
                             <div class="col-md-6">
-
                                 <div class="form-group">
                                     <label>ถึงวันที่ :</label>
-
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
@@ -63,16 +76,15 @@
                                                 tabindex="1" required>
                                     </div><!-- /.input group -->
                                 </div>
-
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id="showall" name="showall" /> แสดงทั้งหมด
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
                         </div><!-- /.box-body -->
                         <div class="box-footer">
                             <button ng-click="getLedgerDebttypes($event, '/account/ledger-debttype')" class="btn btn-info">
@@ -99,7 +111,7 @@
                         </div>
 
                         <div ng-show="debttypes.length > 0" ng-repeat="(index, debttype) in debttypes">
-                            <h4>@{{ index+1 }}.@{{ debttype.debt_type_name }} (@{{ debttype.debt_type_id }})</h4>
+                            <h4>@{{ pager.from+index }}.@{{ debttype.debt_type_name }} (@{{ debttype.debt_type_id }})</h4>
 
                             <table class="table table-bordered table-striped" style="font-size: 12px;">
                                 <thead>
@@ -117,7 +129,7 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="(index, debt) in debttype.debts">
-                                    <td style="text-align: center;">@{{ $index+1 }}</td>
+                                    <td style="text-align: center;">@{{ index+1 }}</td>
                                         <td style="text-align: center;">@{{ debt.debt_id }}</td>
                                         <td style="text-align: center;">@{{ debt.debt_date | thdate }}</td>
                                         <td style="text-align: center;">@{{ debt.deliver_no }}</td>
@@ -141,50 +153,56 @@
                         </div>
                     </div><!-- /.box-body -->
                     <div class="box-footer clearfix">
+                        <div class="row" ng-show="creditors.length > 0">
+                            <div class="col-md-4">
+                                <a ng-click="ledgerDebttypesToExcel()" class="btn btn-success">
+                                    Excel
+                                </a>
+                            </div>
+                            <div class="col-md-4" style="text-align: center;">
+                                <span>หน้า @{{ pager.current_page }} / @{{ pager.last_page }}</span>
+                                <span>จำนวนทั้งสิ้น @{{ pager.total }} รายการ</span>
+                            </div>
+                            <div class="col-md-4">
+                                <ul ng-show="debttypes.length > 0" class="pagination pagination-sm no-margin pull-right">                            
+                                    <li ng-if="pager.current_page !== 1">
+                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.first_page_url)" aria-label="First">
+                                            <span aria-hidden="true">First</span>
+                                        </a>
+                                    </li>                            
 
-                        <a  ng-show="debttypes.length > 0"
-                            ng-click="ledgerDebttypesToExcel()"
-                            class="btn btn-success">
-                            Excel
-                        </a>
+                                    <li ng-class="{'disabled': (pager.current_page==1)}">
+                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.prev_page_url)" aria-label="Prev">
+                                            <span aria-hidden="true">Prev</span>
+                                        </a>
+                                    </li>
+                                    
+                                    <li ng-repeat="i in pages" ng-class="{'active': pager.current_page==i}">
+                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.path + '?page=' +i)">
+                                            @{{ i }}
+                                        </a>
+                                    </li>
 
-                        <ul ng-show="debttypes.length > 0" class="pagination pagination-sm no-margin pull-right">                            
-                            <li ng-if="pager.current_page !== 1">
-                                <a href="#" ng-click="getArrearWithURL(pager.first_page_url)" aria-label="First">
-                                    <span aria-hidden="true">First</span>
-                                </a>
-                            </li>                            
+                                    <!-- <li ng-if="pager.current_page < pager.last_page && (pager.last_page - pager.current_page) > 10">
+                                        <a href="#" ng-click="getDataWithURL(pager.path)">
+                                            ...
+                                        </a>
+                                    </li> -->
+                                    
+                                    <li ng-class="{'disabled': (pager.current_page==pager.last_page)}">
+                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.next_page_url)" aria-label="Next">
+                                            <span aria-hidden="true">Next</span>
+                                        </a>
+                                    </li>
 
-                            <li ng-class="{'disabled': (pager.current_page==1)}">
-                                <a href="#" ng-click="getArrearWithURL(pager.prev_page_url)" aria-label="Prev">
-                                    <span aria-hidden="true">Prev</span>
-                                </a>
-                            </li>
-                            
-                            <li ng-repeat="i in pages" ng-class="{'active': pager.current_page==i}">
-                                <a href="#" ng-click="getArrearWithURL(pager.path + '?page=' +i)">
-                                    @{{ i }}
-                                </a>
-                            </li>
-
-                            <!-- <li ng-if="pager.current_page < pager.last_page && (pager.last_page - pager.current_page) > 10">
-                                <a href="#" ng-click="getDataWithURL(pager.path)">
-                                    ...
-                                </a>
-                            </li> -->
-                            
-                            <li ng-class="{'disabled': (pager.current_page==pager.last_page)}">
-                                <a href="#" ng-click="getArrearWithURL(pager.next_page_url)" aria-label="Next">
-                                    <span aria-hidden="true">Next</span>
-                                </a>
-                            </li>
-
-                            <li ng-if="pager.current_page !== pager.last_page">
-                                <a href="#" ng-click="getArrearWithURL(pager.last_page_url)" aria-label="Last">
-                                    <span aria-hidden="true">Last</span>
-                                </a>
-                            </li>
-                        </ul>
+                                    <li ng-if="pager.current_page !== pager.last_page">
+                                        <a href="#" ng-click="getLedgerDebttypesWithURL(pager.last_page_url)" aria-label="Last">
+                                            <span aria-hidden="true">Last</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
                 </div><!-- /.box -->
@@ -196,22 +214,20 @@
 
     <script>
         $(function () {
+            const initDatePicker = {
+                autoclose: true,
+                language: 'th',
+                format: 'dd/mm/yyyy',
+                thaiyear: true,
+                orientation: 'bottom'
+            };
+
             //Initialize Select2 Elements
-            // $('.select2').select2()
+            $('.select2').select2()
 
-            $('#sdate').datepicker({
-                autoclose: true,
-                language: 'th',
-                format: 'dd/mm/yyyy',
-                thaiyear: true
-            }); //.datepicker("setDate", moment().format('YYYY-MM-DD'));
+            $('#sdate').datepicker(initDatePicker); //.datepicker("setDate", moment().format('YYYY-MM-DD'));
 
-            $('#edate').datepicker({
-                autoclose: true,
-                language: 'th',
-                format: 'dd/mm/yyyy',
-                thaiyear: true
-            }); //.datepicker("setDate", moment().format('YYYY-MM-DD'));
+            $('#edate').datepicker(initDatePicker); //.datepicker("setDate", moment().format('YYYY-MM-DD'));
         });
     </script>
 
