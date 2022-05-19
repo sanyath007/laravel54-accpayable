@@ -165,7 +165,7 @@ app.controller('accountCtrl', function(CONFIG, $scope, $http, toaster, ModalServ
             $scope.pager = pager;
             $scope.creditors = data.map(creditor => {
                 const debts = res.data.debts.filter(debt => debt.supplier_id == creditor.supplier_id);
-                const credit = debts.reduce((credit, curVal) => credit += curVal.debt_amount, 0);
+                const credit = debts.reduce((credit, curVal) => credit += curVal.debt_total, 0);
                 const debit = debts.reduce((debit, curVal) => debit += curVal.rcpamt, 0);
                 const balance = credit - debit;
 
