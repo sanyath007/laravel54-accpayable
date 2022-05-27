@@ -12,12 +12,12 @@ class Bank extends Model
     public $timestamps = false; //ไม่ใช้ field updated_at และ created_at
     
     public function account()
-  	{
-      	return $this->hasMany('App\Models\BankAccount', 'bank_id', 'bank_id');
-  	}
+    {
+        return $this->hasMany('App\Models\BankAccount', 'bank_id', 'bank_id');
+    }
     
     public function branch()
-  	{
-      	return $this->hasMany('App\Models\BankBranch', 'bank_id', 'bank_id');
-  	}
+    {
+        return $this->hasMany('App\Models\BankBranch', 'bank_id', 'bank_id');
+    }
 }

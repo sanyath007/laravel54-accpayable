@@ -11,7 +11,7 @@ use App\Models\PaymentDetail;
 use App\Models\Approvement;
 use App\Models\Creditor;
 use App\Models\Budget;
-use App\Models\Bank;
+use App\Models\BankAccount;
 use App\Models\Debt;
 use App\Models\DebtType;
 
@@ -84,7 +84,7 @@ class PaymentController extends Controller
     {
         return view('payments.add', [
             'creditors' => Creditor::all(),
-            'banks'	    => Bank::all(),
+            'banks'	    => BankAccount::with('bank','branch')->get(),
             'budgets'	=> Budget::all(),
         ]);
     }
