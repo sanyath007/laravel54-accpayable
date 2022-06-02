@@ -39,7 +39,7 @@
                     } else if($debt->debt_status==3) {
                         echo 'ยกเลิก';
                     } else {
-                        echo 'รอดำเนินการ';
+                        echo 'ตั้งหนี้';
                     }   
                     ?>
                 </td>       

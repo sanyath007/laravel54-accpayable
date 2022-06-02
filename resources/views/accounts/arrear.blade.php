@@ -141,12 +141,13 @@
                                     <td style="text-align: center;">@{{ debt.debt_doc_recdate | thdate }}</td>
                                     <td style="text-align: left;">@{{ debt.supplier_name }}</td>
                                     <td style="text-align: center;">@{{ debt.deliver_no }}</td>
-                                    <td style="text-align: right;">@{{ debt.debt_amount | number: 2 }}</td>
+                                    <td style="text-align: right;">@{{ debt.debt_total | number: 2 }}</td>
                                     <td style="text-align: center;">@{{ debt.app_recdoc_date | thdate }}</td>
                                     <td style="text-align: center;">
-                                        @{{ (debt.debt_status==1) ? 'ขออนุมัติ' : 
-                                            (debt.debt_status==2) ? 'ตัดจ่าย' : 
-                                            (debt.debt_status==3) ? 'ยกเลิก' : 'ตั้งหนี้' }}
+                                        <span ng-show="debt.debt_status == 0">ตั้งหนี้</span>
+                                        <span ng-show="debt.debt_status == 1">ขออนุมัติ</span>
+                                        <span ng-show="debt.debt_status == 2">ตัดจ่าย</span>
+                                        <span ng-show="debt.debt_status == 3">ยกเลิก</span>
                                     </td>       
                                 </tr>
                             </tbody>
