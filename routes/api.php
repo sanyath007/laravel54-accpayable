@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'api'], function () {
+    /** รายการตั้งหนี้ */
+    Route::get('tmp-debts', 'TmpDebtController@getAll');
+    Route::get('tmp-debts/{id}', 'TmpDebtController@getById');
+    Route::post('tmp-debts', 'TmpDebtController@store');
 });
