@@ -17,13 +17,26 @@
 
     <!-- Main content -->
     <section class="content" ng-controller="debtCtrl">
-
         <div class="row">
             <div class="col-md-12">
 
                 <div class="box box-primary">
-                    <div class="box-header">
-                        <h3 class="box-title">เพิ่มข้อมูลหนี้</h3>
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="box-title">เพิ่มข้อมูลหนี้</h3>
+                            </div>
+                            <div class="col-md-6">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary pull-right"
+                                    ng-click="showTmpDebtsList();"
+                                >
+                                    <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                                    ตั้งหนี้จากรายการส่งเบิกเงิน
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <form id="frmNewDebt" name="frmNewDebt" method="post" action="{{ url('/debt/store') }}" role="form">
@@ -35,24 +48,35 @@
                                 <div class="col-md-6">
 
                                     <div class="form-group" ng-class="{ 'has-error': frmNewDebt.supplier_id.$error.required }">
-                                        <label class="control-label">เจ้าหนี้ :</label>                                                
-                                        <select id="supplier_id" 
+                                        <label class="control-label">เจ้าหนี้ :</label>
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                id="supplier_name" 
+                                                name="supplier_name"
+                                                ng-model="debt.supplier.supplier_name" 
+                                                class="form-control"
+                                                tabindex="2"
+                                            />
+                                            <input
+                                                type="hidden"
+                                                id="supplier_id" 
                                                 name="supplier_id"
-                                                ng-model="debt.supplier_id" 
-                                                class="form-control select2" 
-                                                style="width: 100%; font-size: 12px;"
-                                                tabindex="2" required>
-                                            <option value="" selected="selected">-- กรุณาเลือก --</option>
-
-                                            @foreach($creditors as $creditor)
-
-                                                <option value="{{ $creditor->supplier_id }}">
-                                                    {{ $creditor->supplier_name }}
-                                                </option>
-
-                                            @endforeach
-                                            
-                                        </select>
+                                                ng-model="debt.supplier_id"
+                                                required
+                                            />
+                                            <span class="input-group-btn">
+                                                <button
+                                                    type="button"
+                                                    id="search-btn"
+                                                    name="search"
+                                                    ng-click="showSuppliersList();"
+                                                    class="btn btn-primary"
+                                                >
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
                                         <div class="help-block" ng-show="frmNewDebt.supplier_id.$error.required">
                                             กรุณาเลือกเจ้าหนี้
                                         </div>
@@ -357,9 +381,11 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            @include('shared._tmp-debts-list')
+                            @include('shared._suppliers-list')
+
                         </div><!-- /.box-body -->
-                  
                         <div class="box-footer clearfix">
                             <button ng-click="store($event, frmNewDebt)" class="btn btn-success pull-right">
                                 บันทึก

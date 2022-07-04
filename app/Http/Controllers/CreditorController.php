@@ -29,6 +29,18 @@ class CreditorController extends Controller
         ];
     }
 
+    public function getAll()
+    {
+        $name = '';
+        $creditors = Creditor::when(!empty($name), function($q) use($name) {
+                            $q->where('supplier_name', 'like', '%'.$name.'%');
+                        })->paginate(10);
+
+        return [
+            'creditors' => $creditors,
+        ];
+    }
+
     private function generateAutoId()
     {
         $supplier = \DB::table('stock_supplier')

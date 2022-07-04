@@ -77,6 +77,21 @@ class TmpDebtController extends Controller
         }
     }
 
+    public function getAll()
+    {
+        $conditions = [];
+        $debts = TmpDebt::where('status', '0')
+                    ->with('supplier')
+                    ->when(count($conditions) > 0, function($q) use($conditions) {
+                        $q->where($conditions);
+                    })
+                    ->paginate(20);
+
+        return [
+            'debts' => $debts,
+        ];
+    }
+
     private function exportExcel($fileName, $view, $data, $options)
     {
         return \Excel::create($fileName, function($excel) use ($view, $data, $options) {
@@ -98,36 +113,9 @@ class TmpDebtController extends Controller
                             ->where('debt_status', '=', '0')
                             ->with('debttype')
                             ->paginate(20);
-            $apps = Debt::where('supplier_id', '=', $creditor)
-                            ->where('debt_status', '=', '1')
-                            ->with('debttype')
-                            ->paginate(20);
-            $paids = Debt::where('supplier_id', '=', $creditor)
-                            ->whereIn('debt_status', [2])
-                            ->with('debttype')
-                            ->paginate(20);
-            $setzeros = Debt::where('supplier_id', '=', $creditor)
-                            ->whereIn('debt_status', [4])
-                            ->with('debttype')
-                            ->paginate(20);
         } else {
             $debts = Debt::where('supplier_id', '=', $creditor)
                             ->where('debt_status', '=', '0')
-                            ->whereBetween('debt_date', [$sdate, $edate])
-                            ->with('debttype')
-                            ->paginate(20);
-            $apps =  Debt::where('supplier_id', '=', $creditor)
-                            ->where('debt_status', '=', '1')
-                            ->whereBetween('debt_date', [$sdate, $edate])
-                            ->with('debttype')
-                            ->paginate(20);
-            $paids = Debt::where('supplier_id', '=', $creditor)
-                            ->whereIn('debt_status', [2])
-                            ->whereBetween('debt_date', [$sdate, $edate])
-                            ->with('debttype')
-                            ->paginate(20);
-            $setzeros = Debt::where('supplier_id', '=', $creditor)
-                            ->whereIn('debt_status', [4])
                             ->whereBetween('debt_date', [$sdate, $edate])
                             ->with('debttype')
                             ->paginate(20);
@@ -178,9 +166,10 @@ class TmpDebtController extends Controller
         $debt = new TmpDebt();
         $debt->withdraw_id  = $req['withdraw_id'];
         $debt->deliver_no   = $req['deliver_no'];
-        $debt->deliver_date   = $req['deliver_date'];
+        $debt->deliver_date = $req['deliver_date'];
         $debt->year         = $req['year'];
         $debt->supplier_id  = $req['supplier_id'];
+        $debt->desc         = $req['desc'];
         $debt->amount       = $req['amount'];
         $debt->vatrate      = $req['vatrate'];
         $debt->vat          = $req['vat'];

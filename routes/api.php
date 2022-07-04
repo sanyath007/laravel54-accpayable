@@ -18,4 +18,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('tmp-debts', 'TmpDebtController@getAll');
     Route::get('tmp-debts/{id}', 'TmpDebtController@getById');
     Route::post('tmp-debts', 'TmpDebtController@store');
+
+    /** เจ้าหนี้ */
+    Route::get('creditors', 'CreditorController@getAll');
 });

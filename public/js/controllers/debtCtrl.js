@@ -49,13 +49,15 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
     $scope.barOptions = {};
 
-    $('#debtToDate').datepicker({
+    const dptDateOptions = {
         autoclose: true,
         orientation: 'bottom',
         language: 'th',
         format: 'dd/mm/yyyy',
         thaiyear: true
-    }).on('changeDate', function(event){
+    };
+
+    $('#debtToDate').datepicker(dptDateOptions).on('changeDate', function(event){
         if($("#debtFromDate").val() == '') {
             alert('กรุณาเลือกระหว่างวันที่ก่อน !!!');
         }
@@ -206,7 +208,89 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
         });
     }
 
-    
+    $scope.suppliers = [];
+    $scope.suppliers_pager = null;
+    $scope.showSuppliersList = function() {
+        $http.get(`${CONFIG.apiUrl}/creditors`)
+        .then(res => {
+            console.log(res);
+            $scope.setSuppliers(res);
+
+            $('#suppliers-list').modal('show');
+        }, err => {
+            console.log(err);
+        });
+    };
+
+    $scope.setSuppliers = function(res) {
+        const { data, ...pager } = res.data.creditors;
+        console.log(data);
+
+        $scope.suppliers = data;
+        $scope.suppliers_pager = pager;
+    };
+
+    $scope.onSelectedSupplier = function(e, supplier) {
+        if (supplier) {
+            console.log(supplier);
+            $scope.debt.supplier_id = supplier.supplier_id;
+            $scope.debt.supplier_name = supplier.supplier_name;
+        }
+
+        $('#suppliers-list').modal('hide');
+    };
+
+    $scope.tmpDebts = [];
+    $scope.tmpDebts_pager = null;
+    $scope.showTmpDebtsList = function() {
+        $http.get(`${CONFIG.apiUrl}/tmp-debts`)
+        .then(res => {
+            console.log(res);
+            $scope.setTmpDebts(res);
+
+            $('#tmp-debts-list').modal('show');
+        }, err => {
+            console.log(err);
+        });
+    };
+
+    $scope.setTmpDebts = function(res) {
+        const { data, ...pager } = res.data.debts;
+        console.log(data);
+
+        $scope.tmpDebts = data;
+        $scope.tmpDebts_pager = pager;
+    };
+
+    $scope.onSelectedTmpDebt = function(e, debt) {
+        if (debt) {
+            console.log(debt);
+            $scope.debt.debt_date = StringFormatService.convFromDbDate(moment().format('YYYY-MM-DD'));
+            $scope.debt.withdraw_id = debt.withdraw_id;
+            $scope.debt.deliver_no = debt.deliver_no;
+            $scope.debt.deliver_date = StringFormatService.convFromDbDate(debt.deliver_date);
+            $scope.debt.debt_year = debt.year;
+            $scope.debt.debt_type_detail = debt.desc;
+            $scope.debt.supplier_id = debt.supplier.supplier_id.toString();
+            $scope.debt.debt_amount = debt.amount;
+            $scope.debt.debt_vatrate = debt.vatrate;
+            $scope.debt.debt_vat = debt.vat;
+            $scope.debt.debt_total = debt.total;
+            $scope.debt.debt_remark = debt.remark;
+
+            /** Update value of all datepicker input */
+            $('#debt_date')
+                .datepicker(dptDateOptions)
+                .datepicker('update', moment().toDate());
+
+            $('#deliver_date')
+                .datepicker(dptDateOptions)
+                .datepicker('update', moment(debt.deliver_date).toDate());
+        }
+
+        $('#tmp-debts-list').modal('hide');
+    };
+
     $scope.getDebtChart = function (creditorId) {
         ReportService.getSeriesData('/report/debt-chart/', creditorId)
         .then(function(res) {
