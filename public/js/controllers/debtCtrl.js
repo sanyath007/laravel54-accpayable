@@ -3,8 +3,7 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
     $scope.loading = false;
 
     $scope.cboSupplier = "";
-    $scope.searchKeyword = "";
-    $scope.searchTmp = [];
+    $scope.txtKeyword = "";
 
     $scope.debts = [];
     $scope.apps = [];
@@ -213,7 +212,6 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
     $scope.showSuppliersList = function() {
         $http.get(`${CONFIG.apiUrl}/creditors`)
         .then(res => {
-            console.log(res);
             $scope.setSuppliers(res);
 
             $('#suppliers-list').modal('show');
@@ -221,6 +219,46 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             console.log(err);
         });
     };
+
+    $scope.getSuppliers = function() {
+        $scope.suppliers = [];
+        $scope.suppliers_pager = [];
+        $scope.loading = true;
+
+        let name = $scope.txtKeyword == '' ? '' : $scope.txtKeyword;
+
+        $http.get(`${CONFIG.apiUrl}/creditors?name=${name}`)
+        .then(function(res) {
+            $scope.setSuppliers(res);
+            
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
+    }
+
+    $scope.getSuppliersWithUrl = function(e, url, cb) {
+        /** Check whether parent of clicked a tag is .disabled just do nothing */
+        if ($(e.currentTarget).parent().is('li.disabled')) return;
+
+        $scope.suppliers = [];
+        $scope.suppliers_pager = [];
+        $scope.loading = true;
+
+        let name = $scope.txtKeyword == '' ? '' : $scope.txtKeyword;
+
+        console.log(url);
+        $http.get(url+ `&name=${name}`)
+        .then(function(res) {
+            cb(res);
+            
+            $scope.loading = false;
+        }, function(err) {
+            console.log(err);
+            $scope.loading = false;
+        });
+    }
 
     $scope.setSuppliers = function(res) {
         const { data, ...pager } = res.data.creditors;

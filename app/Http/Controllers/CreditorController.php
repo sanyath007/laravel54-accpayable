@@ -29,9 +29,10 @@ class CreditorController extends Controller
         ];
     }
 
-    public function getAll()
+    public function getAll(Request $req)
     {
-        $name = '';
+        $name = $req->get('name');
+
         $creditors = Creditor::when(!empty($name), function($q) use($name) {
                             $q->where('supplier_name', 'like', '%'.$name.'%');
                         })->paginate(10);

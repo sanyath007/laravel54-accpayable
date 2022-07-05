@@ -15,9 +15,9 @@
                             <div style="display: flex; gap: 5px;">
                                 <input
                                     type="text"
-                                    ng-model="searchKey"
+                                    ng-model="txtKeyword"
                                     class="form-control"
-                                    ng-keyup="handleInputChange('searchKey', searchKey); getItems();"
+                                    ng-keyup="getSuppliers();"
                                 />
                             </div>
                         </div><!-- /.box-body -->
@@ -31,6 +31,7 @@
                                 <th style="width: 5%; text-align: center;">รหัส</th>
                                 <th>เจ้าหนี้</th>
                                 <th style="width: 30%; text-align: center;">ที่อยู่</th>
+                                <th style="width: 12%; text-align: center;">โทรศัพท์</th>
                                 <th style="width: 12%; text-align: center;">เลขที่ใบกำกับภาษี</th>
                                 <th style="width: 5%; text-align: center;">Actions</th>
                             </tr>
@@ -42,7 +43,12 @@
                                 </td>
                                 <td>@{{ supplier.supplier_id }}</td>
                                 <td>@{{ supplier.supplier_name }}</td>
-                                <td>@{{ supplier.supplier_address1 }}</td>
+                                <td>
+                                    <span ng-show="supplier.supplier_address1">
+                                        @{{ supplier.supplier_address1+ ' ' +supplier.supplier_address2+ ' ' +supplier.supplier_address3 }}
+                                    </span>
+                                </td>
+                                <td>@{{ supplier.supplier_phone }}</td>
                                 <td style="text-align: center;">@{{ supplier.supplier_taxid }}</td>
                                 <td style="text-align: center;">
                                     <a href="#" class="btn btn-primary btn-sm" ng-click="onSelectedSupplier($event, supplier)">
@@ -73,13 +79,13 @@
                         <div class="col-md-4">
                             <ul class="pagination pagination-sm no-margin">
                                 <li ng-if="suppliers_pager.current_page !== 1">
-                                    <a ng-click="getItemsWithUrl($event, suppliers_pager.path+ '?page=1', setSuppliers)" aria-label="Previous">
+                                    <a ng-click="getSuppliersWithUrl($event, suppliers_pager.path+ '?page=1', setSuppliers)" aria-label="Previous">
                                         <span aria-hidden="true">First</span>
                                     </a>
                                 </li>
 
                                 <li ng-class="{'disabled': (suppliers_pager.current_page==1)}">
-                                    <a ng-click="getItemsWithUrl($event, suppliers_pager.prev_page_url, setSuppliers)" aria-label="Prev">
+                                    <a ng-click="getSuppliersWithUrl($event, suppliers_pager.prev_page_url, setSuppliers)" aria-label="Prev">
                                         <span aria-hidden="true">Prev</span>
                                     </a>
                                 </li>
@@ -91,13 +97,13 @@
                                 </li> -->
 
                                 <li ng-class="{'disabled': (suppliers_pager.current_page==suppliers_pager.last_page)}">
-                                    <a ng-click="getItemsWithUrl($event, suppliers_pager.next_page_url, setSuppliers)" aria-label="Next">
+                                    <a ng-click="getSuppliersWithUrl($event, suppliers_pager.next_page_url, setSuppliers)" aria-label="Next">
                                         <span aria-hidden="true">Next</span>
                                     </a>
                                 </li>
 
                                 <li ng-if="suppliers_pager.current_page !== suppliers_pager.last_page">
-                                    <a ng-click="getItemsWithUrl($event, suppliers_pager.path+ '?page=' +suppliers_pager.last_page, setSuppliers)" aria-label="Previous">
+                                    <a ng-click="getSuppliersWithUrl($event, suppliers_pager.path+ '?page=' +suppliers_pager.last_page, setSuppliers)" aria-label="Previous">
                                         <span aria-hidden="true">Last</span>
                                     </a>
                                 </li>
