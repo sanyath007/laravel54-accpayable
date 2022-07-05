@@ -262,7 +262,6 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
     $scope.setSuppliers = function(res) {
         const { data, ...pager } = res.data.creditors;
-        console.log(data);
 
         $scope.suppliers = data;
         $scope.suppliers_pager = pager;
@@ -270,7 +269,6 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
     $scope.onSelectedSupplier = function(e, supplier) {
         if (supplier) {
-            console.log(supplier);
             $scope.debt.supplier_id = supplier.supplier_id;
             $scope.debt.supplier_name = supplier.supplier_name;
         }
@@ -283,7 +281,6 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
     $scope.showTmpDebtsList = function() {
         $http.get(`${CONFIG.apiUrl}/tmp-debts`)
         .then(res => {
-            console.log(res);
             $scope.setTmpDebts(res);
 
             $('#tmp-debts-list').modal('show');
@@ -294,7 +291,6 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
     $scope.setTmpDebts = function(res) {
         const { data, ...pager } = res.data.debts;
-        console.log(data);
 
         $scope.tmpDebts = data;
         $scope.tmpDebts_pager = pager;
@@ -302,13 +298,12 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
     $scope.onSelectedTmpDebt = function(e, debt) {
         if (debt) {
-            console.log(debt);
             $scope.debt.debt_date = StringFormatService.convFromDbDate(moment().format('YYYY-MM-DD'));
             $scope.debt.withdraw_id = debt.withdraw_id;
             $scope.debt.deliver_no = debt.deliver_no;
             $scope.debt.deliver_date = StringFormatService.convFromDbDate(debt.deliver_date);
             $scope.debt.debt_year = debt.year;
-            $scope.debt.debt_type_detail = debt.desc;
+            $scope.debt.debt_type_detail = `${debt.items}, ${debt.desc}`;
             $scope.debt.supplier_id = debt.supplier.supplier_id.toString();
             $scope.debt.supplier_name = debt.supplier.supplier_name;
             $scope.debt.debt_amount = debt.amount;
