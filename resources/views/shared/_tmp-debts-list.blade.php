@@ -58,7 +58,7 @@
                                     @{{ tmpDebts_pager.from + index }}
                                 </td>
                                 <td>@{{ debt.supplier.supplier_name }}</td>
-                                <td>@{{ debt.desc }}</td>
+                                <td>@{{ debt.items }}, @{{ debt.desc }}</td>
                                 <td style="text-align: center;">@{{ debt.deliver_no }}</td>
                                 <td style="text-align: center;">@{{ debt.deliver_date | thdate }}</td>
                                 <td style="text-align: right;">

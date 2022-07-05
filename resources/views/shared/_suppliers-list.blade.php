@@ -45,7 +45,7 @@
                                 <td>@{{ supplier.supplier_address1 }}</td>
                                 <td style="text-align: center;">@{{ supplier.supplier_taxid }}</td>
                                 <td style="text-align: center;">
-                                    <a href="#" class="btn btn-primary btn-sm" ng-click="onSelectedSupplier($event, debt)">
+                                    <a href="#" class="btn btn-primary btn-sm" ng-click="onSelectedSupplier($event, supplier)">
                                         เลือก
                                     </a>
                                 </td>

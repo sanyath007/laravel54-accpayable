@@ -54,7 +54,7 @@
                                                 type="text"
                                                 id="supplier_name" 
                                                 name="supplier_name"
-                                                ng-model="debt.supplier.supplier_name" 
+                                                ng-model="debt.supplier_name" 
                                                 class="form-control"
                                                 tabindex="2"
                                             />

@@ -272,6 +272,7 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             $scope.debt.debt_year = debt.year;
             $scope.debt.debt_type_detail = debt.desc;
             $scope.debt.supplier_id = debt.supplier.supplier_id.toString();
+            $scope.debt.supplier_name = debt.supplier.supplier_name;
             $scope.debt.debt_amount = debt.amount;
             $scope.debt.debt_vatrate = debt.vatrate;
             $scope.debt.debt_vat = debt.vat;
