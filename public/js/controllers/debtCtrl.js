@@ -276,12 +276,16 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
         $('#suppliers-list').modal('hide');
     };
 
+    $scope.isTmpDebt = false;
     $scope.tmpDebts = [];
     $scope.tmpDebts_pager = null;
     $scope.showTmpDebtsList = function() {
+        $scope.isTmpDebt = false;
+
         $http.get(`${CONFIG.apiUrl}/tmp-debts`)
         .then(res => {
             $scope.setTmpDebts(res);
+            $scope.isTmpDebt = true;
 
             $('#tmp-debts-list').modal('show');
         }, err => {
@@ -470,6 +474,19 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             .then(function(res) {
                 console.log(res);
                 toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
+
+                /** TODO: If was receiving debt from e-plan should update data in e-plan as well */
+                if ($scope.isTmpDebt) {
+                    // $http.post(`${CONFIG.eplanApiUrl}/withdrawals/store`, $scope.debt)
+                    // .then(function(res) {
+                        $scope.isTmpDebt = false;
+    
+                    //     toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
+                    // }, function(err) {
+                    //     console.log(err);
+                    //     toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+                    // });
+                }
 
                 $scope.loading = false;
 
