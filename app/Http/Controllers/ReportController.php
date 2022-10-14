@@ -196,14 +196,15 @@ class ReportController extends Controller
             SUM(CASE WHEN (DATEDIFF(NOW(), debt_date) > 120) THEN d.debt_total END) as great120d,
             SUM(d.debt_total) as total
             FROM nrhosp_acc_debt d
-            LEFT JOIN stock_supplier s ON (d.supplier_id=s.supplier_id) 
+            LEFT JOIN stock_supplier s ON (d.supplier_id=s.supplier_id)
             WHERE (d.debt_status IN ('0', '1'))
+            AND (d.debt_date BETWEEN ? AND ?)
             GROUP BY d.supplier_id, s.supplier_name ";
 
         if($dataType == 'excel') {
             $fileName = 'sum-arrear-' . date('YmdHis') . '.xlsx';
 
-            $data = \DB::select($sql);
+            $data = \DB::select($sql, [$sdate, $edate]);
 
             return \Excel::create($fileName, function($excel) use ($data) {
                 $excel->sheet('sheet1', function($sheet) use ($data)
@@ -215,11 +216,11 @@ class ReportController extends Controller
                 });
             })->download();
         } else {
-            $count = count(\DB::select($sql));
+            $count = count(\DB::select($sql, [$sdate, $edate]));
 
             $sql .= "LIMIT $offset, $perpage ";
 
-            $items = \DB::select($sql);
+            $items = \DB::select($sql, [$sdate, $edate]);
 
             $paginator = new Paginator($items, $count, $perpage, $page, [
                 'path' => $req->url(),
