@@ -79,7 +79,7 @@ class CreditorController extends Controller
         $creditor->supplier_fax = $req['supplier_fax'];
         $creditor->supplier_email = $req['supplier_email'];
         $creditor->supplier_taxid = $req['supplier_taxid'];
-        $creditor->supplier_back_acc = $req['supplier_back_acc'];
+        $creditor->supplier_bank_acc = $req['supplier_back_acc'];
         $creditor->supplier_note = $req['supplier_note'];
         $creditor->supplier_credit = $req['supplier_credit'];
         $creditor->supplier_taxrate = $req['supplier_taxrate'];
@@ -129,7 +129,7 @@ class CreditorController extends Controller
         $creditor->supplier_fax = $req['supplier_fax'];
         $creditor->supplier_email = $req['supplier_email'];
         $creditor->supplier_taxid = $req['supplier_taxid'];
-        $creditor->supplier_back_acc = $req['supplier_back_acc'];
+        $creditor->supplier_bank_acc = $req['supplier_back_acc'];
         $creditor->supplier_note = $req['supplier_note'];
         $creditor->supplier_credit = $req['supplier_credit'];
         $creditor->supplier_taxrate = $req['supplier_taxrate'];
