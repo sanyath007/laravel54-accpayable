@@ -163,31 +163,42 @@ class TmpDebtController extends Controller
 
     public function store(Request $req)
     {
-        $debt = new TmpDebt();
-        $debt->withdraw_id  = $req['withdraw_id'];
-        $debt->deliver_no   = $req['deliver_no'];
-        $debt->deliver_date = $req['deliver_date'];
-        $debt->year         = $req['year'];
-        $debt->supplier_id  = $req['supplier_id'];
-        $debt->desc         = $req['desc'];
-        $debt->amount       = $req['amount'];
-        $debt->vatrate      = $req['vatrate'];
-        $debt->vat          = $req['vat'];
-        $debt->total        = $req['total'];
-        $debt->remark       = $req['remark'];
-        $debt->status       = '0';
-        $debt->created_user = $req['user'];
-        $debt->updated_user = $req['user'];
+        try {
+            $debt = new TmpDebt();
+            $debt->withdraw_id      = $req['withdraw_id'];
+            $debt->deliver_no       = $req['deliver_no'];
+            $debt->deliver_date     = $req['deliver_date'];
+            $debt->year             = $req['year'];
+            $debt->supplier_id      = $req['supplier_id'];
+            $debt->supplier_name    = $req['supplier_name'];
+            $debt->desc             = $req['desc'];
+            $debt->po_no            = $req['po_no'];
+            $debt->po_date          = $req['po_date'];
+            $debt->amount           = $req['amount'];
+            $debt->vatrate          = $req['vatrate'];
+            $debt->vat              = $req['vat'];
+            $debt->total            = $req['total'];
+            $debt->remark           = $req['remark'];
+            $debt->status           = '0';
+            $debt->created_user     = $req['user'];
+            $debt->updated_user     = $req['user'];
 
-        if($debt->save()) {
+            if($debt->save()) {
+                return [
+                    "status"    => 1,
+                    "message"   => "Insertion successfully!!",
+                    "debt"      => $debt
+                ];
+            } else {
+                return [
+                    'status'    => 0,
+                    'message'   => 'Something went wrong!!'
+                ];
+            }
+        } catch (\Exception $ex) {
             return [
-                "status" => "success",
-                "message" => "Insert success.",
-            ];
-        } else {
-            return [
-                "status" => "error",
-                "message" => "Insert failed.",
+                'status'    => 0,
+                'message'   => $ex->getMessage()
             ];
         }
     }
@@ -203,46 +214,45 @@ class TmpDebtController extends Controller
         ]);
     }
 
-    public function update(Request $req)
+    public function update(Request $req, $id)
     {
-        /** 0=รอดำเนินการ,1=ขออนุมัติ,2=ตัดจ่าย,3=ยกเลิก,4=ลดหนี้ศุนย์ */
-        $debt = Debt::find($req['debt_id']);
-        $debt->debt_date = $req['debt_date'];
-        $debt->debt_doc_recno = $req['debt_doc_recno'];
-        $debt->debt_doc_recdate = $req['debt_doc_recdate'];        
-        $debt->deliver_no = $req['deliver_no'];
-        $debt->deliver_date = $req['deliver_date'];
-        $debt->debt_doc_no = $req['debt_doc_no'];
-        $debt->debt_doc_date = $req['debt_doc_date'];
-        $debt->debt_type_id = $req['debt_type_id'];
-        $debt->debt_type_detail = $req['debt_type_detail'];
-        $debt->supplier_id = $req['supplier_id'];
-        $debt->supplier_name = $req['supplier_name'];
-        $debt->doc_receive = $req['doc_receive'];
-        $debt->debt_year = $req['debt_year'];
-        $debt->debt_amount = $req['debt_amount'];
-        $debt->debt_vatrate = $req['debt_vatrate'];
-        $debt->debt_vat = $req['debt_vat'];
-        $debt->debt_total = $req['debt_total'];
-        $debt->debt_remark = $req['debt_remark'];
+        try {
+            $debt = TmpDebt::find($id);
+            $debt->withdraw_id      = $req['withdraw_id'];
+            $debt->deliver_no       = $req['deliver_no'];
+            $debt->deliver_date     = $req['deliver_date'];
+            $debt->year             = $req['year'];
+            $debt->supplier_id      = $req['supplier_id'];
+            $debt->supplier_name    = $req['supplier_name'];
+            $debt->desc             = $req['desc'];
+            $debt->po_no            = $req['po_no'];
+            $debt->po_date          = $req['po_date'];
+            $debt->amount           = $req['amount'];
+            $debt->vatrate          = $req['vatrate'];
+            $debt->vat              = $req['vat'];
+            $debt->total            = $req['total'];
+            $debt->remark           = $req['remark'];
+            $debt->status           = '0';
+            $debt->updated_user     = $req['user'];
 
-        $debt->debt_creby = $req['debt_creby'];
-        $debt->debt_credate = date("Y-m-d H:i:s");
-        $debt->debt_userid = $req['debt_userid'];
-        $debt->debt_chgdate = date("Y-m-d H:i:s");
-
-        if($debt->save()) {
+            if($debt->save()) {
+                return [
+                    "status"    => 1,
+                    "message"   => "Insertion successfully!!",
+                    "debt"      => $debt
+                ];
+            } else {
+                return [
+                    'status'    => 0,
+                    'message'   => 'Something went wrong!!'
+                ];
+            }
+        } catch (\Exception $ex) {
             return [
-                "status" => "success",
-                "message" => "Insert success.",
-            ];
-        } else {
-            return [
-                "status" => "error",
-                "message" => "Insert failed.",
+                'status'    => 0,
+                'message'   => $ex->getMessage()
             ];
         }
-
     }
 
     public function delete($debtId)
