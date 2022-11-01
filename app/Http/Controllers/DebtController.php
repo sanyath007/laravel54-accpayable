@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Debt;
 use App\Models\DebtType;
 use App\Models\Creditor;
-
+use App\Models\TmpDebt;
 
 class DebtController extends Controller
 {
@@ -200,6 +200,9 @@ class DebtController extends Controller
             $debt->deliver_date = $req['deliver_date'];
             $debt->debt_doc_no = $req['debt_doc_no'];
             $debt->debt_doc_date = $req['debt_doc_date'];
+            $debt->withdraw_id = $req['withdraw_id'];
+            $debt->po_no = $req['po_no'];
+            $debt->po_date = $req['po_date'];
             $debt->debt_type_id = $req['debt_type_id'];
             $debt->debt_type_detail = $req['debt_type_detail'];
             $debt->debt_month = $req['debt_month'];
@@ -212,7 +215,7 @@ class DebtController extends Controller
             $debt->debt_vat = $req['debt_vat'];
             $debt->debt_total = $req['debt_total'];
             $debt->debt_remark = $req['debt_remark'];
-            
+
             $debt->debt_creby = $req['debt_creby'];
             $debt->debt_credate = date("Y-m-d H:i:s");
             $debt->debt_userid = $req['debt_userid'];
@@ -220,6 +223,11 @@ class DebtController extends Controller
             $debt->debt_status = '0';
 
             if($debt->save()) {
+                /** Update status of TmpDebt data */
+                $tmp = TmpDebt::where('withdraw_id', $req['withdraw_id'])->first();
+                $tmp->status = 1;
+                $tmp->save();
+
                 return [
                     "status"    => 1,
                     "message"   => "Insert success.",

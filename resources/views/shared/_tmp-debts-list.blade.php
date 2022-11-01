@@ -42,9 +42,9 @@
                         <thead>
                             <tr>
                                 <th style="width: 4%; text-align: center;">#</th>
-                                <th style="width: 10%; text-align: center;">เอกสารเบิกจ่ายเงิน</th>
-                                <th style="width: 25%;">เจ้าหนี้</th>
-                                <th>รายละเอียด</th>
+                                <th style="width: 15%; text-align: center;">เอกสารเบิกจ่ายเงิน</th>
+                                <th>เจ้าหนี้</th>
+                                <!-- <th>รายละเอียด</th> -->
                                 <th style="width: 10%; text-align: center;">เลขที่ใบส่งของ</th>
                                 <th style="width: 8%; text-align: center;">วันที่ใบส่งของ</th>
                                 <th style="width: 8%; text-align: right;">ยอดหนี้</th>
@@ -59,11 +59,11 @@
                                     @{{ tmpDebts_pager.from + index }}
                                 </td>
                                 <td>
-                                    <p>เลขที่ @{{ debt.withdraw_no }}</p>
-                                    <p>ลวท. @{{ debt.withdraw_date | thdate }}</p>
+                                    <p style="margin: 0; font-size: 14px;">เลขที่ @{{ debt.withdraw_no }}</p>
+                                    <p style="margin: 0; font-size: 14px;">ลวท. @{{ debt.withdraw_date | thdate }}</p>
                                 </td>
                                 <td>@{{ debt.supplier.supplier_name }}</td>
-                                <td>@{{ debt.items }}, @{{ debt.desc }}</td>
+                                <!-- <td>@{{ debt.items }}, @{{ debt.desc }}</td> -->
                                 <td style="text-align: center;">@{{ debt.deliver_no }}</td>
                                 <td style="text-align: center;">@{{ debt.deliver_date | thdate }}</td>
                                 <td style="text-align: right;">

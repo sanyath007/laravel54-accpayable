@@ -479,29 +479,38 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
             $http.post(`${CONFIG.baseUrl}/debt/store`, $scope.debt)
             .then(function(res) {
-                console.log(res);
-                toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
+                if (res.data.status == 1) {
+                    toaster.pop('success', "ผลการทำงาน", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
 
-                /** TODO: If was receiving debt from e-plan should update data in e-plan as well */
-                if ($scope.isTmpDebt) {
-                    // $http.post(`${CONFIG.eplanApiUrl}/withdrawals/store`, $scope.debt)
-                    // .then(function(res) {
-                    //     $scope.isTmpDebt = false;
-    
-                    //     toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
-                    // }, function(err) {
-                    //     console.log(err);
-                    //     toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
-                    // });
+                    /** TODO: If was receiving debt from e-plan should update data in e-plan as well */
+                    if ($scope.isTmpDebt) {
+                        $http.put(`${CONFIG.eplanApiUrl}/withdrawals/${res.data.debt.withdraw_id}/set-debt`, { debt_id: res.data.debt.debt_id })
+                        .then(function(res) {
+                            if (res.data.status == 1) {
+                                toaster.pop('success', "ผลการทำงาน", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
+
+                                $scope.isTmpDebt = false;
+
+                                /** TODO: should clear all input control values instead of redirect route */
+
+                                /** Redirect to debt list */
+                                // $rootScope.redirectToIndex('debt/list');
+                            } else {
+                                toaster.pop('error', "ผลการทำงาน", 'พบข้อผิดพลาด !!!');
+                            }
+                        }, function(err) {
+                            console.log(err);
+                            toaster.pop('error', "ผลการทำงาน", 'พบข้อผิดพลาด !!!');
+                        });
+                    }
+                } else {
+                    toaster.pop('error', "ผลการทำงาน", 'พบข้อผิดพลาด !!!');
                 }
 
                 $scope.loading = false;
-
-                /** Redirect to debt list */
-                $rootScope.redirectToIndex('debt/list');
             }, function(err) {
                 console.log(err);
-                toaster.pop('error', "", 'พบข้อผิดพลาด !!!');
+                toaster.pop('error', "ผลการทำงาน", 'พบข้อผิดพลาด !!!');
 
                 $scope.loading = false;
             });
