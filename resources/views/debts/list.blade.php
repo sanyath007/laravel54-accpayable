@@ -101,9 +101,7 @@
                                     </select>
                                 </div>
                             </div><!-- /.col-md-6 -->
-
                         </div><!-- /.box-body -->
-                  
                         <div class="box-footer">
                             <a ng-click="add($event)" class="btn btn-primary">
                                 บันทึกรับหนี้

@@ -166,6 +166,8 @@ class TmpDebtController extends Controller
         try {
             $debt = new TmpDebt();
             $debt->withdraw_id      = $req['withdraw_id'];
+            $debt->withdraw_no      = $req['withdraw_no'];
+            $debt->withdraw_date    = $req['withdraw_date'];
             $debt->deliver_no       = $req['deliver_no'];
             $debt->deliver_date     = $req['deliver_date'];
             $debt->year             = $req['year'];
@@ -219,6 +221,8 @@ class TmpDebtController extends Controller
         try {
             $debt = TmpDebt::find($id);
             $debt->withdraw_id      = $req['withdraw_id'];
+            $debt->withdraw_no      = $req['withdraw_no'];
+            $debt->withdraw_date    = $req['withdraw_date'];
             $debt->deliver_no       = $req['deliver_no'];
             $debt->deliver_date     = $req['deliver_date'];
             $debt->year             = $req['year'];

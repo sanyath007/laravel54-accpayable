@@ -12,7 +12,7 @@
                     <!-- // TODO: Filtering controls -->
                     <div class="box">
                         <div class="box-body">
-                            <div style="display: flex; gap: 5px;">
+                            <!-- <div style="display: flex; gap: 5px;">
                                 <select
                                     type="text"
                                     id="cboCategory"
@@ -33,7 +33,7 @@
                                     class="form-control"
                                     ng-keyup="handleInputChange('searchKey', searchKey); getItems();"
                                 />
-                            </div>
+                            </div> -->
                         </div><!-- /.box-body -->
                     </div>
                     <!-- // TODO: Filtering controls -->
@@ -42,13 +42,14 @@
                         <thead>
                             <tr>
                                 <th style="width: 4%; text-align: center;">#</th>
+                                <th style="width: 10%; text-align: center;">เอกสารเบิกจ่ายเงิน</th>
                                 <th style="width: 25%;">เจ้าหนี้</th>
                                 <th>รายละเอียด</th>
                                 <th style="width: 10%; text-align: center;">เลขที่ใบส่งของ</th>
-                                <th style="width: 10%; text-align: center;">วันที่ใบส่งของ</th>
-                                <th style="width: 10%; text-align: right;">ยอดหนี้</th>
-                                <th style="width: 10%; text-align: right;">VAT</th>
-                                <th style="width: 10%; text-align: right;">ยอดหนี้สุทธิ</th>
+                                <th style="width: 8%; text-align: center;">วันที่ใบส่งของ</th>
+                                <th style="width: 8%; text-align: right;">ยอดหนี้</th>
+                                <th style="width: 8%; text-align: right;">VAT</th>
+                                <th style="width: 8%; text-align: right;">ยอดหนี้สุทธิ</th>
                                 <th style="width: 5%; text-align: center;">Actions</th>
                             </tr>
                         </thead>
@@ -56,6 +57,10 @@
                             <tr ng-repeat="(index, debt) in tmpDebts">
                                 <td style="text-align: center;">
                                     @{{ tmpDebts_pager.from + index }}
+                                </td>
+                                <td>
+                                    <p>เลขที่ @{{ debt.withdraw_no }}</p>
+                                    <p>ลวท. @{{ debt.withdraw_date | thdate }}</p>
                                 </td>
                                 <td>@{{ debt.supplier.supplier_name }}</td>
                                 <td>@{{ debt.items }}, @{{ debt.desc }}</td>

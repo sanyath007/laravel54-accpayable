@@ -46,7 +46,6 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6">
-
                                     <div class="form-group" ng-class="{ 'has-error': frmNewDebt.supplier_id.$error.required }">
                                         <label class="control-label">เจ้าหนี้ :</label>
                                         <div class="input-group">
@@ -105,7 +104,20 @@
                                             กรุณาเลือกประเภทหนี้
                                         </div>
                                     </div>
-                                    
+
+                                    <div class="form-group">
+                                        <label>เลขที่ PO :</label>
+                                        <div
+                                            id="po_no" .
+                                            name="po_no"
+                                            class="form-control"
+                                            tabindex="4"
+                                            readonly
+                                        >
+                                            @{{ debt.po_no }}
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label>เลขที่รับหนังสือ :</label>
                                         <input  type="text" 
@@ -172,9 +184,25 @@
                                                 tabindex="3">
                                     </div>
 
+                                    <div class="form-group">
+                                        <label>วันที่ใบ PO :</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            <div 
+                                                id="po_date"
+                                                name="po_date"
+                                                class="form-control"
+                                                readonly
+                                            >
+                                                @{{ debt.po_date | thdate }}
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group" ng-class="{ 'has-error': frmNewDebt.debt_doc_recdate.$error.required }">
                                         <label>วันที่รับหนังสือ :</label>
-
                                         <div class="input-group">
                                             <div class="input-group-addon">
                                                 <i class="fa fa-clock-o"></i>

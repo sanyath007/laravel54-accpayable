@@ -304,10 +304,13 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
         if (debt) {
             $scope.debt.debt_date = StringFormatService.convFromDbDate(moment().format('YYYY-MM-DD'));
             $scope.debt.withdraw_id = debt.withdraw_id;
+            $scope.debt.debt_doc_no = debt.withdraw_no;
+            $scope.debt.po_no = debt.po_no;
+            $scope.debt.po_date = debt.po_date;
             $scope.debt.deliver_no = debt.deliver_no;
             $scope.debt.deliver_date = StringFormatService.convFromDbDate(debt.deliver_date);
             $scope.debt.debt_year = debt.year;
-            $scope.debt.debt_type_detail = `${debt.items}, ${debt.desc}`;
+            // $scope.debt.debt_type_detail = `${debt.items}, ${debt.desc}`;
             $scope.debt.supplier_id = debt.supplier.supplier_id.toString();
             $scope.debt.supplier_name = debt.supplier.supplier_name;
             $scope.debt.debt_amount = debt.amount;
@@ -324,6 +327,10 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             $('#deliver_date')
                 .datepicker(dptDateOptions)
                 .datepicker('update', moment(debt.deliver_date).toDate());
+
+            $('#debt_doc_date')
+                .datepicker(dptDateOptions)
+                .datepicker('update', moment(debt.withdraw_date).toDate());
         }
 
         $('#tmp-debts-list').modal('hide');
@@ -465,7 +472,7 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convToDbDate($scope.debt.debt_doc_date) : '';
             $scope.debt.doc_receive = StringFormatService.convToDbDate($scope.debt.doc_receive);
             /** Get supplier data */
-            $scope.debt.supplier_name = ($("#supplier_id").find('option:selected').text()).trim();
+            // $scope.debt.supplier_name = ($("#supplier_id").find('option:selected').text()).trim();
             /** Get user id */
             $scope.debt.debt_creby = $("#user").val();
             $scope.debt.debt_userid = $("#user").val();
@@ -479,7 +486,7 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
                 if ($scope.isTmpDebt) {
                     // $http.post(`${CONFIG.eplanApiUrl}/withdrawals/store`, $scope.debt)
                     // .then(function(res) {
-                        $scope.isTmpDebt = false;
+                    //     $scope.isTmpDebt = false;
     
                     //     toaster.pop('success', "", 'บันทึกข้อมูลเรียบร้อยแล้ว !!!');
                     // }, function(err) {
