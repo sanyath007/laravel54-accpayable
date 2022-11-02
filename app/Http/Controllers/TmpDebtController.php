@@ -77,13 +77,22 @@ class TmpDebtController extends Controller
         }
     }
 
-    public function getAll()
+    public function getAll(Request $req)
     {
+        $supplier = $req->get('supplier');
+        $deliverNo = $req->get('deliver_no');
+
         $conditions = [];
         $debts = TmpDebt::where('status', '0')
                     ->with('supplier')
                     ->when(count($conditions) > 0, function($q) use($conditions) {
                         $q->where($conditions);
+                    })
+                    ->when(!empty($supplier), function($q) use ($supplier) {
+                        $q->where('supplier_id', $supplier);
+                    })
+                    ->when(!empty($deliverNo), function($q) use ($deliverNo) {
+                        $q->where('deliver_no', 'like', '%'.$deliverNo.'%');
                     })
                     ->paginate(20);
 

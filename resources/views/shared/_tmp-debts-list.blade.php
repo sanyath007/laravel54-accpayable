@@ -12,28 +12,34 @@
                     <!-- // TODO: Filtering controls -->
                     <div class="box">
                         <div class="box-body">
-                            <!-- <div style="display: flex; gap: 5px;">
+                            <div style="display: flex; gap: 5px;">
                                 <select
                                     type="text"
-                                    id="cboCategory"
-                                    name="cboCategory"
-                                    ng-model="cboCategory"
-                                    ng-change="handleInputChange('cboCategory', cboCategory); getItems();"
-                                    class="form-control"
+                                    id="cboSupplier"
+                                    name="cboSupplier"
+                                    ng-model="cboSupplier"
+                                    ng-change="handleInputChange('cboSupplier', cboSupplier); getTmpDebts();"
+                                    class="form-control select2"
+                                    style="width: 50%;"
                                 >
-                                    <option value="">-- เลือกประเภทสินค้า/บริการ --</option>
-                                    <option ng-repeat="category in forms.categories" value="@{{ category.id }}">
-                                        @{{ category.name }}
-                                    </option>
+                                    <option value="">-- เจ้าหนี้ทั้งหมด --</option>
+                                    @foreach($creditors as $supplier)
+                                        <option value="{{ $supplier->supplier_id }}">
+                                            {{ $supplier->supplier_name }}
+                                        </option>
+                                    @endforeach
                                 </select>
-
                                 <input
                                     type="text"
-                                    ng-model="searchKey"
+                                    id="txtKeyword"
+                                    name="txtKeyword"
+                                    ng-model="txtKeyword"
                                     class="form-control"
-                                    ng-keyup="handleInputChange('searchKey', searchKey); getItems();"
+                                    placeholder="ค้นหาเลขที่ใบส่งของ"
+                                    ng-keyup="handleInputChange('searchKey', searchKey); getTmpDebts();"
+                                    style="width: 50%;"
                                 />
-                            </div> -->
+                            </div>
                         </div><!-- /.box-body -->
                     </div>
                     <!-- // TODO: Filtering controls -->
@@ -104,13 +110,13 @@
                         <div class="col-md-4">
                             <ul class="pagination pagination-sm no-margin">
                                 <li ng-if="tmpDebts_pager.current_page !== 1">
-                                    <a ng-click="getItemsWithUrl($event, tmpDebts_pager.path+ '?page=1', setTmpDebts)" aria-label="Previous">
+                                    <a ng-click="getTmpDebtsWithUrl($event, tmpDebts_pager.path+ '?page=1', setTmpDebts)" aria-label="Previous">
                                         <span aria-hidden="true">First</span>
                                     </a>
                                 </li>
 
                                 <li ng-class="{'disabled': (tmpDebts_pager.current_page==1)}">
-                                    <a ng-click="getItemsWithUrl($event, tmpDebts_pager.prev_page_url, setTmpDebts)" aria-label="Prev">
+                                    <a ng-click="getTmpDebtsWithUrl($event, tmpDebts_pager.prev_page_url, setTmpDebts)" aria-label="Prev">
                                         <span aria-hidden="true">Prev</span>
                                     </a>
                                 </li>
@@ -122,13 +128,13 @@
                                 </li> -->
 
                                 <li ng-class="{'disabled': (tmpDebts_pager.current_page==tmpDebts_pager.last_page)}">
-                                    <a ng-click="getItemsWithUrl($event, tmpDebts_pager.next_page_url, setTmpDebts)" aria-label="Next">
+                                    <a ng-click="getTmpDebtsWithUrl($event, tmpDebts_pager.next_page_url, setTmpDebts)" aria-label="Next">
                                         <span aria-hidden="true">Next</span>
                                     </a>
                                 </li>
 
                                 <li ng-if="tmpDebts_pager.current_page !== tmpDebts_pager.last_page">
-                                    <a ng-click="getItemsWithUrl($event, tmpDebts_pager.path+ '?page=' +tmpDebts_pager.last_page, setTmpDebts)" aria-label="Previous">
+                                    <a ng-click="getTmpDebtsWithUrl($event, tmpDebts_pager.path+ '?page=' +tmpDebts_pager.last_page, setTmpDebts)" aria-label="Previous">
                                         <span aria-hidden="true">Last</span>
                                     </a>
                                 </li>

@@ -293,6 +293,47 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
         });
     };
 
+    $scope.getTmpDebts = function() {
+        $scope.loading = true;
+        $scope.tmpDebts = [];
+        $scope.tmpDebts_pager = null;
+
+        let supplier = $scope.cboSupplier == "" ? '' : $scope.cboSupplier;
+        let deliver_no = $scope.txtKeyword == "" ? '' : $scope.txtKeyword;
+
+        $http.get(`${CONFIG.apiUrl}/tmp-debts?supplier=${supplier}&deliver_no=${deliver_no}`)
+        .then(res => {
+            $scope.setTmpDebts(res);
+
+            $scope.loading = false;
+        }, err => {
+            console.log(err);
+            $scope.loading = false;
+        });
+    }
+
+    $scope.getTmpDebtsWithUrl = function(e, url, cb) {
+        /** Check whether parent of clicked a tag is .disabled just do nothing */
+        if ($(e.currentTarget).parent().is('li.disabled')) return;
+
+        $scope.loading = true;
+        $scope.tmpDebts = [];
+        $scope.tmpDebts_pager = null;
+
+        let supplier = $scope.cboSupplier == "" ? '' : $scope.cboSupplier;
+        let deliver_no = $scope.txtKeyword == "" ? '' : $scope.txtKeyword;
+
+        $http.get(`${url}&supplier=${supplier}&deliver_no=${deliver_no}`)
+        .then(res => {
+            cb(res);
+
+            $scope.loading = false;
+        }, err => {
+            console.log(err);
+            $scope.loading = false;
+        });
+    }
+
     $scope.setTmpDebts = function(res) {
         const { data, ...pager } = res.data.debts;
 
