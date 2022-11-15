@@ -196,7 +196,7 @@
                                                 class="form-control"
                                                 readonly
                                             >
-                                                @{{ debt.po_date | thdate }}
+                                                <span ng-show="debt.po_date">@{{ debt.po_date | thdate }}</span>
                                             </div>
                                         </div>
                                     </div>

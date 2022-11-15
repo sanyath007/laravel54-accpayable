@@ -30,6 +30,9 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
         deliver_date: '',
         debt_doc_no: '',
         debt_doc_date: '',
+        withdraw_id:  '',
+        po_no: '',
+        po_date:  '',
         debt_type_id: '',
         debt_type_detail: '',
         debt_month: '',
@@ -67,29 +70,30 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
     });
 
     $scope.clearDebtObj = function() {
-        $scope.debt = {
-            debt_date: '',
-            debt_doc_recno: '',
-            debt_doc_recdate: '',
-            deliver_no: '',
-            deliver_date: '',
-            debt_doc_no: '',
-            debt_doc_date: '',
-            debt_type_id: '',
-            debt_type_detail: '',
-            debt_month: '',
-            debt_year: '',
-            supplier_id: '',
-            supplier_name: '',
-            doc_receive: '',
-            debt_amount: '',
-            debt_vatrate: '',
-            debt_vat: '',
-            debt_total: '',
-            debt_remark: '',
-            debt_creby: '',
-            debt_userid: ''
-        };
+        $scope.debt.debt_date = '';
+        $scope.debt.debt_doc_recno = '';
+        $scope.debt.debt_doc_recdate = '';
+        $scope.debt.deliver_no = '';
+        $scope.debt.deliver_date = '';
+        $scope.debt.debt_doc_no = '';
+        $scope.debt.debt_doc_date = '';
+        $scope.debt.withdraw_id = '';
+        $scope.debt.po_no ='';
+        $scope.debt.po_date = '';
+        $scope.debt.debt_type_id = '';
+        $scope.debt.debt_type_detail = '';
+        $scope.debt.debt_month = '';
+        $scope.debt.debt_year = '';
+        $scope.debt.doc_receive = '';
+        $scope.debt.debt_amount = '';
+        $scope.debt.debt_vatrate = '';
+        $scope.debt.debt_vat = '';
+        $scope.debt.debt_total = '';
+        $scope.debt.debt_remark = '';
+        $scope.debt.debt_creby = '';
+        $scope.debt.debt_userid = '';
+
+        $('#debt_type_id').val('').trigger('change.select2');
     };
 
     $scope.getData = function() {
@@ -512,6 +516,7 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             $scope.debt.deliver_date = StringFormatService.convToDbDate($scope.debt.deliver_date);
             $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convToDbDate($scope.debt.debt_doc_date) : '';
             $scope.debt.doc_receive = StringFormatService.convToDbDate($scope.debt.doc_receive);
+
             /** Get supplier data */
             // $scope.debt.supplier_name = ($("#supplier_id").find('option:selected').text()).trim();
             /** Get user id */
@@ -544,6 +549,8 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
                             toaster.pop('error', "ผลการทำงาน", 'พบข้อผิดพลาด !!!');
                         });
                     }
+
+                    $scope.clearDebtObj();
                 } else {
                     toaster.pop('error', "ผลการทำงาน", 'พบข้อผิดพลาด !!!');
                 }
