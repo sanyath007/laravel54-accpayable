@@ -285,45 +285,53 @@ class TmpDebtController extends Controller
         }   
     }
 
-    public function updateStatus (Request $req, $id)
+    public function pending(Request $req, $id)
     {
-        $debt = Debt::find($id)->update([
-                    'debt_chgdate'  => date("Y-m-d H:i:s"),
-                    'debt_userid'   => $req['user'],
-                    'debt_status'   => $req['status']
-                ]);
-
-        if ($debt) {
+        try {
+            $tmp = TmpDebt::find($id);
+            $tmp->status = 9;
+    
+            if ($tmp->save()) {
+                return [
+                    'status'    => 1,
+                    'message'   => 'Updating successfully!!',
+                ];
+            } else {
+                return [
+                    'status'    => 0,
+                    'message'   => 'Something went wrong!!'
+                ];
+            }
+        } catch (\Exception $ex) {
             return [
-                'status' => 'success',
-                'message' => 'Updated id ' . $req['debt_id'] . 'is successed.',
+                'status'    => 0,
+                'message'   => $ex->getMessage()
             ];
         }
     }
 
-    public function setZero(Request $req)
+    public function resend(Request $req, $id)
     {
-        if(Debt::where('debt_id', '=', $req['debt_id'])->update(['debt_status' => '4']) <> 0) {
+        try {
+            $tmp = TmpDebt::find($id);
+            $tmp->status = 0;
+    
+            if ($tmp->save()) {
+                return [
+                    'status'    => 1,
+                    'message'   => 'Updating successfully!!',
+                ];
+            } else {
+                return [
+                    'status'    => 0,
+                    'message'   => 'Something went wrong!!'
+                ];
+            }
+        } catch (\Exception $ex) {
             return [
-                'status' => 'success',
-                'message' => 'Updated id ' . $req['debt_id'] . 'is successed.',
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => 'Updated id ' . $req['debt_id'] . 'is failed.',
+                'status'    => 0,
+                'message'   => $ex->getMessage()
             ];
         }
-    }
-
-    public function supplierDebt($creditor)
-    {
-        /** 0=รอดำเนินการ,1=ขออนุมัติ,2=ตัดจ่าย,3=ยกเลิก,4=ลดหนี้ศุนย์ */
-        return [
-            'debts' => Debt::where(['supplier_id' => $creditor])
-                            ->where(['debt_status' => 0])
-                            ->with('debttype')
-                            ->paginate(10),
-        ];
     }
 }
