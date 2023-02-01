@@ -32,7 +32,7 @@ function convThDateToDb($date)
 	if(empty($date) || !isset($date)) { return ''; }
 
 	$arr = explode('/', $date);
-	$year = (int)$arr[2] + 543;
+	$year = (int)$arr[2] - 543;
 	
-	return $year. '-' .$arr[1]. '-' .$arr[2];
+	return $year. '-' .$arr[1]. '-' .$arr[0];
 }

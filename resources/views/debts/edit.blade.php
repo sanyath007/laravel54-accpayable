@@ -80,7 +80,20 @@
                                             กรุณาเลือกประเภทหนี้
                                         </div>
                                     </div>
-                                    
+
+                                    <div class="form-group">
+                                        <label>เลขที่ PO :</label>
+                                        <div
+                                            id="po_no" .
+                                            name="po_no"
+                                            class="form-control"
+                                            tabindex="4"
+                                            readonly
+                                        >
+                                            @{{ debt.po_no }}
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label>เลขที่รับหนังสือ :</label>
                                         <input  type="text" 
@@ -92,7 +105,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>เลขที่หนังสือ :</label>
+                                        <label>เลขที่หนังสือส่งเบิกเงิน (พัสดุ) :</label>
                                         <input type="text" id="debt_doc_no" name="debt_doc_no" ng-model="debt.debt_doc_no" class="form-control">
                                     </div>
 
@@ -141,6 +154,23 @@
                                                 tabindex="3">
                                     </div>
 
+                                    <div class="form-group">
+                                        <label>วันที่ใบ PO :</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            <div 
+                                                id="po_date"
+                                                name="po_date"
+                                                class="form-control"
+                                                readonly
+                                            >
+                                                <span ng-show="debt.po_date">@{{ debt.po_date }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group" ng-class="{ 'has-error': frmEditDebt.debt_doc_recdate.$error.required }">
                                         <label>วันที่รับหนังสือ :</label>
 
@@ -161,7 +191,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>วันที่หนังสือ :</label>
+                                        <label>วันที่หนังสือส่งเบิกเงิน (พัสดุ) :</label>
 
                                         <div class="input-group">
                                             <div class="input-group-addon">

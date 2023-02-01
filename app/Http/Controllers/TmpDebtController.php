@@ -197,7 +197,7 @@ class TmpDebtController extends Controller
             if($debt->save()) {
                 return [
                     "status"    => 1,
-                    "message"   => "Insertion successfully!!",
+                    "message"   => "Insert success.",
                     "debt"      => $debt
                 ];
             } else {

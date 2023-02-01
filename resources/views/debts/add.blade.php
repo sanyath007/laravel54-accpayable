@@ -129,7 +129,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>เลขที่หนังสือ :</label>
+                                        <label>เลขที่หนังสือส่งเบิกเงิน (พัสดุ) :</label>
                                         <input  type="text" 
                                                 id="debt_doc_no" 
                                                 name="debt_doc_no" 
@@ -220,7 +220,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>วันที่หนังสือ :</label>
+                                        <label>วันที่หนังสือส่งเบิกเงิน (พัสดุ) :</label>
 
                                         <div class="input-group">
                                             <div class="input-group-addon">

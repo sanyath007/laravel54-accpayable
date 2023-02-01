@@ -289,7 +289,6 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
         $http.get(`${CONFIG.apiUrl}/tmp-debts`)
         .then(res => {
             $scope.setTmpDebts(res);
-            $scope.isTmpDebt = true;
 
             $('#tmp-debts-list').modal('show');
         }, err => {
@@ -347,6 +346,8 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
     $scope.onSelectedTmpDebt = function(e, debt) {
         if (debt) {
+            $scope.isTmpDebt = true;
+
             $scope.debt.debt_date = StringFormatService.convFromDbDate(moment().format('YYYY-MM-DD'));
             $scope.debt.withdraw_id = debt.withdraw_id;
             $scope.debt.debt_doc_no = debt.withdraw_no;
@@ -478,6 +479,7 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
             /** Convert db date to thai date. */
             $scope.debt.debt_date = StringFormatService.convFromDbDate($scope.debt.debt_date);
+            $scope.debt.po_date = StringFormatService.convFromDbDate($scope.debt.po_date);
             $scope.debt.debt_doc_recdate = StringFormatService.convFromDbDate($scope.debt.debt_doc_recdate);
             $scope.debt.deliver_date = StringFormatService.convFromDbDate($scope.debt.deliver_date);
             $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convFromDbDate($scope.debt.debt_doc_date) : '';
@@ -511,14 +513,15 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             $scope.loading = true;
 
             /** Convert thai date to db date. */
-            $scope.debt.debt_date = StringFormatService.convToDbDate($scope.debt.debt_date);
-            $scope.debt.debt_doc_recdate = StringFormatService.convToDbDate($scope.debt.debt_doc_recdate);
-            $scope.debt.deliver_date = StringFormatService.convToDbDate($scope.debt.deliver_date);
-            $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convToDbDate($scope.debt.debt_doc_date) : '';
-            $scope.debt.doc_receive = StringFormatService.convToDbDate($scope.debt.doc_receive);
+            // $scope.debt.debt_date = StringFormatService.convToDbDate($scope.debt.debt_date);
+            // $scope.debt.debt_doc_recdate = StringFormatService.convToDbDate($scope.debt.debt_doc_recdate);
+            // $scope.debt.deliver_date = StringFormatService.convToDbDate($scope.debt.deliver_date);
+            // $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convToDbDate($scope.debt.debt_doc_date) : '';
+            // $scope.debt.doc_receive = StringFormatService.convToDbDate($scope.debt.doc_receive);
 
             /** Get supplier data */
             // $scope.debt.supplier_name = ($("#supplier_id").find('option:selected').text()).trim();
+
             /** Get user id */
             $scope.debt.debt_creby = $("#user").val();
             $scope.debt.debt_userid = $("#user").val();
@@ -580,18 +583,19 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
             return;
         } else {            
             /** Convert thai date to db date. */
-            $scope.debt.debt_date = StringFormatService.convToDbDate($scope.debt.debt_date);
-            $scope.debt.debt_doc_recdate = StringFormatService.convToDbDate($scope.debt.debt_doc_recdate);
-            $scope.debt.deliver_date = StringFormatService.convToDbDate($scope.debt.deliver_date);
-            $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convToDbDate($scope.debt.debt_doc_date) : '';
-            $scope.debt.doc_receive = StringFormatService.convToDbDate($scope.debt.doc_receive);
+            // $scope.debt.debt_date = StringFormatService.convToDbDate($scope.debt.debt_date);
+            // $scope.debt.debt_doc_recdate = StringFormatService.convToDbDate($scope.debt.debt_doc_recdate);
+            // $scope.debt.deliver_date = StringFormatService.convToDbDate($scope.debt.deliver_date);
+            // $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convToDbDate($scope.debt.debt_doc_date) : '';
+            // $scope.debt.doc_receive = StringFormatService.convToDbDate($scope.debt.doc_receive);
+
             /** Get supplier data */
             $scope.debt.supplier_id = $("#supplier_id").val();
             $scope.debt.supplier_name = $("#supplier_name").val();
+
             /** Get user id */
             $scope.debt.debt_creby = $("#user").val();
             $scope.debt.debt_userid = $("#user").val();
-            console.log($scope.debt);
 
             if(confirm("คุณต้องแก้ไขรายการหนี้เลขที่ " + debtId + " ใช่หรือไม่?")) {
                 $scope.loading = true;
@@ -611,13 +615,14 @@ app.controller('debtCtrl', function($rootScope, $scope, $http, CONFIG, toaster, 
 
                     $scope.loading = false;
                 });
-            } else {
-                $scope.debt.debt_date = StringFormatService.convFromDbDate($scope.debt.debt_date);
-                $scope.debt.debt_doc_recdate = StringFormatService.convFromDbDate($scope.debt.debt_doc_recdate);
-                $scope.debt.deliver_date = StringFormatService.convFromDbDate($scope.debt.deliver_date);
-                $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convFromDbDate($scope.debt.debt_doc_date) : '';
-                $scope.debt.doc_receive = StringFormatService.convFromDbDate($scope.debt.doc_receive);
             }
+            // else {
+            //     $scope.debt.debt_date = StringFormatService.convFromDbDate($scope.debt.debt_date);
+            //     $scope.debt.debt_doc_recdate = StringFormatService.convFromDbDate($scope.debt.debt_doc_recdate);
+            //     $scope.debt.deliver_date = StringFormatService.convFromDbDate($scope.debt.deliver_date);
+            //     $scope.debt.debt_doc_date = ($scope.debt.debt_doc_date) ? StringFormatService.convFromDbDate($scope.debt.debt_doc_date) : '';
+            //     $scope.debt.doc_receive = StringFormatService.convFromDbDate($scope.debt.doc_receive);
+            // }
         }
     };
 
