@@ -56,9 +56,10 @@ class ApprovementController extends Controller
                 {    
                     /** Use view */
                     $sheet->loadView('exports.approvement-list-excel', [
-                        'approvements' => $data,
-                        'sdate' => $sdate,
-                        'edate' => $edate
+                        'approvements'  => $data,
+                        'debttypes'     => DebtType::all()->toArray(),
+                        'sdate'         => $sdate,
+                        'edate'         => $edate
                     ]);                
                 });
             })->download();

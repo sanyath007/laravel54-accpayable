@@ -13,6 +13,7 @@
                     <th style="width: 5%; text-align: center;">รหัส</th>
                     <th style="width: 8%; text-align: center;">เลขที่ขออนุมัติ</th>
                     <th style="width: 8%; text-align: center;">วันที่ขออนุมัติ</th>
+                    <th style="width: 15%; text-align: center;">ประเภทหนี้</th>
                     <th style="text-align: left;">สั่งจ่าย</th>
                     <th style="width: 8%; text-align: center;">ฐานภาษี</th>
                     <th style="width: 8%; text-align: center;">ภาษีหัก ณ ที่จ่าย</th>
@@ -31,6 +32,7 @@
                         <td style="text-align: center;">{{ $approvement->app_id }}</td>
                         <td style="text-align: center;">{{ $approvement->app_doc_no }}</td>
                         <td style="text-align: center;">{{ convThDateFromDb($approvement->app_date) }}</td>
+                        <td style="text-align: left;">{{ getDebtTypeListOfApprovement($approvement->app_detail, $debttypes) }}</td>
                         <td style="text-align: left;">{{ $approvement->pay_to }}</td>
                         <td style="text-align: right;">{{ number_format($approvement->net_val, 2) }}</td>
                         <td style="text-align: right;">{{ number_format($approvement->tax_val, 2) }}</td>

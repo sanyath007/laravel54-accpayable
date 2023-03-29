@@ -166,17 +166,17 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
         const { data, ...pager } = res.data.approvements;
 
         const approves = data.map(app => {
-            app.type_list = app && app.app_detail.length > 0 ? getDebtTypeList(app.app_detail).toString() : '';
+            app.type_list = app && app.app_detail.length > 0 ? getDebtTypeListOfApprovement(app.app_detail).toString() : '';
 
             return app;
         });
 
-        $scope.approvements = data;
+        $scope.approvements = approves;
         $scope.pager = pager;
     };
 
-    const getDebtTypeList = function(lists = []) {
-        return lists.length > 0 ? lists.map(lst => lst.debts.debttype.debt_type_name) : []
+    const getDebtTypeListOfApprovement = function(details = []) {
+        return details.length > 0 ? details.map(detail => detail.debts.debttype.debt_type_name) : []
     };
 
     $scope.getApprove = function(approveId) {
