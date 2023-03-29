@@ -90,7 +90,7 @@
 
                             </div><!-- /.row -->
                         </div><!-- /.box-body -->
-                  
+
                         <div class="box-footer">
                             <button ng-click="getCreditorPaidData()" class="btn btn-info">
                                 ค้นหา
@@ -101,7 +101,7 @@
 
                 <div class="box">
                     <div class="box-header with-border">
-                      <h3 class="box-title">รายการเจ้าหนี้จ่ายชำระหนี้</h3>
+                        <h3 class="box-title">รายการเจ้าหนี้จ่ายชำระหนี้</h3>
                     </div><!-- /.box-header -->
 
                     <div class="box-body">
@@ -110,6 +110,7 @@
                                 <tr>
                                     <th style="width: 3%; text-align: center;">#</th>
                                     <th style="width: 5%; text-align: center;">รหัสรายการ</th>
+                                    <th style="width: 5%; text-align: center;">วันที่รับเอกสาร</th>
                                     <th style="width: 5%; text-align: center;">วันที่ชำระ</th>
                                     <th style="width: 5%; text-align: center;">เลขที่เช็ค</th>
                                     <th style="width: 5%; text-align: center;">เลขที่เอกสาร</th>
@@ -127,6 +128,7 @@
                                 <tr ng-repeat="(index, payment) in payments">
                                     <td style="text-align: center;">@{{ index+pager.from }}</td>
                                     <td style="text-align: center;">@{{ payment.debt_id }}</td>
+                                    <td style="text-align: center;">@{{ payment.debt_doc_recdate | thdate }}</td>
                                     <td style="text-align: center;">@{{ payment.paid_date | thdate }}</td>
                                     <td style="text-align: center;">@{{ payment.cheque_no }}</td>
                                     <td style="text-align: center;">@{{ payment.deliver_no }}</td>
