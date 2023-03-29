@@ -36,12 +36,14 @@ class ApprovementController extends Controller
         if($searchKey !== '0') array_push($conditions, ['pay_to', 'like', '%'.$searchKey.'%']);
 
         if($conditions == '0') {
-            $approvements = Approvement::whereIn('app_stat', ['0', '1'])
+            $approvements = Approvement::with('app_detail','app_detail.debts','app_detail.debts.debttype')
+                                ->whereIn('app_stat', ['0', '1'])
                                 ->orderBy('app_date', 'DESC');
         } else {
-            $approvements = Approvement::whereIn('app_stat', ['0', '1'])
-                                ->orderBy('app_date', 'DESC')
-                                ->where($conditions);
+            $approvements = Approvement::with('app_detail','app_detail.debts','app_detail.debts.debttype')
+                                ->whereIn('app_stat', ['0', '1'])
+                                ->where($conditions)
+                                ->orderBy('app_date', 'DESC');
         }
 
         if($dataType == 'excel') {

@@ -17,17 +17,17 @@ class Debt extends Model
     protected $fillable = ['debt_chgdate', 'debt_userid', 'debt_status'];
     
     public function debttype()
-  	{
-      	return $this->belongsTo('App\Models\DebtType', 'debt_type_id', 'debt_type_id');
-  	}
+	{
+		return $this->belongsTo('App\Models\DebtType', 'debt_type_id', 'debt_type_id');
+	}
 
-  	public function app_detail()
-  	{
-      	return $this->hasMany('App\Models\ApprovementDetail', 'debt_id', 'debt_id');
-  	}
+	public function app_detail()
+	{
+		return $this->hasMany('App\Models\ApprovementDetail', 'debt_id', 'debt_id');
+	}
 
-  	public function payment_detail()
-  	{
-      	return $this->hasMany('App\Models\PaymentDetail', 'debt_id', 'debt_id');
-  	}
+	public function payment_detail()
+	{
+		return $this->hasMany('App\Models\PaymentDetail', 'debt_id', 'debt_id');
+	}
 }

@@ -136,9 +136,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
 
         $http.get(`${CONFIG.baseUrl}/approve/search/json/${sDate}/${eDate}/${searchKey}/${showAll}`)
         .then(function(res) {
-            console.log(res);
-            $scope.approvements = res.data.approvements.data;
-            $scope.pager = res.data.approvements;
+            $scope.setApprovements(res);
 
             $scope.loading = false;
         }, function(err) {
@@ -155,9 +153,7 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
 
         $http.get(URL)
         .then(function(res) {
-            console.log(res);
-            $scope.approvements = res.data.approvements.data;
-            $scope.pager = res.data.approvements;
+            $scope.setApprovements(res);
 
             $scope.loading = false;
         }, function(err) {
@@ -165,7 +161,24 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
             $scope.loading = false;
         });
     }
-    
+
+    $scope.setApprovements = function(res) {
+        const { data, ...pager } = res.data.approvements;
+
+        const approves = data.map(app => {
+            app.type_list = app && app.app_detail.length > 0 ? getDebtTypeList(app.app_detail).toString() : '';
+
+            return app;
+        });
+
+        $scope.approvements = data;
+        $scope.pager = pager;
+    };
+
+    const getDebtTypeList = function(lists = []) {
+        return lists.length > 0 ? lists.map(lst => lst.debts.debttype.debt_type_name) : []
+    };
+
     $scope.getApprove = function(approveId) {
         $http.get(`${CONFIG.baseUrl}/approve/get-creditor/${approveId}`)
         .then(function(res) {
