@@ -176,7 +176,12 @@ app.controller('approveCtrl', function($rootScope, $scope, $http, toaster, CONFI
     };
 
     const getDebtTypeListOfApprovement = function(details = []) {
-        return details.length > 0 ? details.map(detail => detail.debts.debttype.debt_type_name) : []
+        if (details.length == 0) return [];
+
+        const debttypes = details.map(detail => detail.debts ? detail.debts.debttype.debt_type_name : '');
+        const typeNames = [...new Set(debttypes)];
+
+        return typeNames;
     };
 
     $scope.getApprove = function(approveId) {
