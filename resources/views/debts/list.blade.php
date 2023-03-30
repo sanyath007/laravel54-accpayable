@@ -148,7 +148,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="(index, debt) in debts">
+                                    <tr ng-repeat="(index, debt) in debts" ng-show="debts.length == 0">
                                         <td style="text-align: center;">@{{ index+pager.from }}</td>
                                         <td style="text-align: center;">@{{ debt.debt_id }}</td>
                                         <td style="text-align: center;">@{{ debt.debt_date | thdate }}</td>
@@ -188,6 +188,11 @@
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         </td>             
+                                    </tr>
+                                    <tr ng-show="debts.length == 0">
+                                        <td colspan="11" style="text-align: center; color: red;">
+                                            -- ไม่พบข้อมูล --
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

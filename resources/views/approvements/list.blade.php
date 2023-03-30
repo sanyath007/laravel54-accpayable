@@ -122,7 +122,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="(index, approvement) in approvements">
+                                <tr ng-repeat="(index, approvement) in approvements" ng-show="approvements.length > 0">
                                     <td style="text-align: center;">@{{ index+pager.from }}</td>
                                     <td style="text-align: center;">@{{ approvement.app_id }}</td>
                                     <td style="text-align: center;">@{{ approvement.app_doc_no }}</td>
@@ -173,6 +173,11 @@
                                         
                                     </td>
                                 </tr>
+                                <tr ng-show="approvements.length == 0">
+                                    <td colspan="11" style="text-align: center; color: red;">
+                                        -- ไม่พบข้อมูล --
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div><!-- /.box-body -->
@@ -180,6 +185,12 @@
                     <!-- Box Footer with pagination -->
                     @include('approvements._list-pagination')
                     <!-- Box Footer with pagination -->
+
+                    <!-- Loading (remove the following to stop the loading)-->
+                    <div ng-show="loading" class="overlay">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                    <!-- end loading -->
 
                 </div><!-- /.box -->
 
